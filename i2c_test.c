@@ -41,6 +41,7 @@ inline void master_receive() {
 inline void master_answer(u8 value) {
     I2C1CONbits.ACKDT = value;
     I2C1CONbits.ACKEN = 1;
+    while (I2C1CONbits.ACKEN == 1);
 }
 
 int main(void) {
@@ -54,25 +55,38 @@ int main(void) {
         I2C1BRG = 0x030;
 	I2C1CONbits.ON = 1;
 
+        I2C1CONbits.SEN = 1; // Master start
+        while (I2C1CONbits.SEN == 1)
+           Nop();
+        master_send(ADDR_WRITE_MODE(SLAVE_ADDR));
+        master_send(PWR_MGMT_1);
+        master_send(0b00001000); // Power management -> Module on, no temp sensor.
+        I2C1CONbits.PEN = 1;
+        while (I2C1CONbits.PEN == 1);
+        while (1) {
 //        while (I2C1STATbits.P == 0) Nop();
         I2C1CONbits.SEN = 1; // Master start
-            while (I2C1CONbits.SEN == 1)
-                Nop();
-
-            master_send(ADDR_WRITE_MODE(SLAVE_ADDR));
-            master_send(PWR_MGMT_1);
-            master_send(0b00001000); // Power management -> Module on, no temp sensor.
-            I2C1CONbits.PEN = 1;
-            Nop();
-         //   while (I2C1STATbits.P == 0) Nop();
+//            while (I2C1CONbits.SEN == 1)
+//                Nop();
+//            master_send(ADDR_WRITE_MODE(SLAVE_ADDR));
+//            master_send(PWR_MGMT_1);
+//            master_send(0b00001000); // Power management -> Module on, no temp sensor.
+//            I2C1CONbits.PEN = 1;
+//            Nop();
+//            while (I2C1CONbits.PEN == 1);
+//         //   while (I2C1STATbits.P == 0) Nop();
             I2C1CONbits.SEN = 1;
+            while (I2C1CONbits.SEN == 1);
             master_send(ADDR_WRITE_MODE(SLAVE_ADDR));
             master_send(WHO_AM_I);
             I2C1CONbits.RSEN = 1;
+            while (I2C1CONbits.RSEN == 1);
             master_send(ADDR_READ_MODE(SLAVE_ADDR));
             master_receive();
             master_answer(NACK);
             I2C1CONbits.PEN = 1;
+            while (I2C1CONbits.PEN == 1);
             Nop();
-        while (1) Nop();
+}
+ //       while (1) Nop();
 }
