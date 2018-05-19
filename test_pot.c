@@ -1,7 +1,7 @@
 /** AN3 - RB3 **/
 
 /** Step doc 
- *
+
 
 	AD1PCFG<15:0>;// 0 -> analog ; 1 -> digital
 	AD1CHS<32:0>;// select MUX
