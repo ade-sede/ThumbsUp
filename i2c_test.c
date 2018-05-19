@@ -1,92 +1,72 @@
+
+/*
+ * File:   main.c
+ * Author: amelielallemand
+ *
+ * Created on April 30, 2018, 5:31 PM
+ */
+
 #include <p32xxxx.h>
 #include <xc.h>
 #include <sys/attribs.h>
 #include "header.h"
 
-#define RW_READ 1
-#define RW_WRITE 0
-#define ADDR_READ_MODE(addr) ((addr << 1) | RW_READ)
-#define ADDR_WRITE_MODE(addr) (addr << 1)
-#define NACK 1
-#define ACK 0
-#define ACCEL_XOUT_L 0x3C
-#define WHO_AM_I 0x75
-#define PWR_MGMT_1 0x6B
-#define SLAVE_ADDR 0x68
 #define LED_OFF LATFbits.LATF1 = 0
 #define LED_ON LATFbits.LATF1 = 1
 #define LED_TOGGLE LATFbits.LATF1 ^= 1
 
 u8 volatile g_data_buffer[2];
-u8 volatile g_target;
-u8 volatile g_i2c_state = 0;
 u8 volatile *g_data;
-u8 volatile g_err = 0;
 
-inline void master_send(u8 data) {
-        I2C1TRN = data;
-        while (I2C1STATbits.TRSTAT == 1)
-            Nop();
-//        Nop();
-         if (I2C1STATbits.ACKSTAT == NACK)
-            g_err = 1;
-}
+/** AN3 - RB3 **/
 
-inline void master_receive() {
-    I2C1CONbits.RCEN = 1;
-    while (I2C1STATbits.RBF == 0) Nop();
-    *g_data = I2C1RCV;
-}
+/** Step doc
+	AD1PCFG<15:0>;// 0 -> analog ; 1 -> digital
+	AD1CHS<32:0>;// select MUX
+	FORM<2:0> (AD1CON1<10:8>);// select format
+	SSRC<2:0> (AD1CON1<7:5>);// select sample clock source
+	VCFG<2:0> (AD1CON2<15:13>);// select voltage
+	CSCNA (AD1CON2<10>);// select scan mode
+	SMP<3:0> (AD1CON2<5:2>);// number conv / int
+	BUFM (AD1CON2<1>); buff fill mode
+	BUFS (AD1CON2<1>); 1 -> current fill 0 -> current fill work if BUFM = 1
+	ALTS AD1CON2<0>;// MUX
+	ADRC (AD1CON3<15>);// Clock and prescale
+	SAMC<4:0> (AD1CON3<12:8>);// sample
+	ADCS<7:0> (AD1CON3<7:0>);// clock source and prescale
+	AD1CON1<15>
+*/
 
-inline void master_answer(u8 value) {
-    I2C1CONbits.ACKDT = value;
-    I2C1CONbits.ACKEN = 1;
-    while (I2C1CONbits.ACKEN == 1);
-}
+int		main(){
 
-int main(void) {
 	TRISFbits.TRISF1 = 0;
-	LATFbits.LATF1 = 0;
+	LED_OFF;
 
-        g_data = &g_data_buffer[0];
-        OSCCONbits.PBDIV = 0b011; // PBCLK = SYSCLK / 8 soit 10Mhz
+	TRISBbits.TRISB3 = 1;//ADC AN3 pot IN
 
-//        I2C1BRG = 0x0F8;
-        I2C1BRG = 0x030;
-	I2C1CONbits.ON = 1;
+	// ** ADC CONF
+//	AD1PCFG:ADC;
+//	AD1CHS0bits.CH0SB = 0b0011;;// select MUX B sur AN3
+	AD1CON1bits.FORM = 0;// select format INT16
+	AD1CON1bits.SSRC = 0;//Clearing SAMP bit ends sampling and starts conversion
+	AD1CON2bits.VCFG = 0;//AVDD AVSS
+//	AD1CON2.CSCNA -> 0 no scan input ; 1 -> scan input for MUX A
+//	SMP<3:0> (AD1CON2<5:2>);// number conv / int
+	AD1CON2bits.BUFM = 0;// buff fill mode one big buff
+	AD1CON2bits.ALTS = 0; // Always MUX A
+	AD1CHSbits.CH0SA = 0b0011;;// select MUX A sur AN3
+	AD1CON3bits.ADRC = 1;// Clock and prescale 1 -> ADC internal RC clock
+//	SAMC<4:0> (AD1CON3<12:8>);// sample
+//	AD1CON3.ADCS = ;//clock source and prescale 00000000 =TPB • 2 • (ADCS<7:0> + 1) = 2 • TPB = TAD ?
+	AD1CON1bits.ON = 1;//ACD ON
+	AD1CON1bits.ASAM = 0; //sampling begins when SAMP bit is set
+	AD1CON1bits.SSRC = 0b000; //clearing SAMP ends sampling and starts conversion
 
-        I2C1CONbits.SEN = 1; // Master start
-        while (I2C1CONbits.SEN == 1)
-           Nop();
-        master_send(ADDR_WRITE_MODE(SLAVE_ADDR));
-        master_send(PWR_MGMT_1);
-        master_send(0b00001000); // Power management -> Module on, no temp sensor.
-        I2C1CONbits.PEN = 1;
-        while (I2C1CONbits.PEN == 1);
-        while (1) {
-//        while (I2C1STATbits.P == 0) Nop();
-        I2C1CONbits.SEN = 1; // Master start
-//            while (I2C1CONbits.SEN == 1)
-//                Nop();
-//            master_send(ADDR_WRITE_MODE(SLAVE_ADDR));
-//            master_send(PWR_MGMT_1);
-//            master_send(0b00001000); // Power management -> Module on, no temp sensor.
-//            I2C1CONbits.PEN = 1;
-//            Nop();
-//            while (I2C1CONbits.PEN == 1);
-//         //   while (I2C1STATbits.P == 0) Nop();
-            I2C1CONbits.SEN = 1;
-            while (I2C1CONbits.SEN == 1);
-            master_send(ADDR_WRITE_MODE(SLAVE_ADDR));
-            master_send(WHO_AM_I);
-            I2C1CONbits.RSEN = 1;
-            while (I2C1CONbits.RSEN == 1);
-            master_send(ADDR_READ_MODE(SLAVE_ADDR));
-            master_receive();
-            master_answer(NACK);
-            I2C1CONbits.PEN = 1;
-            while (I2C1CONbits.PEN == 1);
-            Nop();
-}
- //       while (1) Nop();
+	while (1) {
+	    AD1CON1bits.DONE = 0; //conversion not started or in progress
+            AD1CON1bits.SAMP = 1; //Echantillonage
+	    AD1CON1bits.SAMP = 0; //Conversion
+	    while(AD1CON1bits.DONE == 0) ;
+	    g_data = ADC1BUF0;//value on 16bits
+	}
 }
