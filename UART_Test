@@ -1,0 +1,53 @@
+
+#include <p32xxxx.h>
+#include "types.h"
+
+
+void inline UART_transmit_byte(u8 byte) {
+    if (U1STAbits.UTXBF == 0) // If transmit buffer is not full
+            U1TXREG = byte; // Fill transmit buffer;
+}
+
+void inline UART_idle_after_transmit() {
+    while (U1STAbits.TRMT != 1) // Transmit idle
+        Nop();
+}
+
+void inline UART_transmit_idle(u8 byte) {
+    UART_transmit_byte(byte);
+    UART_idle_after_transmit();
+}
+
+void inline shift_cursor(s8 x_stop, s8 y_stop) {
+    UART_transmit_idle(0xFD); // Raw package ID
+    UART_transmit_idle(5); // Package size
+    UART_transmit_idle(2); // Mouse descriptor
+    UART_transmit_idle(0); // Buttons
+    UART_transmit_idle(x_stop);
+    UART_transmit_idle(y_stop);
+    UART_transmit_idle(0); // Wheel
+}
+
+int main() {
+
+    /* DEVCFG.FPLLIDIV Must be set to divied by 2 */
+
+    /* SYSCLK to 40MHz & PBCLK = SYSCLK*/
+    /* FRC (8MHz) * PLLMULT (20) / PLLDIV (2) = 40 MHz*/
+
+    OSCCONbits.NOSC = 0b11; // FRC with PLL module
+    OSCCONbits.PLLMULT = 0b101; // 40;
+    OSCCONbits.PLLODIV = 0; // Not PLL output divide
+    OSCCONbits.PBDIV = 0; // PCBLCK = SYSCLK
+
+    U1BRG = 21; // Target baude rate = 115k
+    U1MODEbits.PDSEL = 0; // 8 bit data, no parity
+    U1MODEbits.STSEL = 0; // 1 stop bit
+    U1MODEbits.ON = 1;
+    U1STAbits.UTXEN = 1; // Transmition enabled.
+
+    while (1) {
+        shift_cursor(10, 10);
+    }
+}
+
