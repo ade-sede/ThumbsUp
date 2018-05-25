@@ -1,10 +1,3 @@
-/* 
- * File:   main.c
- * Author: ade-sede, asuissa
- *
- * Created on May 24, 2018, 10:18 AM
- */
- 
 #include <p32xxxx.h>
 
 // DEVCFG2
