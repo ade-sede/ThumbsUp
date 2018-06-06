@@ -71,7 +71,7 @@ GenerateClassCluster=0
 DocumentUniqueId=MAXBIIJA
 
 [Document3]
-DocumentPath=Main.SchDoc
+DocumentPath=PIC32MX.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -137,6 +137,23 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=HHPQQANH
+
+[Document7]
+DocumentPath=Button.SchDoc
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=IXTLLIVY
 
 [Configuration1]
 Name=Default Configuration
