@@ -1,0 +1,12 @@
+Removed Parameter LatestRevisionDate:17-Jul-2002 from Part R6
+Removed Parameter LatestRevisionDate:17-Jul-2002 from Part SW2
+Removed Parameter LatestRevisionNote:Re-released for DXP Platform. from Part R6
+Removed Parameter LatestRevisionNote:Re-released for DXP Platform. from Part SW2
+Removed Parameter Published:8-Jun-2000 from Part R6
+Removed Parameter Published:24-Mar-1999 from Part SW2
+Removed Parameter Publisher:Altium Limited from Part R6
+Removed Parameter Publisher:Altium Limited from Part SW2
+Added Parameter Fabricant=Multicomp to Part R6
+Added Parameter Fournisseur=Farnell to Part R6
+Added Parameter Fournisseur=Farnell to Part SW2
+Added Parameter RefFournisseur=9330399 to Part R6
