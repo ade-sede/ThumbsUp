@@ -1,0 +1,155 @@
+Added Component: Designator=BT2(Battery Holder)
+Added Component: Designator=C1(CAP 0603)
+Added Component: Designator=C2(CAP 0603)
+Added Component: Designator=C3(CAP 0603)
+Added Component: Designator=C4(CAP 0603)
+Added Component: Designator=C5(CAP 0603)
+Added Component: Designator=C6(CAP 0603)
+Added Component: Designator=C7(CAP 0603)
+Added Component: Designator=D1(LED)
+Added Component: Designator=D2(LED)
+Added Component: Designator=D3(LED)
+Added Component: Designator=J1(ICSP)
+Added Component: Designator=L2(Coil)
+Added Component: Designator=M1(RN42)
+Added Component: Designator=R1(RES 0603)
+Added Component: Designator=R2(RES 0603)
+Added Component: Designator=R3(RES 0603)
+Added Component: Designator=R4(RES 0603)
+Added Component: Designator=R5(RES 0603)
+Added Component: Designator=R6_Button1(RES 0603)
+Added Component: Designator=R6_Button2(RES 0603)
+Added Component: Designator=SW1(SWITCH ON/OFF)
+Added Component: Designator=SW2_Button1(SWITCH)
+Added Component: Designator=SW2_Button2(SWITCH)
+Added Component: Designator=U1(MCP1603B/TSOT)
+Added Component: Designator=U2(PIC32MX150F128B)
+Added Component: Designator=VR1(91A1A-B28-B13L)
+Added Component: Designator=XA1(MOD-MPU9150)
+Added Pin To Net: NetName=BOUTTON 1 Pin=R6_Button1-1
+Added Pin To Net: NetName=BOUTTON 1 Pin=SW2_Button1-1
+Added Pin To Net: NetName=BOUTTON 1 Pin=U2-9
+Added Net: Name=BOUTTON 1
+Added Pin To Net: NetName=BOUTTON 2 Pin=R6_Button2-1
+Added Pin To Net: NetName=BOUTTON 2 Pin=SW2_Button2-1
+Added Pin To Net: NetName=BOUTTON 2 Pin=U2-10
+Added Net: Name=BOUTTON 2
+Added Pin To Net: NetName=GND Pin=BT2-2
+Added Pin To Net: NetName=GND Pin=C1-1
+Added Pin To Net: NetName=GND Pin=C2-1
+Added Pin To Net: NetName=GND Pin=C3-1
+Added Pin To Net: NetName=GND Pin=C4-1
+Added Pin To Net: NetName=GND Pin=C5-1
+Added Pin To Net: NetName=GND Pin=C6-1
+Added Pin To Net: NetName=GND Pin=C7-1
+Added Pin To Net: NetName=GND Pin=D1-2
+Added Pin To Net: NetName=GND Pin=D2-2
+Added Pin To Net: NetName=GND Pin=J1-3
+Added Pin To Net: NetName=GND Pin=M1-1
+Added Pin To Net: NetName=GND Pin=M1-12
+Added Pin To Net: NetName=GND Pin=M1-28
+Added Pin To Net: NetName=GND Pin=M1-29
+Added Pin To Net: NetName=GND Pin=SW2_Button1-2
+Added Pin To Net: NetName=GND Pin=SW2_Button2-2
+Added Pin To Net: NetName=GND Pin=U1-2
+Added Pin To Net: NetName=GND Pin=U2-8
+Added Pin To Net: NetName=GND Pin=U2-19
+Added Pin To Net: NetName=GND Pin=U2-27
+Added Pin To Net: NetName=GND Pin=VR1-2
+Added Pin To Net: NetName=GND Pin=XA1-2
+Added Net: Name=GND
+Added Pin To Net: NetName=MCLR Pin=J1-1
+Added Pin To Net: NetName=MCLR Pin=R5-1
+Added Pin To Net: NetName=MCLR Pin=U2-1
+Added Net: Name=MCLR
+Added Pin To Net: NetName=NetBT2_1 Pin=BT2-1
+Added Pin To Net: NetName=NetBT2_1 Pin=SW1-1
+Added Net: Name=NetBT2_1
+Added Pin To Net: NetName=NetC1_2 Pin=C1-2
+Added Pin To Net: NetName=NetC1_2 Pin=SW1-2
+Added Pin To Net: NetName=NetC1_2 Pin=U1-1
+Added Pin To Net: NetName=NetC1_2 Pin=U1-3
+Added Net: Name=NetC1_2
+Added Pin To Net: NetName=NetC5_2 Pin=C5-2
+Added Pin To Net: NetName=NetC5_2 Pin=U2-20
+Added Net: Name=NetC5_2
+Added Pin To Net: NetName=NetC6_2 Pin=C6-2
+Added Pin To Net: NetName=NetC6_2 Pin=R4-1
+Added Pin To Net: NetName=NetC6_2 Pin=R5-2
+Added Net: Name=NetC6_2
+Added Pin To Net: NetName=NetD1_1 Pin=D1-1
+Added Pin To Net: NetName=NetD1_1 Pin=R1-1
+Added Net: Name=NetD1_1
+Added Pin To Net: NetName=NetD2_1 Pin=D2-1
+Added Pin To Net: NetName=NetD2_1 Pin=R2-1
+Added Net: Name=NetD2_1
+Added Pin To Net: NetName=NetD3_1 Pin=D3-1
+Added Pin To Net: NetName=NetD3_1 Pin=R3-1
+Added Net: Name=NetD3_1
+Added Pin To Net: NetName=NetD3_2 Pin=D3-2
+Added Pin To Net: NetName=NetD3_2 Pin=M1-21
+Added Net: Name=NetD3_2
+Added Pin To Net: NetName=NetL2_1 Pin=L2-1
+Added Pin To Net: NetName=NetL2_1 Pin=U1-5
+Added Net: Name=NetL2_1
+Added Pin To Net: NetName=NetM1_5 Pin=M1-5
+Added Pin To Net: NetName=NetM1_5 Pin=U2-7
+Added Net: Name=NetM1_5
+Added Pin To Net: NetName=NetM1_13 Pin=M1-13
+Added Pin To Net: NetName=NetM1_13 Pin=U2-11
+Added Net: Name=NetM1_13
+Added Pin To Net: NetName=NetM1_14 Pin=M1-14
+Added Pin To Net: NetName=NetM1_14 Pin=U2-15
+Added Net: Name=NetM1_14
+Added Pin To Net: NetName=NetR2_2 Pin=R2-2
+Added Pin To Net: NetName=NetR2_2 Pin=U2-12
+Added Net: Name=NetR2_2
+Added Pin To Net: NetName=NetU2_17 Pin=U2-17
+Added Pin To Net: NetName=NetU2_17 Pin=XA1-5
+Added Net: Name=NetU2_17
+Added Pin To Net: NetName=NetU2_18 Pin=U2-18
+Added Pin To Net: NetName=NetU2_18 Pin=XA1-6
+Added Net: Name=NetU2_18
+Added Pin To Net: NetName=NetU2_21 Pin=U2-21
+Added Pin To Net: NetName=NetU2_21 Pin=XA1-14
+Added Net: Name=NetU2_21
+Added Pin To Net: NetName=NetU2_26 Pin=U2-26
+Added Pin To Net: NetName=NetU2_26 Pin=VR1-3
+Added Net: Name=NetU2_26
+Added Pin To Net: NetName=PGEC Pin=J1-5
+Added Pin To Net: NetName=PGEC Pin=U2-5
+Added Net: Name=PGEC
+Added Pin To Net: NetName=PGED Pin=J1-4
+Added Pin To Net: NetName=PGED Pin=U2-4
+Added Net: Name=PGED
+Added Pin To Net: NetName=V3P3 Pin=C2-2
+Added Pin To Net: NetName=V3P3 Pin=C3-2
+Added Pin To Net: NetName=V3P3 Pin=C4-2
+Added Pin To Net: NetName=V3P3 Pin=C7-2
+Added Pin To Net: NetName=V3P3 Pin=J1-2
+Added Pin To Net: NetName=V3P3 Pin=L2-2
+Added Pin To Net: NetName=V3P3 Pin=M1-11
+Added Pin To Net: NetName=V3P3 Pin=R1-2
+Added Pin To Net: NetName=V3P3 Pin=R3-2
+Added Pin To Net: NetName=V3P3 Pin=R4-2
+Added Pin To Net: NetName=V3P3 Pin=R6_Button1-2
+Added Pin To Net: NetName=V3P3 Pin=R6_Button2-2
+Added Pin To Net: NetName=V3P3 Pin=U1-4
+Added Pin To Net: NetName=V3P3 Pin=U2-13
+Added Pin To Net: NetName=V3P3 Pin=U2-28
+Added Pin To Net: NetName=V3P3 Pin=VR1-1
+Added Pin To Net: NetName=V3P3 Pin=XA1-1
+Added Net: Name=V3P3
+Added Class: Name=9-axe
+Added Class: Name=Alim
+Added Class: Name=Bluetooth
+Added Class: Name=Button1
+Added Class: Name=Button2
+Added Class: Name=PIC32MX
+Added Class: Name=Button
+Added Room: Name=9-axe
+Added Room: Name=Alim
+Added Room: Name=Bluetooth
+Added Room: Name=Button1
+Added Room: Name=Button2
+Added Room: Name=PIC32MX

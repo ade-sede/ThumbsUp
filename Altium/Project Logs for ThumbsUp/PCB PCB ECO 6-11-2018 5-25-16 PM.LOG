@@ -1,0 +1,11 @@
+Added Component: Designator=M1(RN42)
+Added Pin To Net: NetName=GND Pin=M1-1
+Added Pin To Net: NetName=NetM1_5 Pin=M1-5
+Added Pin To Net: NetName=V3P3 Pin=M1-11
+Added Pin To Net: NetName=GND Pin=M1-12
+Added Pin To Net: NetName=NetM1_13 Pin=M1-13
+Added Pin To Net: NetName=NetM1_14 Pin=M1-14
+Added Pin To Net: NetName=NetD3_2 Pin=M1-21
+Added Pin To Net: NetName=GND Pin=M1-28
+Added Pin To Net: NetName=GND Pin=M1-29
+Added Member To Class: ClassName=Bluetooth Member=Component M1 RN42
