@@ -1,0 +1,3 @@
+Change Physical Footprint: Designator=SW1 Old Footprint=SWITCH ON/OFF New Footprint=SWITCH ON/OFF
+Change Physical Footprint: Designator=SW2_Button1 Old Footprint=SWITCH New Footprint=SWITCH
+Change Physical Footprint: Designator=SW2_Button2 Old Footprint=SWITCH New Footprint=SWITCH

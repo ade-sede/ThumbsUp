@@ -1,0 +1,28 @@
+Change Physical Footprint: Designator=BT2 Old Footprint=Battery Holder New Footprint=Battery Holder
+Change Physical Footprint: Designator=C1 Old Footprint=CAP 0603 New Footprint=CAP 0603
+Change Physical Footprint: Designator=C2 Old Footprint=CAP 0603 New Footprint=CAP 0603
+Change Physical Footprint: Designator=C3 Old Footprint=CAP 0603 New Footprint=CAP 0603
+Change Physical Footprint: Designator=C4 Old Footprint=CAP 0603 New Footprint=CAP 0603
+Change Physical Footprint: Designator=C5 Old Footprint=CAP 0603 New Footprint=CAP 0603
+Change Physical Footprint: Designator=C6 Old Footprint=CAP 0603 New Footprint=CAP 0603
+Change Physical Footprint: Designator=C7 Old Footprint=CAP 0603 New Footprint=CAP 0603
+Change Physical Footprint: Designator=D1 Old Footprint=LED New Footprint=LED
+Change Physical Footprint: Designator=D2 Old Footprint=LED New Footprint=LED
+Change Physical Footprint: Designator=D3 Old Footprint=LED New Footprint=LED
+Change Physical Footprint: Designator=J1 Old Footprint=ICSP New Footprint=ICSP
+Change Physical Footprint: Designator=L2 Old Footprint=Coil New Footprint=Coil
+Change Physical Footprint: Designator=M1 Old Footprint=RN42 New Footprint=RN42
+Change Physical Footprint: Designator=R1 Old Footprint=RES 0603 New Footprint=RES 0603
+Change Physical Footprint: Designator=R2 Old Footprint=RES 0603 New Footprint=RES 0603
+Change Physical Footprint: Designator=R3 Old Footprint=RES 0603 New Footprint=RES 0603
+Change Physical Footprint: Designator=R4 Old Footprint=RES 0603 New Footprint=RES 0603
+Change Physical Footprint: Designator=R5 Old Footprint=RES 0603 New Footprint=RES 0603
+Change Physical Footprint: Designator=R6_Button1 Old Footprint=RES 0603 New Footprint=RES 0603
+Change Physical Footprint: Designator=R6_Button2 Old Footprint=RES 0603 New Footprint=RES 0603
+Change Physical Footprint: Designator=SW1 Old Footprint=SWITCH ON/OFF New Footprint=SWITCH ON/OFF
+Change Physical Footprint: Designator=SW2_Button1 Old Footprint=SWITCH New Footprint=SWITCH
+Change Physical Footprint: Designator=SW2_Button2 Old Footprint=SWITCH New Footprint=SWITCH
+Change Physical Footprint: Designator=U1 Old Footprint=MCP1603B/TSOT New Footprint=MCP1603B/TSOT
+Change Physical Footprint: Designator=U2 Old Footprint=PIC32MX150F128B New Footprint=PIC32MX150F128B
+Change Physical Footprint: Designator=VR1 Old Footprint=91A1A-B28-B13L New Footprint=91A1A-B28-B13L
+Change Physical Footprint: Designator=XA1 Old Footprint=MOD-MPU9150 New Footprint=MOD-MPU9150
