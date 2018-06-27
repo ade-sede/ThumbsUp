@@ -1,0 +1,31 @@
+Designator Footprint               Mid X         Mid Y         Ref X         Ref Y         Pad X         Pad Y TB      Rotation Comment        
+
+XA1        MOD-MPU9150         10.8966mm     47.7266mm     11.2776mm     51.8414mm      5.8166mm     46.4566mm  T         90.00 MOD-MPU9150 Breakout Board
+VR1        91A1A-B28-B13L      10.0086mm      31.557mm     11.6586mm      39.497mm     10.0086mm      34.097mm  T        180.00 5k             
+U2         PIC32MX150F128B     29.9476mm     18.4404mm     25.2476mm     10.1854mm     25.2476mm     10.1854mm  B        360.00 PIC32MX150F128B
+U1         MCP1603B/TSOT       26.1336mm     47.1526mm     27.5336mm     46.2026mm     27.5336mm     46.2026mm  T        180.00 MCP1503B       
+SW2_Button SWITCH              10.8738mm       4.572mm      6.2738mm       4.572mm      6.2738mm       4.572mm  T        360.00 SW-SPST        
+SW2_Button SWITCH              10.8738mm     14.4272mm      6.2738mm     14.4272mm      6.2738mm     14.4272mm  T        360.00 SW-SPST        
+SW1        SWITCH_ON/OFF       34.6128mm     41.9608mm     32.5628mm     38.1508mm     32.5628mm     38.1508mm  T         90.00 SW             
+R6_Button2 RES_0603             3.3528mm      31.115mm      3.3528mm      31.115mm      3.3528mm      30.265mm  B         90.00 10k            
+R6_Button1 RES_0603              6.477mm     31.0896mm       6.477mm     31.0896mm       6.477mm     30.2396mm  B         90.00 10k            
+R5         RES_0603            13.0048mm     24.9174mm     13.0048mm     24.9174mm     13.0048mm     24.0674mm  B         90.00 1K             
+R4         RES_0603            13.0302mm     29.4386mm     13.0302mm     29.4386mm     13.0302mm     28.5886mm  B         90.00 10K            
+R3         RES_0603            10.0076mm     10.0076mm     10.0076mm     10.0076mm     10.8576mm     10.0076mm  T        180.00 750            
+R2         RES_0603            18.0848mm       53.34mm     18.0848mm       53.34mm     18.9348mm       53.34mm  B        180.00 750            
+R1         RES_0603            21.3868mm     48.9712mm     21.3868mm     48.9712mm     22.2368mm     48.9712mm  B        180.00 750            
+L2         Coil                25.9334mm      42.291mm     25.9334mm      42.291mm     25.9334mm      43.331mm  T        270.00 4.7uH          
+J1         ICSP                16.2818mm     30.3532mm     16.2814mm      24.003mm     16.2818mm     24.0032mm  T         90.00 Program / Debug
+BT.STATUS  LED                 15.6718mm      9.9822mm     15.6718mm      9.9822mm     14.4968mm      9.9822mm  T        360.00 2mA, 1.8V      
+MOV.STATUS LED                 26.9494mm     52.0192mm     26.9494mm     52.0192mm     25.7744mm     52.0192mm  T        360.00 2mA, 1.8V      
+PWR.STATUS LED                 34.7218mm     52.0192mm     34.7218mm     52.0192mm     33.5468mm     52.0192mm  T        360.00 2mA, 1.8V      
+C7         CAP_0603             1.6002mm     14.4272mm      1.6002mm     14.4272mm      1.6002mm     13.5772mm  B         90.00 Cap            
+C6         CAP_0603             8.6106mm     25.7556mm      8.6106mm     25.7556mm      7.7606mm     25.7556mm  B        360.00 0.1uF          
+C5         CAP_0603            37.6428mm      19.431mm     37.6428mm      19.431mm     37.6428mm      18.581mm  B         90.00 10uF           
+C4         CAP_0603            20.9042mm     25.4254mm     20.9042mm     25.4254mm     20.0542mm     25.4254mm  B        360.00 0.1uF          
+C3         CAP_0603            34.6456mm      5.1562mm     34.6456mm      5.1562mm     34.6456mm      4.3062mm  B         90.00 0.1uF          
+C2         CAP_0603            21.9456mm     42.0878mm     21.9456mm     42.0878mm     21.9456mm     41.2378mm  T         90.00 10 uF          
+C1         CAP_0603            30.0482mm     42.3164mm     30.0482mm     42.3164mm     30.0482mm     41.4664mm  T         90.00 4.7 uF         
+M1         RN42                10.4846mm     12.3478mm      3.7846mm     20.4978mm      4.0846mm      4.4978mm  B        360.00 RN42           
+BT2        Battery_Holder      26.6084mm      17.865mm     29.9734mm       3.175mm     29.9734mm      32.555mm  T         90.00 Battery        
+
