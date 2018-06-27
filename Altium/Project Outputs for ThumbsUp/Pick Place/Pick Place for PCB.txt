@@ -27,5 +27,5 @@ C3         CAP_0603            34.6456mm      5.1562mm     34.6456mm      5.1562
 C2         CAP_0603            21.9456mm     42.0878mm     21.9456mm     42.0878mm     21.9456mm     41.2378mm  T         90.00 10 uF          
 C1         CAP_0603            30.0482mm     42.3164mm     30.0482mm     42.3164mm     30.0482mm     41.4664mm  T         90.00 4.7 uF         
 M1         RN42                10.4846mm     12.3478mm      3.7846mm     20.4978mm      4.0846mm      4.4978mm  B        360.00 RN42           
-BT2        Battery_Holder      26.6084mm      17.865mm     29.9734mm       3.175mm     29.9734mm      32.555mm  T         90.00 Battery        
+BT2        Battery_Holder      33.3384mm      17.865mm     29.9734mm       3.175mm     29.9734mm      32.555mm  T         90.00 Battery        
 
