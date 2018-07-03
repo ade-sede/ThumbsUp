@@ -1,6 +1,3 @@
-#include <p32xxxx.h>
-#include <xc.h>
-#include <sys/attribs.h>
 #include "header.h"
 
 void master_send(u8 data) {

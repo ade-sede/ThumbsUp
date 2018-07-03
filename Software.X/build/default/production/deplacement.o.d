@@ -1,2 +1,3 @@
 build/default/production/deplacement.o:  \
-deplacement.c 
+deplacement.c  \
+header.h 

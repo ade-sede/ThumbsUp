@@ -1,6 +1,3 @@
-#include <p32xxxx.h>
-#include <xc.h>
-#include <sys/attribs.h>
 #include "header.h"
 
 u8 g_data_buffer[2];
@@ -13,7 +10,11 @@ int main(void) {
 	TRISFbits.TRISF1 = 0;
 	LATFbits.LATF1 = 0;
 
-	g_data = &g_data_buffer[0];
+        //UART
+        UART2_init();
+
+        //I2C9axes
+        g_data = &g_data_buffer[0];
 	OSCCONbits.PBDIV = 0b011; // PBCLK = SYSCLK / 8 soit 10Mhz
 
 	//        I2C1BRG = 0x0F8;
@@ -53,5 +54,8 @@ int main(void) {
 		while (I2C1CONbits.PEN == 1);
 		Nop();
 	}
-	while (1);
+	while (1)
+        {
+
+        }
 }
