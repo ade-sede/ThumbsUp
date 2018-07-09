@@ -10,9 +10,6 @@
 #pragma config FNOSC = PRIPLL           // Oscillator Selection Bits (Primary Osc w/PLL (XT+,HS+,EC+PLL))
 #pragma config POSCMOD = HS             // Primary Oscillator Configuration (HS osc mode)// DEVCFG2
 
-#define SYSCLK (8000000/2*20/1) // = 80Mhz
-#define PBCLK (SYSCLK/2) // = 40 Mhz
-#define UART_BAUD_RATE ((PBCLK/(115200*16)-1))
 
 void UART_transmit_byte(u8 byte) {
     while (U2STAbits.UTXBF); // If transmit buffer is not full
