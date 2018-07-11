@@ -13,6 +13,8 @@
 #include <xc.h>
 #include <sys/attribs.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 typedef unsigned char u8;
 typedef signed char s8;
@@ -51,7 +53,7 @@ typedef signed long s32;
 #define UART_BAUD_RATE ((PBCLK/(115200*16)-1))
 
 void UART_transmit_idle(u8 byte);
-void UART_transmitnbr(u8 data);
+void UART_transmitnbr(u16 data);
 
 #endif	/* HEADER_H */
 

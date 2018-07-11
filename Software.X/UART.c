@@ -50,3 +50,10 @@ void UART_transmitnbr(u16 data) {
 	}
 }
 
+void UART_putstr(u8 *str) {
+	while(*str){
+		UART_transmit_byte(*str);
+		str++;
+	}
+	UART_idle_after_transmit();
+}

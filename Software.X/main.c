@@ -77,32 +77,39 @@ inline void i2c_pickup_data(u8 addr) {
 inline void i2c_loop() {
 	u8 i;
 
-	i = ACCEL_XOUT_H;
-	while (i <= ACCEL_ZOUT_L) {
+	i = ACCEL_ZOUT_L;
+	while (i >= ACCEL_XOUT_H) {
 		i2c_pickup_data(i);
-		i++;
+		i--;
 	}
 }
 
 int main(void) {
+	u8 *str[4096] = {0};
+	u32 i = 0;
 	TRISFbits.TRISF1 = 0;
 	LATFbits.LATF1 = 0;
 
 	//g_data = &g_data_buffer[0];
-	g_accelX = (u16 *)&g_data_buffer[0];
-	g_accelY = (u16 *)&g_data_buffer[2];
-	g_accelZ = (u16 *)&g_data_buffer[4];
+	g_accelX = (u16 *)g_data_buffer;
+	g_accelY = (u16 *)(g_data_buffer + 2);
+	g_accelZ = (u16 *)(g_data_buffer + 4);
+
+
 
 	i2c_config();
 	i2c_init();
 	UART2_init();
+	UART_putstr("\rX                  Y                   Z\n");
 	while (1) {
 		i2c_loop();
-		UART_transmit_idle(' ');
-		if (g_data_buffer[1])
-			UART_transmitnbr(*g_accelX);
-		else
-			UART_transmit_idle(' ');
+		while(i++ < 100000);
+		sprintf((char *)str, "\r%d       %d         %d\n", (s16)(((*g_accelX)&255)<<8|(*g_accelX)>>8),(s16)(((*g_accelY)&255)<<8|(*g_accelY)>>8), (s16)(((*g_accelZ)&255)<<8|(*g_accelZ)>>8)); // val * 10 / 16384
+		UART_putstr(str);
+		//memset((void *)str, 0, strlen((char *)str));
+		i = 0;
+		//UART_transmit_idle(' ');
+		//UART_transmitnbr(*g_accelX);
 		Nop();
 	}
 }
