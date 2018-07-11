@@ -39,7 +39,7 @@ void UART2_init(){
     U2MODEbits.ON = 1;
 }
 
-void UART_transmitnbr(u8 data) {
+void UART_transmitnbr(u16 data) {
 	if (data == 0)
 		UART_transmit_idle('0');
 	if (data <= 9 && data > 0)
