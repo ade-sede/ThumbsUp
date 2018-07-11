@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   main.c
  * Author: bocal
  *
@@ -6,14 +6,14 @@
  */
 
 #include "header.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-u8 volatile g_data_buffer[2];
+u8 volatile g_data_buffer[6];
 u8 volatile g_target;
 u8 volatile g_i2c_state = 0;
 u8 volatile *g_data;
+u16 volatile *g_accelX;
+u16 volatile *g_accelY;
+u16 volatile *g_accelZ;
 u8 volatile g_err = 0;
 
 inline void i2c_master_send(u8 data) {
@@ -24,11 +24,11 @@ inline void i2c_master_send(u8 data) {
 		g_err = 1;
 }
 
-inline void i2c_master_receive(u8 *i) {
+inline void i2c_master_receive(u8 i) {
 	I2C1CONbits.RCEN = 1;
 	while (I2C1STATbits.RBF == 0)
 		Nop();
-	*i = I2C1RCV;
+	g_data_buffer[i] = I2C1RCV;
 }
 
 inline void i2c_master_answer(u8 value) {
@@ -57,65 +57,52 @@ inline void i2c_init() {
 		Nop();
 }
 
-inline u8 i2c_accel() {
+inline void i2c_pickup_data(u8 addr) {
 	I2C1CONbits.SEN = 1; // Master start
 	while (I2C1CONbits.SEN == 1)
 		Nop();
 	i2c_master_send(ADDR_WRITE_MODE(SLAVE_ADDR));
-	i2c_master_send(ACCEL_XOUT_L);
+	i2c_master_send(addr);
 	I2C1CONbits.RSEN = 1;
 	while (I2C1CONbits.RSEN == 1)
 		Nop();
 	i2c_master_send(ADDR_READ_MODE(SLAVE_ADDR));
-	i2c_master_receive(&g_data[0]);
+	i2c_master_receive(addr - ACCEL_XOUT_H);
 	i2c_master_answer(NACK);
 	I2C1CONbits.PEN = 1;
 	while (I2C1CONbits.PEN == 1)
 		Nop();
-	I2C1CONbits.SEN = 1; // Master start
-	while (I2C1CONbits.SEN == 1)
-		Nop();
-	i2c_master_send(ADDR_WRITE_MODE(SLAVE_ADDR));
-	i2c_master_send(ACCEL_XOUT_H);
-	I2C1CONbits.RSEN = 1;
-	while (I2C1CONbits.RSEN == 1)
-		Nop();
-	i2c_master_send(ADDR_READ_MODE(SLAVE_ADDR));
-	i2c_master_receive(&g_data[1]);
-	i2c_master_answer(NACK);
-	I2C1CONbits.PEN = 1;
-	while (I2C1CONbits.PEN == 1)
-		Nop();
-	u8 x = 0;
-	x |= g_data[0];
-	x |= g_data[1];
-	return (x);
+}
+
+inline void i2c_loop() {
+	u8 i;
+
+	i = ACCEL_XOUT_H;
+	while (i <= ACCEL_ZOUT_L) {
+		i2c_pickup_data(i);
+		i++;
+	}
 }
 
 int main(void) {
-	u32 i = 0;
-	u8 j = 0;
-	u8 x = 0;
-	char p[5] = "";
 	TRISFbits.TRISF1 = 0;
 	LATFbits.LATF1 = 0;
 
-	g_data = &g_data_buffer[0];
+	//g_data = &g_data_buffer[0];
+	g_accelX = (u16 *)&g_data_buffer[0];
+	g_accelY = (u16 *)&g_data_buffer[2];
+	g_accelZ = (u16 *)&g_data_buffer[4];
 
 	i2c_config();
 	i2c_init();
 	UART2_init();
 	while (1) {
-		x = i2c_accel();
-		while(i++ < 40000);
-		sprintf(p, "%d", x);
-		/*while(p[j]){
-			UART_transmit_byte(p[j]);
-			j++;
-		} j = 0;*/
-		UART_transmit_byte(' ');
-
-		i = 0;
+		i2c_loop();
+		UART_transmit_idle(' ');
+		if (g_data_buffer[1])
+			UART_transmitnbr(*g_accelX);
+		else
+			UART_transmit_idle(' ');
 		Nop();
 	}
 }

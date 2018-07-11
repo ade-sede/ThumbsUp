@@ -12,6 +12,7 @@
 #include <p32xxxx.h>
 #include <xc.h>
 #include <sys/attribs.h>
+#include <stdio.h>
 
 typedef unsigned char u8;
 typedef signed char s8;
@@ -31,6 +32,8 @@ typedef signed long s32;
 #define ACCEL_XOUT_H 0x3B
 #define ACCEL_YOUT_L 0x3E
 #define ACCEL_YOUT_H 0x3D
+#define ACCEL_ZOUT_L 0x40
+#define ACCEL_ZOUT_H 0x3F
 #define WHO_AM_I 0x75
 #define PWR_MGMT_1 0x6B
 #define SLAVE_ADDR 0x68
@@ -48,6 +51,7 @@ typedef signed long s32;
 #define UART_BAUD_RATE ((PBCLK/(115200*16)-1))
 
 void UART_transmit_idle(u8 byte);
+void UART_transmitnbr(u8 data);
 
 #endif	/* HEADER_H */
 

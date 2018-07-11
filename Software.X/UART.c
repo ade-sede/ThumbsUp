@@ -38,3 +38,15 @@ void UART2_init(){
     U2STAbits.UTXEN = 1; // Transmition enabled.
     U2MODEbits.ON = 1;
 }
+
+void UART_transmitnbr(u8 data) {
+	if (data == 0)
+		UART_transmit_idle('0');
+	if (data <= 9 && data > 0)
+		UART_transmit_idle(data + 48);
+	else if (data > 0) {
+		UART_transmitnbr(data / 10);
+		UART_transmit_idle(data % 10 + 48);
+	}
+}
+
