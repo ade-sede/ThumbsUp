@@ -1,3 +1,5 @@
 build/default/debug/uart.o:  \
 uart.c  \
-header.h 
+header.h  \
+uart.h  \
+clock.h 

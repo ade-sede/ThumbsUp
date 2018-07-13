@@ -5,6 +5,10 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>header.h</itemPath>
+      <itemPath>MPU9150.h</itemPath>
+      <itemPath>clock.h</itemPath>
+      <itemPath>i2c.h</itemPath>
+      <itemPath>uart.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -15,12 +19,15 @@
                    projectFiles="true">
       <itemPath>main.c</itemPath>
       <itemPath>uart.c</itemPath>
+      <itemPath>i2c_utils.c</itemPath>
+      <itemPath>config.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>i2c.c</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

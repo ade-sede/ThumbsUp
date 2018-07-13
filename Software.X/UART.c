@@ -1,14 +1,7 @@
 #include "header.h"
+#include "uart.h"
 
-// DEVCFG2
-#pragma config FPLLIDIV = DIV_2         // PLL Input Divider (2x Divider)
-#pragma config FPLLMUL = MUL_20         // PLL Multiplier (20x Multiplier)
-#pragma config FPLLODIV = DIV_1         // System PLL Output Clock Divider (PLL Divide by 1)
-#pragma config FPBDIV = DIV_2           // Peripheral Clock Divisor (Pb_Clk is Sys_Clk/2)
 
-// DEVCFG1
-#pragma config FNOSC = FRCPLL           // Oscillator Selection Bits (Primary Osc w/PLL (XT+,HS+,EC+PLL))
-#pragma config POSCMOD = HS             // Primary Oscillator Configuration (HS osc mode)// DEVCFG2
 
 
 void UART_transmit_byte(u8 byte) {
@@ -40,6 +33,10 @@ void UART2_init(){
 }
 
 void UART_transmitnbr(u16 data) {
+	if (data < 0) {
+		UART_transmit_idle('-');
+		data = -data;
+	}
 	if (data == 0)
 		UART_transmit_idle('0');
 	if (data <= 9 && data > 0)
