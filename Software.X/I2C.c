@@ -23,6 +23,11 @@ void i2c_read(u8 source, u8 *dest) {
  * This function retrieves all the accelerometers measurement and stores
  * them in the corresponding sturcture
  */
+void i2c_encode(struct s_data *data) {
+	data->accelX = (s16)(data->accelX_HIGH << 8 | data->accelX_LOW);
+	data->accelY = (s16)(data->accelY_HIGH << 8 | data->accelY_LOW);
+	data->accelZ = (s16)(data->accelZ_HIGH << 8 | data->accelZ_LOW);
+}
 
 void i2c_read_accel(struct s_data *data) {
 	i2c_read(ACCEL_XOUT_L, &data->accelX_LOW);
@@ -38,15 +43,6 @@ void i2c_read_fifo(struct s_fifo *fifo) {
 	i2c_read(FIFO_COUNTL, &fifo->fifo_count_l);
 	i2c_read(FIFO_R_W, &fifo->fifo_rw);
 }
-
-//void i2c_map(struct s_data *data, void (*f)(u8 source,u8 *dest)){
-//	f(ACCEL_XOUT_L, &data->accelX_LOW);
-//	f(ACCEL_XOUT_H, &data->accelX_HIGH);
-//	f(ACCEL_YOUT_L, &data->accelY_LOW);
-//	f(ACCEL_YOUT_H, &data->accelY_HIGH);
-//	f(ACCEL_ZOUT_L, &data->accelZ_LOW);
-//	f(ACCEL_ZOUT_H, &data->accelZ_HIGH);
-//}
 
 void i2c_map(struct s_data *data, void (*f)(u8 *elem)){
 	f(&data->accelX_LOW);
@@ -67,9 +63,8 @@ void i2c_subtract(struct s_data *buff, struct s_data *data){
 }
 
 void i2c_process_data(struct s_data *buff, struct s_data *data) {
-	//i2c_map(data, &i2c_read);
 	i2c_read_accel(data);
-	i2c_subtract(buff, data);
-	//i2c_map(data, &i2c_filter);
+	//i2c_subtract(buff, data);
+	i2c_process_data(buff, data);
 	i2c_read_accel(buff);
 }

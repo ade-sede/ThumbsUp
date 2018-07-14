@@ -12,7 +12,6 @@
 
 int main(void) {
 	u8 buffer[4096];
-	u8 i = 0;
 	struct s_data data;
 	struct s_data buff;
 
@@ -28,12 +27,6 @@ int main(void) {
 	UART2_init();
 	UART_putstr("X                  Y                   Z"NEWLINE);
 	while (1) {
-//		if (i == 1)
-//			i2c_process_data(&buff, &data);
-//		else {
-//			i2c_read_accel(&buff);
-//			i = 1;
-//		}
 		i2c_read_accel(&data);
 		sprintf(buffer, "%d              %d                %d"NEWLINE,	(s16)((data.accelX_HIGH << 8) | data.accelX_LOW),\
 																		(s16)((data.accelY_HIGH << 8) | data.accelY_LOW),\

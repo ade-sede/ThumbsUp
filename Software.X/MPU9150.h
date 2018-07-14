@@ -21,6 +21,9 @@ struct s_data {
 	u8 accelY_HIGH;
 	u8 accelZ_LOW;
 	u8 accelZ_HIGH;
+	s16 accelX;
+	s16 accelY;
+	s16 accelZ;
 };
 
 struct s_fifo {
