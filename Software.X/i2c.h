@@ -23,13 +23,15 @@
 #define ACK 0
 
 /* Prototypes */
-inline void i2c_init();
-inline void i2c_read(u8 source, u8 *dest);
-inline void i2c_loop(struct s_data *);
-inline void i2c_config_and_start(u8 brg);
-inline void i2c_master_send(u8 data);
-inline void i2c_master_receive(u8 *dest);
-inline void i2c_master_answer(u8 value);
+void i2c_read(u8 source, u8 *dest);
+void i2c_read_accel(struct s_data *);
+void i2c_read_fifo(struct s_fifo *);
+void i2c_config_register(u8 register_name, u8 bit_config);
+void i2c_config_and_start(u8 brg);
+void i2c_master_send(u8 data);
+void i2c_master_receive(u8 *dest);
+void i2c_master_answer(u8 value);
+void i2c_process_data(struct s_data *buff, struct s_data *data);
 
 
 #endif	/* I2C_H */

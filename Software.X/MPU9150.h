@@ -23,8 +23,15 @@ struct s_data {
 	u8 accelZ_HIGH;
 };
 
+struct s_fifo {
+	u8 fifo_rw;
+	u8 fifo_count_h;
+	u8 fifo_count_l;
+};
+
 /* Local values we use */
 #define PWR_MGMT_ON_NO_TEMP 0b00001000  /* Enables power management, disable temp. sensor */
+#define ACCEL_FIFO_EN 0b00001000/* Accel data store in fifo register */
 
 
 
@@ -38,6 +45,10 @@ struct s_data {
 #define WHO_AM_I 0x75
 #define PWR_MGMT_1 0x6B
 #define SLAVE_ADDR 0x68
+#define FIFO_EN 0x23
+#define FIFO_COUNTH 0x72
+#define FIFO_COUNTL 0x73
+#define FIFO_R_W 0x74
 
 #endif	/* MPU9150_H */
 
