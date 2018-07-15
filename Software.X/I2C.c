@@ -45,26 +45,13 @@ void i2c_read_fifo(struct s_fifo *fifo) {
 }
 
 void i2c_map(struct s_data *data, void (*f)(u8 *elem)){
-	f(&data->accelX_LOW);
-	f(&data->accelX_HIGH);
-	f(&data->accelY_LOW);
-	f(&data->accelY_HIGH);
-	f(&data->accelZ_LOW);
-	f(&data->accelZ_HIGH);
-}
-
-void i2c_subtract(struct s_data *buff, struct s_data *data){
-	data->accelX_LOW = buff->accelX_LOW - data->accelX_LOW;
-	data->accelX_HIGH = buff->accelX_HIGH - data->accelX_HIGH;
-	data->accelY_LOW = buff->accelY_LOW - data->accelY_LOW;
-	data->accelY_HIGH = buff->accelY_HIGH - data->accelY_HIGH;
-	data->accelZ_LOW = buff->accelZ_LOW - data->accelZ_LOW;
-	data->accelZ_HIGH = buff->accelZ_HIGH - data->accelZ_HIGH;
+	f(&data->accelX);
+	f(&data->accelY);
+	f(&data->accelZ);
 }
 
 void i2c_process_data(struct s_data *buff, struct s_data *data) {
 	i2c_read_accel(data);
-	//i2c_subtract(buff, data);
 	i2c_process_data(buff, data);
 	i2c_read_accel(buff);
 }
