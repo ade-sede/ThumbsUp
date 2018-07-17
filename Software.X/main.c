@@ -9,6 +9,7 @@
 #include "MPU9150.h"
 #include "i2c.h"
 #include "uart.h"
+#include "clock.h"
 
 int main(void) {
 	u8 buffer[4096];

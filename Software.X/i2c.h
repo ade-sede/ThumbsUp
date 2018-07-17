@@ -26,7 +26,6 @@
 void i2c_read(u8 source, u8 *dest);
 void i2c_read_accel(struct s_data *);
 void i2c_read_fifo(struct s_fifo *);
-void i2c_config_register(u8 register_name, u8 bit_config);
 void i2c_config_and_start(u8 brg);
 void i2c_master_send(u8 data);
 void i2c_master_receive(u8 *dest);

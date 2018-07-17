@@ -53,5 +53,7 @@ struct s_fifo {
 #define FIFO_COUNTL 0x73
 #define FIFO_R_W 0x74
 
+void config_MPU9150_register(u8 register_name, u8 bit_config);
+
 #endif	/* MPU9150_H */
 
