@@ -2,7 +2,7 @@
 #include "header.h"
 #include "MPU9150.h"
 
-void i2c_read(u8 source, u8 *dest) {
+void MPU9150_read(u8 source, u8 *dest) {
 	I2C1CONbits.SEN = 1; // Master start
 	while (I2C1CONbits.SEN == 1)
 		Nop();
@@ -21,42 +21,32 @@ void i2c_read(u8 source, u8 *dest) {
 
 /*
  * This function retrieves all the accelerometers measurement and stores
- * them in the corresponding sturcture
+ * them in the corresponding structure
  */
-void i2c_encode(struct s_data *data) {
+
+void read_accel(struct s_data *data) {
+	u8 accelX_LOW;
+	u8 accelX_HIGH;
+	u8 accelY_LOW;
+	u8 accelY_HIGH;
+	u8 accelZ_LOW;
+	u8 accelZ_HIGH;
+	
+	MPU9150_read(ACCEL_XOUT_L, &accelX_LOW);
+	MPU9150_read(ACCEL_XOUT_H, &accelX_HIGH);
+	MPU9150_read(ACCEL_YOUT_L, &accelY_LOW);
+	MPU9150_read(ACCEL_YOUT_H, &accelY_HIGH);
+	MPU9150_read(ACCEL_ZOUT_L, &accelZ_LOW);
+	MPU9150_read(ACCEL_ZOUT_H, &accelZ_HIGH);
+
 	data->accelX = (s16)(data->accelX_HIGH << 8 | data->accelX_LOW);
 	data->accelY = (s16)(data->accelY_HIGH << 8 | data->accelY_LOW);
 	data->accelZ = (s16)(data->accelZ_HIGH << 8 | data->accelZ_LOW);
 }
 
-void i2c_read_accel(struct s_data *data) {
-	i2c_read(ACCEL_XOUT_L, &data->accelX_LOW);
-	i2c_read(ACCEL_XOUT_H, &data->accelX_HIGH);
-	i2c_read(ACCEL_YOUT_L, &data->accelY_LOW);
-	i2c_read(ACCEL_YOUT_H, &data->accelY_HIGH);
-	i2c_read(ACCEL_ZOUT_L, &data->accelZ_LOW);
-	i2c_read(ACCEL_ZOUT_H, &data->accelZ_HIGH);
-}
+/* Fonction used to update any register of the MPU9150 */
 
-void i2c_read_fifo(struct s_fifo *fifo) {
-	i2c_read(FIFO_COUNTH, &fifo->fifo_count_h);
-	i2c_read(FIFO_COUNTL, &fifo->fifo_count_l);
-	i2c_read(FIFO_R_W, &fifo->fifo_rw);
-}
-
-void i2c_map(struct s_data *data, void (*f)(u8 *elem)){
-	f(&data->accelX);
-	f(&data->accelY);
-	f(&data->accelZ);
-}
-
-void i2c_process_data(struct s_data *buff, struct s_data *data) {
-	i2c_read_accel(data);
-	i2c_process_data(buff, data);
-	i2c_read_accel(buff);
-}
-
-void config_MPU9150_register(u8 register_name, u8 bit_config) {
+void MPU9150_write(u8 register_name, u8 bit_config) {
 	I2C1CONbits.SEN = 1; // Master start
 	while (I2C1CONbits.SEN == 1)
 		Nop();
