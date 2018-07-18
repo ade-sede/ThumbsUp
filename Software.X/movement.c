@@ -6,6 +6,36 @@ extern s16 g_xbias;
 extern s16 g_ybias;
 extern s16 g_zbias;
 
+/*
+** If the accel is null during too long, we consider velocity is null
+*/
+static void	check_no_movement(struct s_accel *accel, struct s_velocity *velocity) {
+	static u32 countX = 0;
+	static u32 countY = 0;
+	static u32 countZ = 0;
+
+	if (accel[CURR].accelX == 0)
+		++countX;
+	if (countX >= NO_ACCEL_TRESHOLD) {
+		velocity[CURR].velocityX = 0;
+		velocity[PREV].velocityX = 0;
+	}
+	 
+	if (accel[CURR].accelY == 0)
+		++countY;
+	if (countY >= NO_ACCEL_TRESHOLD) {
+		velocity[CURR].velocityY = 0;
+		velocity[PREV].velocityY = 0;
+	}
+	 
+	if (accel[CURR].accelZ == 0)
+		++countZ;
+	if (countZ >= NO_ACCEL_TRESHOLD) {
+		velocity[CURR].velocityZ = 0;
+		velocity[PREV].velocityZ = 0;
+	}
+}
+
 /* 
 ** This function is meant to:
 ** 1) Compute any movement
@@ -49,14 +79,24 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	** Everything beetwen window _low and window_high is considered to be 0.
 	** Window_low is a negative integer, window_high a positive one
 	*/
-
 	if (accel[CURR].accelX <= WINDOW_HIGH || accel[CURR].accelX >= WINDOW_LOW)
-		accel[CURR].accelX = 0;
+e 		accel[CURR].accelX = 0;
 	if (accel[CURR].accelY <= WINDOW_HIGH || accel[CURR].accelY >= WINDOW_LOW)
 		accel[CURR].accelY = 0;
 	if (accel[CURR].accelZ <= WINDOW_HIGH || accel[CURR].accelZ >= WINDOW_LOW)
 		accel[CURR].accelZ = 0;
+
+	/* Integration */
+	velocity[CURR].velocityX = velocity[PREV].velocityX + accel[CURR].accelX;
+	velocity[CURR].velocityY = velocity[PREV].velocityY + accel[CURR].accelY;
+	velocity[CURR].velocityZ = velocity[PREV].velocityZ + accel[CURR].accelZ;
 															
+	/*
+	** Movement = Velocity * time, but as we sample at a regular time we can
+	** consider time to be 1. Thus :
+	** Movement = Velocity
+    */
+
 	/* Curr becomes prev */
 	memcpy(&velocity[PREVIOUS], &velocity[CURRENT], sizeof(struct s_velocity));
 	memcpy(&accel[PREVIOUS], &accel[CURRENT], sizeof(struct s_accel));
