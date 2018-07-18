@@ -87,9 +87,9 @@ e 		accel[CURR].accelX = 0;
 		accel[CURR].accelZ = 0;
 
 	/* Integration */
-	velocity[CURR].velocityX = velocity[PREV].velocityX + accel[CURR].accelX;
-	velocity[CURR].velocityY = velocity[PREV].velocityY + accel[CURR].accelY;
-	velocity[CURR].velocityZ = velocity[PREV].velocityZ + accel[CURR].accelZ;
+	velocity[CURR].velocityX = velocity[PREV].velocityX + accel[PREV].accelX + ((accel[CURR].accelX - accel[PREV].accelX) / 2);
+	velocity[CURR].velocityY = velocity[PREV].velocityY + accel[PREV].accelY + ((accel[CURR].accelY - accel[PREV].accelY) / 2);
+	velocity[CURR].velocityZ = velocity[PREV].velocityZ + accel[PREV].accelZ + ((accel[CURR].accelZ - accel[PREV].accelZ) / 2);
 															
 	/*
 	** Movement = Velocity * time, but as we sample at a regular time we can
@@ -97,6 +97,7 @@ e 		accel[CURR].accelX = 0;
 	** Movement = Velocity
     */
 
+	check_no_movement(accel, velocity)
 	/* Curr becomes prev */
 	memcpy(&velocity[PREVIOUS], &velocity[CURRENT], sizeof(struct s_velocity));
 	memcpy(&accel[PREVIOUS], &accel[CURRENT], sizeof(struct s_accel));
