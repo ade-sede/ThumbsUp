@@ -77,7 +77,7 @@ void calibration(void) {
 	u16 count = 0;
 	struct s_accel sample;
 
-	while (count < CALIBRATION_SAMPLE_NUMBER) {
+	while (count <= CALIBRATION_SAMPLE_NUMBER) {
 		memset(&sample, 0, sizeof(struct s_accel));
 		read_accel(&sample);
 		g_xbias += sample.accelX;

@@ -32,7 +32,7 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	struct s_accel sample;
 	 
 	/* SAMPLING */
-	while (count < AVERAGE_SAMPLE_NUMBER) {
+	while (count <= AVERAGE_SAMPLE_NUMBER) {
 		memset(&sample, 0, sizeof(struct s_velocity));
 		read_accel(&sample);
 		accel[CURR].accelX += sample.accelX;
@@ -44,6 +44,19 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	accel[CURR].accelY /= AVERAGE_SAMPLE_NUMBER;
 	accel[CURR].accelZ /= AVERAGE_SAMPLE_NUMBER;
 
+	/*
+	** Interpret acceleration close to 0, as if they were 0
+	** Everything beetwen window _low and window_high is considered to be 0.
+	** Window_low is a negative integer, window_high a positive one
+	*/
+
+	if (accel[CURR].accelX <= WINDOW_HIGH || accel[CURR].accelX >= WINDOW_LOW)
+		accel[CURR].accelX = 0;
+	if (accel[CURR].accelY <= WINDOW_HIGH || accel[CURR].accelY >= WINDOW_LOW)
+		accel[CURR].accelY = 0;
+	if (accel[CURR].accelZ <= WINDOW_HIGH || accel[CURR].accelZ >= WINDOW_LOW)
+		accel[CURR].accelZ = 0;
+															
 	/* Curr becomes prev */
 	memcpy(&velocity[PREVIOUS], &velocity[CURRENT], sizeof(struct s_velocity));
 	memcpy(&accel[PREVIOUS], &accel[CURRENT], sizeof(struct s_accel));
