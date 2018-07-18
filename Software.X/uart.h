@@ -18,6 +18,7 @@
 
 void UART_transmit_idle(u8 byte);
 void UART_transmitnbr(u16 data);
+void UART_putstr(u8 *str);
 
 #endif	/* UART_H */
 

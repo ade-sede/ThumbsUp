@@ -1,9 +1,6 @@
 #include "header.h"
 #include "uart.h"
 
-
-
-
 void UART_transmit_byte(u8 byte) {
     while (U2STAbits.UTXBF); // If transmit buffer is not full
     U2TXREG = byte; // Fill transmit buffer;
@@ -13,7 +10,7 @@ void UART_idle_after_transmit() {
     while (U2STAbits.TRMT != 1); // Transmit idle
 }
 
-u8 UART_RECEIVE_byte(){
+u8 UART_receive_byte(){
     if (U2STAbits.URXDA)
         return(U2RXREG);
 }
@@ -50,7 +47,7 @@ void UART_transmitnbr(u16 data) {
 void UART_putstr(u8 *str) {
 	while(*str){
 		UART_transmit_byte(*str);
-		str++;
+		++str;
 	}
 	UART_idle_after_transmit();
 }

@@ -12,6 +12,8 @@
 # include <p32xxxx.h>
 # include <xc.h>
 # include <sys/attribs.h>
+
+/* Extraneous includes for io libraries, used for debug */
 # include <stdio.h>
 # include <string.h>
 # include <stdlib.h>
