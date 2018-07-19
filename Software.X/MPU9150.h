@@ -10,16 +10,16 @@
  */
 
 struct s_accel {
-	s16 accelX;
-	s16 accelY;
-	s16 accelZ;
+	s32 accelX;
+	s32 accelY;
+	s32 accelZ;
 };
 
 struct s_velocity {
 	s32 velocityX;
 	s32 velocityY;
 	s32 velocityZ;
-}
+};
 
  /*
   * Those variables represent the acceleration present on each axis, in a no-move condition 
@@ -27,9 +27,9 @@ struct s_velocity {
   * so that it is accurate.
   */
 
-s16	g_xbias;
-s16 g_ybias;
-s16 g_zbias;
+s32	g_xbias;
+s32 g_ybias;
+s32 g_zbias;
 
 /* Config bits */
 # define PWR_MGMT_ON_NO_TEMP 0b1000  /* Goes to PWR_MGMT_1. Disable temp sensor */
@@ -61,7 +61,7 @@ s16 g_zbias;
 
 void MPU9150_write(u8 register_name, u8 bit_config);
 void MPU9150_read(u8 source, u8 *dest);
-void read_accel(struct s_data *);
+void read_accel(struct s_accel *accel);
 void calibration(void);
 
 #endif	/* MPU9150_H */

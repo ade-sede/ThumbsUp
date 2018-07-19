@@ -16,6 +16,7 @@
 #define UART_BAUD_RATE ((PBCLK /(115200 * 16) - 1))
 #define NEWLINE "\r\n"
 
+void UART2_init(u32 BRG);
 void UART_transmit_idle(u8 byte);
 void UART_transmitnbr(u16 data);
 void UART_putstr(u8 *str);

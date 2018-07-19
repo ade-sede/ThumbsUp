@@ -2,9 +2,9 @@
 #include "MPU9150.h"
 #include "movement.h"
 
-extern s16 g_xbias;
-extern s16 g_ybias;
-extern s16 g_zbias;
+extern s32 g_xbias;
+extern s32 g_ybias;
+extern s32 g_zbias;
 
 /*
 ** If the accel is null during too long, we consider velocity is null
@@ -68,36 +68,52 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 		accel[CURR].accelX += sample.accelX;
 		accel[CURR].accelY += sample.accelY;
 		accel[CURR].accelZ += sample.accelZ;
+		++count;
 	}
 	/* Retrieving average */
 	accel[CURR].accelX /= AVERAGE_SAMPLE_NUMBER;
 	accel[CURR].accelY /= AVERAGE_SAMPLE_NUMBER;
 	accel[CURR].accelZ /= AVERAGE_SAMPLE_NUMBER;
 
+	/* Remove priously calibrated values */
+	accel[CURR].accelX -= g_xbias;
+	accel[CURR].accelY -= g_ybias;
+	accel[CURR].accelZ -= g_zbias;
+	
 	/*
 	** Interpret acceleration close to 0, as if they were 0
 	** Everything beetwen window _low and window_high is considered to be 0.
 	** Window_low is a negative integer, window_high a positive one
 	*/
-	if (accel[CURR].accelX <= WINDOW_HIGH || accel[CURR].accelX >= WINDOW_LOW)
-e 		accel[CURR].accelX = 0;
-	if (accel[CURR].accelY <= WINDOW_HIGH || accel[CURR].accelY >= WINDOW_LOW)
-		accel[CURR].accelY = 0;
-	if (accel[CURR].accelZ <= WINDOW_HIGH || accel[CURR].accelZ >= WINDOW_LOW)
-		accel[CURR].accelZ = 0;
+	UART_putstr("Acceleration before filter\n\r");
+	print_accel(accel[CURR]);
+	
+	if (INVALID_VALUE(accel[CURR].accelX))
+ 		accel[CURR].accelX = 0;
+	if (INVALID_VALUE(accel[CURR].accelY))
+ 		accel[CURR].accelY = 0;
+	if (INVALID_VALUE(accel[CURR].accelZ))
+ 		accel[CURR].accelZ = 0;
+	
 
+	UART_putstr("Acceleration after filter\n\r");
+	print_accel(accel[CURR]);
 	/* Integration */
 	velocity[CURR].velocityX = velocity[PREV].velocityX + accel[PREV].accelX + ((accel[CURR].accelX - accel[PREV].accelX) / 2);
 	velocity[CURR].velocityY = velocity[PREV].velocityY + accel[PREV].accelY + ((accel[CURR].accelY - accel[PREV].accelY) / 2);
 	velocity[CURR].velocityZ = velocity[PREV].velocityZ + accel[PREV].accelZ + ((accel[CURR].accelZ - accel[PREV].accelZ) / 2);
-															
+	
 	/*
 	** Movement = Velocity * time, but as we sample at a regular time we can
 	** consider time to be 1. Thus :
 	** Movement = Velocity
     */
 
-	check_no_movement(accel, velocity)
+	/* Output */
+	UART_putstr("Velocity\n\r");
+	print_velocity(velocity[CURR]);
+	
+	check_no_movement(accel, velocity);
 	/* Curr becomes prev */
 	memcpy(&velocity[PREVIOUS], &velocity[CURRENT], sizeof(struct s_velocity));
 	memcpy(&accel[PREVIOUS], &accel[CURRENT], sizeof(struct s_accel));

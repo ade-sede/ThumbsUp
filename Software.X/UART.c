@@ -20,8 +20,8 @@ void UART_transmit_idle(u8 byte) {
     UART_idle_after_transmit();
 }
 
-void UART2_init(){
-    U2BRG = UART_BAUD_RATE; // Target baude rate = 115k
+void UART2_init(u32 BRG){
+    U2BRG = BRG; // Target baude rate = 115k
     U2MODEbits.PDSEL = 0; // 8 bit data, no parity
     U2MODEbits.STSEL = 0; // 1 stop bits
     U2STAbits.URXEN = 1; // reception enable

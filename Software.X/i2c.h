@@ -27,7 +27,6 @@ void i2c_config_and_start(u8 brg);
 void i2c_master_send(u8 data);
 void i2c_master_receive(u8 *dest);
 void i2c_master_answer(u8 value);
-void i2c_process_data(struct s_data *buff, struct s_data *data);
 
 
 #endif	/* I2C_H */

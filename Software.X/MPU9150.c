@@ -1,10 +1,12 @@
 #include "i2c.h"
 #include "header.h"
 #include "MPU9150.h"
+#include "uart.h"
+#include "debug.h"
 
-extern s16 g_xbias;
-extern s16 g_ybias;
-extern s16 g_zbias;
+extern s32 g_xbias;
+extern s32 g_ybias;
+extern s32 g_zbias;
 
 /*
 ** Request a read from register addr source, stores
@@ -48,9 +50,9 @@ void read_accel(struct s_accel *accel) {
 	MPU9150_read(ACCEL_ZOUT_L, &accelZ_LOW);
 	MPU9150_read(ACCEL_ZOUT_H, &accelZ_HIGH);
 
-	accel->accelX = (s16)(accel->accelX_HIGH << 8 | accel->accelX_LOW);
-	accel->accelY = (s16)(accel->accelY_HIGH << 8 | accel->accelY_LOW);
-	accel->accelZ = (s16)(accel->accelZ_HIGH << 8 | accel->accelZ_LOW);
+	accel->accelX = (s16)(accelX_HIGH << 8 | accelX_LOW);
+	accel->accelY = (s16)(accelY_HIGH << 8 | accelY_LOW);
+	accel->accelZ = (s16)(accelZ_HIGH << 8 | accelZ_LOW);
 }
 
 /* Fonction used to update any register of the MPU9150 */
@@ -61,7 +63,7 @@ void MPU9150_write(u8 register_addr, u8 value) {
 		Nop();
 	i2c_master_send(ADDR_WRITE_MODE(SLAVE_ADDR));
 	i2c_master_send(register_addr);
-	i2c_master_send(bit_config);
+	i2c_master_send(value);
 	I2C1CONbits.PEN = 1; // Master stop
 	while (I2C1CONbits.PEN == 1)
 		Nop();
@@ -83,9 +85,17 @@ void calibration(void) {
 		g_xbias += sample.accelX;
 		g_ybias += sample.accelY;
 		g_zbias += sample.accelZ;
+		++count;
+		//print_accel(sample);
 	}
 
 	g_xbias /= CALIBRATION_SAMPLE_NUMBER;
 	g_ybias /= CALIBRATION_SAMPLE_NUMBER;
 	g_zbias /= CALIBRATION_SAMPLE_NUMBER;
+	
+	
+	char buff[4096];
+	
+	sprintf(buff, "%d	%d	%d\n\r", g_xbias, g_ybias, g_zbias);
+	UART_putstr(buff);
 }
