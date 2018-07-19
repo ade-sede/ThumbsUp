@@ -9,6 +9,7 @@
       <itemPath>clock.h</itemPath>
       <itemPath>i2c.h</itemPath>
       <itemPath>uart.h</itemPath>
+      <itemPath>movement.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -22,6 +23,9 @@
       <itemPath>i2c_utils.c</itemPath>
       <itemPath>config.c</itemPath>
       <itemPath>i2c.c</itemPath>
+      <itemPath>MPU9150.c</itemPath>
+      <itemPath>UART.c</itemPath>
+      <itemPath>movement.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -39,7 +43,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD3PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>1.34</languageToolchainVersion>
+        <languageToolchainVersion>1.44</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <compileType>
@@ -54,6 +58,8 @@
           <parseOnProdLoad>false</parseOnProdLoad>
           <alternateLoadableFile></alternateLoadableFile>
         </loading>
+        <subordinates>
+        </subordinates>
       </compileType>
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
