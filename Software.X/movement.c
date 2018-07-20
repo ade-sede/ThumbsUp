@@ -85,7 +85,7 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	** Everything beetwen window _low and window_high is considered to be 0.
 	** Window_low is a negative integer, window_high a positive one
 	*/
-	UART_putstr("Acceleration before filter\n\r");
+	uart2_putstr("Acceleration before filter\n\r");
 	print_accel(accel[CURR]);
 	
 	if (INVALID_VALUE(accel[CURR].accelX))
@@ -96,7 +96,7 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
  		accel[CURR].accelZ = 0;
 	
 
-	UART_putstr("Acceleration after filter\n\r");
+	uart2_putstr("Acceleration after filter\n\r");
 	print_accel(accel[CURR]);
 	/* Integration */
 	velocity[CURR].velocityX = velocity[PREV].velocityX + accel[PREV].accelX + ((accel[CURR].accelX - accel[PREV].accelX) / 2);
@@ -110,7 +110,7 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
     */
 
 	/* Output */
-	UART_putstr("Velocity\n\r");
+	uart2_putstr("Velocity\n\r");
 	print_velocity(velocity[CURR]);
 	
 	check_no_movement(accel, velocity);

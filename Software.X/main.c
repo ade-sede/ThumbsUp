@@ -35,7 +35,7 @@ int main(void) {
 	u8 buff[] = "Start\n\r";	
 	init();
 	
-	UART_putstr(buff);
+	uart2_putstr(buff);
 	while (1) {
 
 		

@@ -3,8 +3,8 @@
 #include "uart.h"
 
 void uart1_transmit_byte(u8 byte) {
-    while (U1gceSTAbits.UTXBF); // If transmit buffer is not full
-    U1U1gceTXREG = byte; // Fill transmit buffer;
+    while (U1STAbits.UTXBF); // If transmit buffer is not full
+    U1TXREG = byte; // Fill transmit buffer;
 }
 
 void uart1_idle_after_transmit() {

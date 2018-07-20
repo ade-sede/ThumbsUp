@@ -97,5 +97,5 @@ void calibration(void) {
 	char buff[4096];
 	
 	sprintf(buff, "%d	%d	%d\n\r", g_xbias, g_ybias, g_zbias);
-	UART_putstr(buff);
+	uart2_putstr(buff);
 }
