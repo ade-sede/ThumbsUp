@@ -17,7 +17,7 @@ void	init(void) {
 	LATFbits.LATF1 = 0; /* Turn off led on the test board */
 
 	i2c_config_and_start((u8)I2CBRG);	/* After this line i2c module is running with baud rate I2CBRG */
-	UART2_init((u32)UART_BAUD_RATE);
+	uart2_init((u32)UART2_BAUD_RATE);
 
 
 	MPU9150_write(PWR_MGMT_1, PWR_MGMT_ON_NO_TEMP);  /* Initialisation Power management -> no temp sensor */

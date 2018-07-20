@@ -13,13 +13,25 @@
 #endif
 #define SQR_MULT 10
 
-#define UART_BAUD_RATE ((PBCLK /(115200 * 16) - 1))
+#define UART2_BAUD_RATE ((PBCLK /(115200 * 16) - 1))
 #define NEWLINE "\r\n"
 
-void UART2_init(u32 BRG);
-void UART_transmit_idle(u8 byte);
-void UART_transmitnbr(u16 data);
-void UART_putstr(u8 *str);
+
+void uart2_transmit_byte(u8 byte);
+void uart2_idle_after_transmit();
+u8 uart2_receive_byte();
+void uart2_transmit_idle(u8 byte);
+void uart2_init(u32 BRG);
+void uart2_transmitnbr(u16 data);
+void uart2_putstr(u8 *str);
+
+void uart1_transmit_byte(u8 byte);
+void uart1_idle_after_transmit();
+u8 uart1_receive_byte();
+void uart1_transmit_idle(u8 byte);
+void uart1_init(u32 BRG);
+void uart1_transmitnbr(u16 data);
+void uart1_putstr(u8 *str);
 
 #endif	/* UART_H */
 
