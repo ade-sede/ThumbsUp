@@ -1,0 +1,10 @@
+SN,<string> -> Changes name
++ -> echo mode
+$$$ -> command mode
+--- -> exit command mode
+R,1 -> reboot
+SH,<value> -> Change HID flag register to value -> value = 0220 for mouse
+S~,<value> -> Change prolfile -> 0 for SPP, 6 for HID. reboot is needed 
+SF,1 -> reset to factory default
+S~,<string> -> Change serialized friendly name of the device
+ST,<value> -> 1 <= value <= 252 set command mode timeout to value
