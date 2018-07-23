@@ -52,3 +52,4 @@ void uart1_putstr(u8 *str) {
 	}
 	uart1_idle_after_transmit();
 }
+
