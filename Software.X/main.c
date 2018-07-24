@@ -40,9 +40,9 @@ int main(void) {
 	uart2_putstr(buff);
 	while (1) {
 
-//		test_run();
+		//test_run();
 		movement(accel, velocity);
-		//send_movement(velocity);
+		send_movement(velocity[CURRENT]);
 		Nop();
 	}
 }
