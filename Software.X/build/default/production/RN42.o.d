@@ -3,4 +3,5 @@ RN42.c  \
 header.h  \
 RN42.h  \
 uart.h  \
-clock.h 
+clock.h  \
+ MPU9150.h 

@@ -30,21 +30,6 @@ void uart1_init(u32 BRG){
     U1MODEbits.ON = 1;
 }
 
-void uart1_transmitnbr(u16 data) {
-	if (data < 0) {
-		uart1_transmit_idle('-');
-		data = -data;
-	}
-	if (data == 0)
-		uart1_transmit_idle('0');
-	if (data <= 9 && data > 0)
-		uart1_transmit_idle(data + 48);
-	else if (data > 0) {
-		uart1_transmitnbr(data / 10);
-		uart1_transmit_idle(data % 10 + 48);
-	}
-}
-
 void uart1_putstr(u8 *str) {
 	while(*str){
 		uart1_transmit_byte(*str);

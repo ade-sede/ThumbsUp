@@ -29,21 +29,6 @@ void uart2_init(u32 BRG){
     U2MODEbits.ON = 1;
 }
 
-void uart2_transmitnbr(u16 data) {
-	if (data < 0) {
-		uart2_transmit_idle('-');
-		data = -data;
-	}
-	if (data == 0)
-		uart2_transmit_idle('0');
-	if (data <= 9 && data > 0)
-		uart2_transmit_idle(data + 48);
-	else if (data > 0) {
-		uart2_transmitnbr(data / 10);
-		uart2_transmit_idle(data % 10 + 48);
-	}
-}
-
 void uart2_putstr(u8 *str) {
 	while(*str){
 		uart2_transmit_byte(*str);
