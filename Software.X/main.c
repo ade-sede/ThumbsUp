@@ -17,9 +17,14 @@ void	init(void) {
 	TRISFbits.TRISF1 = 0;	/* Setting up tri-state */
 	LATFbits.LATF1 = 0; /* Turn off led on the test board */
 
-	i2c_config_and_start((u8)I2CBRG);	/* After this line i2c module is running with baud rate I2CBRG */
-	uart2_init((u32)UART2_BAUD_RATE); /* Console debug */
+        uart2_init((u32)UART2_BAUD_RATE); /* Console debug */
 	uart1_init((u32)RN42_BAUD_RATE); /* Bluetooth */
+
+        u8 buff[] = "Start\n\r";
+        Nop();
+       	uart2_putstr(buff);
+        Nop();
+	i2c_config_and_start((u8)I2CBRG);	/* After this line i2c module is running with baud rate I2CBRG */
 
 
 	MPU9150_write(PWR_MGMT_1, PWR_MGMT_ON_NO_TEMP);  /* Initialisation Power management -> no temp sensor */
@@ -34,15 +39,12 @@ int main(void) {
 	memset(velocity, 0, sizeof(struct s_velocity) * 2);
 
 
-	u8 buff[] = "Start\n\r";	
-	init();
-	
-	uart2_putstr(buff);
-	while (1) {
 
-		//test_run();
+
+	init();
+
+	while (1) {
 		movement(accel, velocity);
-		send_movement(velocity[CURRENT]);
 		Nop();
 	}
 }

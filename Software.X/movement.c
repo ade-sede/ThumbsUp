@@ -85,8 +85,8 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	** Everything beetwen window _low and window_high is considered to be 0.
 	** Window_low is a negative integer, window_high a positive one
 	*/
-	//uart2_putstr("Acceleration before filter\n\r");
-	//print_accel(accel[CURR]);
+//	uart2_putstr("Acceleration before filter\n\r");
+//	print_accel(accel[CURR]);
 	
 	if (INVALID_VALUE(accel[CURR].accelX))
  		accel[CURR].accelX = 0;
@@ -96,8 +96,8 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
  		accel[CURR].accelZ = 0;
 	
 
-	//uart2_putstr("Acceleration after filter\n\r");
-	//print_accel(accel[CURR]);
+//	uart2_putstr("Acceleration after filter\n\r");
+//	print_accel(accel[CURR]);
 	/* Integration */
 	velocity[CURR].velocityX = velocity[PREV].velocityX + accel[PREV].accelX + ((accel[CURR].accelX - accel[PREV].accelX) / 2);
 	velocity[CURR].velocityY = velocity[PREV].velocityY + accel[PREV].accelY + ((accel[CURR].accelY - accel[PREV].accelY) / 2);
@@ -110,10 +110,12 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
     */
 
 	/* Output */
-	uart2_putstr("Velocity\n\r");
+	uart2_putstr("Velocity / Movement\n\r");
 	print_velocity(velocity[CURR]);
-	
+
+        send_movement(&velocity[CURRENT]);
 	check_no_movement(accel, velocity);
+        
 	/* Curr becomes prev */
 	memcpy(&velocity[PREVIOUS], &velocity[CURRENT], sizeof(struct s_velocity));
 	memcpy(&accel[PREVIOUS], &accel[CURRENT], sizeof(struct s_accel));

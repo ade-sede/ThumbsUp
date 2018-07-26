@@ -39,7 +39,7 @@ s32 g_zbias;
 ** to compare is only 16 bit long
 */
 
-# define CALIBRATION_SAMPLE_NUMBER 1024 /* Max value is 65335*/
+# define CALIBRATION_SAMPLE_NUMBER 100 /* Max value is 65335*/
 # define AVERAGE_SAMPLE_NUMBER 64 /* Max value is 65335*/
 
 
