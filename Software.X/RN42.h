@@ -6,6 +6,7 @@
 # define UART1_BAUD_RATE RN42_BAUD_RATE
 
 void	test_run(void);
-void	send_movement(struct s_velocity *velocity);
+void	send_report(u8 *report);
+u8		*built_report(u8 button, u32 x_move, u32 y_move);
 
 #endif
