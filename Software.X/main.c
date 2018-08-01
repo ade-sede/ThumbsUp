@@ -15,7 +15,7 @@ s32 g_zbias = 0;
 
 void	init(void) {
 	TRISFbits.TRISF1 = 0;	/* Setting up tri-state */
-	LATFbits.LATF1 = 0;		/* Turn off led on the test board */
+	LATFbits.LATF1 = 0; /* Turn off led on the test board */
 
 	uart2_init((u32)UART2_BAUD_RATE);	/* Console debug */
 	uart1_init((u32)RN42_BAUD_RATE);	/* Bluetooth */
@@ -38,7 +38,7 @@ int main(void) {
 	memset(velocity, 0, sizeof(struct s_velocity) * 2);
 
 	init();
-	set_interrupt();
+	//set_interrupt();
 	while (1) {
 		movement(accel, velocity);
 		Nop();

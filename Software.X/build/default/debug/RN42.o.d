@@ -1,4 +1,4 @@
-build/default/production/RN42.o:  \
+build/default/debug/RN42.o:  \
 RN42.c  \
 header.h  \
 uart.h  \
