@@ -3,20 +3,20 @@
 
 void __ISR (_EXTERNAL_2_VECTOR, IPL6SRS) left_click (void){
 	IFS0bits.INT2IF = 0;
-	LATFbits.LATF1 = 1;
+	//LATFbits.LATF1 = 1;
 	send_report(create_report(1, 0, 0));
 	//LATFbits.LATF1 = 0;
 }
 
 void __ISR (_EXTERNAL_3_VECTOR, IPL6SRS) right_click (void){
 	IFS0bits.INT3IF = 0;
-	LATFbits.LATF1 ^= 1;
+	//LATFbits.LATF1 ^= 1;
 	send_report(create_report(2, 0, 0));
 	//LATFbits.LATF1 = 0;
 }
 
 void __ISR (_TIMER_2_VECTOR, IPL7SRS) led_blink (void){
-	LATFbits.LATF1 ^= 1;
+	//LATFbits.LATF1 ^= 1;
 	IFS0bits.T2IF = 0;
 }
 
