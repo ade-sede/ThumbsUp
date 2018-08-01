@@ -1,6 +1,7 @@
 #include "header.h"
 #include "MPU9150.h"
 #include "movement.h"
+#include "RN42.h"
 
 extern s32 g_xbias;
 extern s32 g_ybias;
@@ -110,11 +111,13 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
     */
 
 	/* Output */
-	uart2_putstr("Velocity / Movement\n\r");
+	
+        uart2_putstr("Velocity / Movement\n\r");
 	print_velocity(velocity[CURR]);
 
 	//build_report(&velocity[CURRENT]);
 	send_report(create_report(0, velocity[CURR].velocityX, velocity[CURR].velocityY));
+        //send_movement(&velocity[CURR]);
 	check_no_movement(accel, velocity);
         
 	/* Curr becomes prev */

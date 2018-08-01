@@ -29,6 +29,7 @@
       <itemPath>uart2.c</itemPath>
       <itemPath>uart1.c</itemPath>
       <itemPath>RN42.c</itemPath>
+      <itemPath>interrupt.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
