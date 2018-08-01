@@ -38,7 +38,7 @@ int main(void) {
 	memset(velocity, 0, sizeof(struct s_velocity) * 2);
 
 	init();
-
+	set_interrupt();
 	while (1) {
 		movement(accel, velocity);
 		Nop();

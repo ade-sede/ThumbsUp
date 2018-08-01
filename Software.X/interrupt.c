@@ -3,19 +3,24 @@
 
 void __ISR (_EXTERNAL_2_VECTOR, IPL6SRS) left_click (void){
 	IFS0bits.INT2IF = 0;
-	LATFbits.LATF1 ^= 1;
+	LATFbits.LATF1 = 1;
 	send_report(create_report(1, 0, 0));
+	LATFbits.LATF1 = 0;
 }
 
 void __ISR (_EXTERNAL_3_VECTOR, IPL6SRS) right_click (void){
-	IFS0bits.INT2IF = 0;
+	IFS0bits.INT3IF = 0;
 	LATFbits.LATF1 ^= 1;
 	send_report(create_report(2, 0, 0));
+	LATFbits.LATF1 = 0;
 }
 
-void set_timer_interrupt() {
-	TRISDbits.TRISD8 = 1;	/* Settimg up tri-state*/
+void __ISR (_TIMER_2_VECTOR, IPL7SRS) led_blink (void){
+	LATFbits.LATF1 ^= 1;
+	IFS0bits.T2IF = 0;
+}
 
+void set_external_interrupt() {
 	// Interrupt Button left click
 	INT2CONbits.INT2EP = 0;
 	IPC1bits.INT2IP = 6;
@@ -28,8 +33,21 @@ void set_timer_interrupt() {
 	IFS0bits.INT3IF = 0;
 	IEC0bits.INT3IE = 1;
 
-	INTCONTbits.MVEC = 1;
-	__builtin_enable_interrupts();
+}
+
+void set_timer() {
+	T2CON = 0;//reset
+	T2CONbits.TCKPS = 0b110; //1:64
+	TMR2 = 0;//set timer 0
+	PR2 = 6250;
 
 	T2CONbits.ON = 1;
+}
+
+void set_interrupt() {
+	set_external_interrupt();
+	set_timer();
+
+	INTCONTbits.MVEC = 1;
+	__builtin_enable_interrupts();
 }

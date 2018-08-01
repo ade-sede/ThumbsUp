@@ -25,5 +25,7 @@ typedef signed short s16;
 typedef unsigned long u32;
 typedef signed long s32;
 
+void	set_interrupt();
+
 #endif	/* HEADER_H */
 
