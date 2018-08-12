@@ -16,8 +16,8 @@ s32 g_zbias = 0;
 void	init(void) {
 	TRISFbits.TRISF1 = 0;	/* Setting up tri-state */
 	TRISDbits.TRISD8 = 1;	// int1
-	   	TRISDbits.TRISD9 = 1;	/* Setting up tri-state int2 input*/
-	TRISDbits.TRISD10 = 1;	/* Setting up tri-state int3 input*/
+	TRISDbits.TRISD9 = 1;	/* Setting up tri-state int2 input*/
+	//TRISDbits.TRISD10 = 1;	/* Setting up tri-state int3 input*/
 	LATFbits.LATF1 = 0; /* Turn off led on the test board */
 
 	uart2_init((u32)UART2_BAUD_RATE);	/* Console debug */
@@ -43,7 +43,7 @@ int main(void) {
 	init();
 	set_interrupt();
 	while (1) {
-		movement(accel, velocity);
+	//	movement(accel, velocity);
 		Nop();
 	}
 }
