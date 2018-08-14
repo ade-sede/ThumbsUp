@@ -21,13 +21,22 @@ s16  *create_report(u8 button, s16 x_move, s16 y_move) {
 	return (report);
 }
 
-/* Send Mouse raw report format to module bluetooth
-**/
+/*
+** Send Mouse raw report format to module bluetooth
+** Sending protocol should never be interrupted ! Therefor, CPU interrupt state
+** is jumped to the highest, and restored to its original state when sending is over 
+*/
+
 void send_report(s16 *report) {
 	u16 i = 0;
 
-        char buff[4096];
+	char buff[4096];
+	unsigned int original_priority;
 
+	/* Storing priority on entry, jumping to highest */
+	original_priority = __builtin_get_isr_state();
+	__builtin_set_isr_state(7);
+	
 	sprintf(buff, "%d		%d		%d\n\r", report[4], report[5], report[0]);
 	uart2_putstr(buff);
 	while (i < 7) {
@@ -37,4 +46,7 @@ void send_report(s16 *report) {
         while (i < 30000)
 		++i;
 	Nop();
+
+	/* Restoring priority */
+	__builtin_set_isr_state(original_priority);
 }
