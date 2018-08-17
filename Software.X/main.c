@@ -36,14 +36,22 @@ void	init(void) {
 int main(void) {
 	struct s_accel accel[2];
 	struct s_velocity velocity[2];
+        unsigned int original_priority;
+
 
 	memset(accel, 0, sizeof(struct s_accel) * 2);
 	memset(velocity, 0, sizeof(struct s_velocity) * 2);
 
 	init();
+        init_pot();
 	set_interrupt();
 	while (1) {
+                /* Storing priority on entry, jumping to highest */
+                original_priority = __builtin_get_isr_state();
+                __builtin_set_isr_state(7);
 		movement(accel, velocity);
+                /* Restoring priority */
+                __builtin_set_isr_state(original_priority);
 		Nop();
 	}
 }

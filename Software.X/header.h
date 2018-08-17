@@ -26,6 +26,8 @@ typedef unsigned long u32;
 typedef signed long s32;
 
 void	set_interrupt();
+void    init_pot();
+u16      pot_report();
 
 #endif	/* HEADER_H */
 

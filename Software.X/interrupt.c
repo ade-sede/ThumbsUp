@@ -4,8 +4,8 @@
 #define FALLING 0
 #define RISING 1
 
-g_egde_int2 = RISING;
-g_egde_int3 = RISING;
+u8 g_edge_int2 = RISING;
+u8 g_edge_int3 = RISING;
 
 void __ISR (_TIMER_2_VECTOR, IPL7SRS) int2_debounce (void){
 	// Relaunch interrupt2 after left click debounce
@@ -96,22 +96,7 @@ void set_timer() {
 	IEC0bits.T3IE = 1;
 }
 
-void __ISR (_EXTERNAL_1_VECTOR, IPL6SRS) test_click (void){
-	//T2CONbits.ON = 0;
-	//IFS0bits.INT1IF = 0;
-	LATFbits.LATF1 ^= 1;
-	send_report(create_report(2, 0, 0));
-	IFS0bits.INT1IF = 0;
-	//TMR2 = 0;
-	//T2CONbits.ON = 1;
-}
-
-void set_interrupt() { //final function
-//  Test interrupt with board button uncomment this line and comment set_external & set_timer
-//	INTCONbits.INT1EP = 0;
-//	IPC1bits.INT1IP = 6;
-//	IFS0bits.INT1IF = 0;
-//	IEC0bits.INT1IE = 1;
+void set_interrupt() {
 	set_external_interrupt();
 	set_timer();
 
