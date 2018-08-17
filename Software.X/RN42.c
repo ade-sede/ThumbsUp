@@ -11,6 +11,7 @@
 s16  *create_report(u8 button, s16 x_move, s16 y_move) {
     s16 report[7];
     u16 pot = pot_report();
+	// If you want activate sensibily with potentiometre add pot variable to report[4] and [5]
 
 	report[0] = (u8)0xFD; // Format mouse raw
 	report[1] = 5; // Length
@@ -19,6 +20,10 @@ s16  *create_report(u8 button, s16 x_move, s16 y_move) {
 	report[4] = (x_move / 100);// * pot;
 	report[5] = (y_move / 100);// * pot;
 	report[6] = 0; // Wheel
+	char buff[4096];
+
+        sprintf(buff, "%d       %d	%d    %d    %d\n\r", report[3], report[4], report[5], report[6], pot);
+	uart2_putstr(buff);
 	return (report);
 }
 
@@ -30,8 +35,6 @@ s16  *create_report(u8 button, s16 x_move, s16 y_move) {
 
 void send_report(s16 *report) {
 	u16 i = 0;
-
-	//char buff[4096];
 	unsigned int original_priority;
 
 	/* Storing priority on entry, jumping to highest */
