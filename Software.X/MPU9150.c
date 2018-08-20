@@ -55,6 +55,36 @@ void read_accel(struct s_accel *accel) {
 	accel->accelZ = (s16)(accelZ_HIGH << 8 | accelZ_LOW);
 }
 
+/*
+ * This function retrieves all the gyroscope measurement
+ */
+void read_gyro(void) {
+	char buff[4096];
+	u8 gyroX_LOW;
+	u8 gyroX_HIGH;
+	u8 gyroY_LOW;
+	u8 gyroY_HIGH;
+	u8 gyroZ_LOW;
+	u8 gyroZ_HIGH;
+	s16 gyroX;
+	s16 gyroY;
+	s16 gyroZ;
+
+	MPU9150_read(GYRO_XOUT_L, &gyroX_LOW);
+	MPU9150_read(GYRO_XOUT_H, &gyroX_HIGH);
+	MPU9150_read(GYRO_YOUT_L, &gyroY_LOW);
+	MPU9150_read(GYRO_YOUT_H, &gyroY_HIGH);
+	MPU9150_read(GYRO_ZOUT_L, &gyroZ_LOW);
+	MPU9150_read(GYRO_ZOUT_H, &gyroZ_HIGH);
+
+	gyroX = (s16)(gyroX_HIGH << 8 | gyroX_LOW);
+	gyroY = (s16)(gyroY_HIGH << 8 | gyroY_LOW);
+	gyroZ = (s16)(gyroZ_HIGH << 8 | gyroZ_LOW);
+
+	sprintf(buff, "%d		%d		%d\n\r", gyroX, gyroY, gyroZ);
+    uart2_putstr("Gyroscope :\n\r");
+	uart2_putstr(buff);
+}
 /* Fonction used to update any register of the MPU9150 */
 
 void MPU9150_write(u8 register_addr, u8 value) {
@@ -92,10 +122,9 @@ void calibration(void) {
 	g_xbias /= CALIBRATION_SAMPLE_NUMBER;
 	g_ybias /= CALIBRATION_SAMPLE_NUMBER;
 	g_zbias /= CALIBRATION_SAMPLE_NUMBER;
-	
-	
+
 	char buff[4096];
-	
+
 	sprintf(buff, "%d	%d	%d\n\r", g_xbias, g_ybias, g_zbias);
 	uart2_putstr(buff);
 }
