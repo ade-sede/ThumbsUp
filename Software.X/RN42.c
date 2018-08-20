@@ -1,6 +1,7 @@
 #include "header.h"
 #include "uart.h"
 #include "MPU9150.h"
+#include "debug.h"
 
 /* bouton n = (1 << n) bouton indexe en 0
 **/
@@ -20,10 +21,12 @@ s16  *create_report(u8 button, s16 x_move, s16 y_move) {
 	report[4] = (x_move / 100);// * pot;
 	report[5] = (y_move / 100);// * pot;
 	report[6] = 0; // Wheel
-	char buff[4096];
-
-        sprintf(buff, "%d       %d	%d    %d    %d\n\r", report[3], report[4], report[5], report[6], pot);
-	uart2_putstr(buff);
+//	read_gyro();
+//	char buff[4096];
+//
+//    sprintf(buff, "%d       %d		%d    %d\n\r", report[3], report[4], report[5], pot);
+//	uart2_putstr("Report :\n\r");
+//	uart2_putstr(buff);
 	return (report);
 }
 

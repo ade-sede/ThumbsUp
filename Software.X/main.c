@@ -15,7 +15,7 @@ s32 g_zbias = 0;
 
 void	init(void) {
 	TRISFbits.TRISF1 = 0;	/* Setting up tri-state */
-	TRISDbits.TRISD8 = 1;	// int1
+	TRISDbits.TRISD8 = 1;	// int1 board button
 	TRISDbits.TRISD9 = 1;	/* Setting up tri-state int2 input*/
 	TRISDbits.TRISD10 = 1;	/* Setting up tri-state int3 input*/
 	LATFbits.LATF1 = 0; /* Turn off led on the test board */

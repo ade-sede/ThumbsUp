@@ -6,7 +6,6 @@
 
 u8 g_edge_int2 = RISING;
 u8 g_edge_int3 = RISING;
-u8 g_double_click = 0;
 
 void __ISR (_TIMER_2_VECTOR, IPL7SRS) int2_debounce (void){
 	// Relaunch interrupt2 after left click debounce
@@ -26,21 +25,14 @@ void __ISR (_TIMER_3_VECTOR, IPL7SRS) int3_debounce (void){
 	set_interrupt_right_click();
 }
 
-void __ISR (_TIMER_4_VECTOR, IPL7SRS) double_click (void){
-	// Too late for double click
-	T4CONbits.ON = 0;
-	IFS0bits.T4IF = 0;
-	TMR4 = 0;
-	g_double_click = 0;
-}
-
 void __ISR (_EXTERNAL_2_VECTOR, IPL6SRS) left_click (void){
 	IEC0bits.INT2IE = 0;
 	LATFbits.LATF1 = 1;
-	if (g_edge_int2 == FALLING && g_double_click == 0)
-		send_report(create_report(1, 0, 0));
-	else if (g_edge_int2 == FALLING && g_double_click == 1)
-		send_report(create_report(3, 0, 0));
+	if (g_edge_int2 == FALLING)
+	{
+		while (PORTDbits.RD9 == FALLING)
+			send_report(create_report(1, 0, 0));
+	}
 	T2CONbits.ON = 1;
 }
 
@@ -105,15 +97,6 @@ void set_timer() {
 	IPC3bits.T3IP = 7;
 	IFS0bits.T3IF = 0;
 	IEC0bits.T3IE = 1;
-
-	// Timer 4 delay double click
-	T4CON = 0;//reset
-	T4CONbits.TCKPS = 0b110; //1:64
-	TMR4 = 0;//set timer 0
-	PR4 = 312500;//500ms 625000 -> 1s
-	IPC4bits.T4IP = 7;
-	IFS0bits.T4IF = 0;
-	IEC0bits.T4IE = 1;
 }
 
 void set_interrupt() {
