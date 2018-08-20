@@ -81,6 +81,14 @@ void read_gyro(void) {
 	gyroY = (s16)(gyroY_HIGH << 8 | gyroY_LOW);
 	gyroZ = (s16)(gyroZ_HIGH << 8 | gyroZ_LOW);
 
+	
+	/*
+	 *  Calibrating the Gyroscope
+	 * 
+	 */
+	
+	calibration_gyro(void);
+
 	sprintf(buff, "%d		%d		%d\n\r", gyroX, gyroY, gyroZ);
     uart2_putstr("Gyroscope :\n\r");
 	uart2_putstr(buff);
@@ -104,6 +112,25 @@ void MPU9150_write(u8 register_addr, u8 value) {
  * during a no-move condition
  * We average those measures using 1024 samples
  */
+
+void	calibration_gyro(void){
+	u16 count = 0;
+	struct s_gyro sample;
+
+	while (count <= CALIBRATION_SAMPLE_NUMBER) {
+		memset(&sample, 0, sizeof(struct s_gyro));
+		read_gyro(&sample);
+		g_xgyro += sample.gyroX;
+		g_ygyro += sample.gyroY;
+		g_zgyro += sample.gyroZ;
+		++count;
+	}
+
+	g_xgyro /= CALIBRATION_SAMPLE_NUMBER;
+	g_ygyro /= CALIBRATION_SAMPLE_NUMBER;
+	g_zgyro /= CALIBRATION_SAMPLE_NUMBER;
+
+}
 
 void calibration(void) {
 	u16 count = 0;

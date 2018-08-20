@@ -21,6 +21,12 @@ struct s_velocity {
 	s32 velocityZ;
 };
 
+struct s_gyro {
+	s32 gyroX;
+	s32 gyroY;
+	s32 gyroZ;
+};
+
  /*
   * Those variables represent the acceleration present on each axis, in a no-move condition 
   *	They are mesured during calibration. We have to remove this bias from each measurement
@@ -30,6 +36,10 @@ struct s_velocity {
 s32	g_xbias;
 s32 g_ybias;
 s32 g_zbias;
+
+s32 g_xgyro;
+s32 g_ygyro;
+s32 g_zgyro;
 
 /* Config bits */
 # define PWR_MGMT_ON_NO_TEMP 0b1000  /* Goes to PWR_MGMT_1. Disable temp sensor */
