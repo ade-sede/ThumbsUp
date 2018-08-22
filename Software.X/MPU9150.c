@@ -58,7 +58,7 @@ void read_accel(struct s_accel *accel) {
 /*
  * This function retrieves all the gyroscope measurement
  */
-void read_gyro(void) {
+void read_gyro(struct s_gyro *gyro) {
 	char buff[4096];
 	u8 gyroX_LOW;
 	u8 gyroX_HIGH;
@@ -66,9 +66,6 @@ void read_gyro(void) {
 	u8 gyroY_HIGH;
 	u8 gyroZ_LOW;
 	u8 gyroZ_HIGH;
-	s16 gyroX;
-	s16 gyroY;
-	s16 gyroZ;
 
 	MPU9150_read(GYRO_XOUT_L, &gyroX_LOW);
 	MPU9150_read(GYRO_XOUT_H, &gyroX_HIGH);
@@ -77,11 +74,11 @@ void read_gyro(void) {
 	MPU9150_read(GYRO_ZOUT_L, &gyroZ_LOW);
 	MPU9150_read(GYRO_ZOUT_H, &gyroZ_HIGH);
 
-	gyroX = (s16)(gyroX_HIGH << 8 | gyroX_LOW);
-	gyroY = (s16)(gyroY_HIGH << 8 | gyroY_LOW);
-	gyroZ = (s16)(gyroZ_HIGH << 8 | gyroZ_LOW);
+	gyro->gyroX = (s16)(gyroX_HIGH << 8 | gyroX_LOW);
+	gyro->gyroY = (s16)(gyroY_HIGH << 8 | gyroY_LOW);
+	gyro->gyroZ = (s16)(gyroZ_HIGH << 8 | gyroZ_LOW);
 
-	sprintf(buff, "%d		%d		%d\n\r", gyroX, gyroY, gyroZ);
+	sprintf(buff, "%d		%d		%d\n\r", gyro->gyroX, gyro->gyroY, gyro->gyroZ);
     uart2_putstr("Gyroscope :\n\r");
 	uart2_putstr(buff);
 }
@@ -101,15 +98,16 @@ void MPU9150_write(u8 register_addr, u8 value) {
 
 /*
  * This is the function that measures the forces present in the system, 
- * during a no-move condition
- * We average those measures using 1024 samples
+ * during a no-move condition at the beginnig
+ * and shorter during execution
+ * We average those measures using calibration_sample_number samples
  */
 
-void calibration(void) {
+void calibration(u8 calibration_sample_number) {
 	u16 count = 0;
 	struct s_accel sample;
 
-	while (count <= CALIBRATION_SAMPLE_NUMBER) {
+	while (count <= calibration_sample_number) {
 		memset(&sample, 0, sizeof(struct s_accel));
 		read_accel(&sample);
 		g_xbias += sample.accelX;
@@ -119,12 +117,53 @@ void calibration(void) {
 		//print_accel(sample);
 	}
 
-	g_xbias /= CALIBRATION_SAMPLE_NUMBER;
-	g_ybias /= CALIBRATION_SAMPLE_NUMBER;
-	g_zbias /= CALIBRATION_SAMPLE_NUMBER;
+	g_xbias /= calibration_sample_number;
+	g_ybias /= calibration_sample_number;
+	g_zbias /= calibration_sample_number;
 
 	char buff[4096];
 
 	sprintf(buff, "%d	%d	%d\n\r", g_xbias, g_ybias, g_zbias);
+	uart2_putstr("Calibration");
 	uart2_putstr(buff);
+}
+
+void calibration_gyroscope(struct s_gyro *gyro, u8 calibration_sample_number) {
+	u16 count = 0;
+	struct s_gyro sample;
+
+	while (count <= calibration_sample_number) {
+		memset(&sample, 0, sizeof(struct s_gyro));
+		read_gyro(&sample);
+		gyro->gyroX += sample.gyroX;
+		gyro->gyroY += sample.gyroY;
+		gyro->gyroZ += sample.accelZ;
+		++count;
+	}
+
+	gyro->gyroX /= calibration_sample_number;
+	gyro->gyroY /= calibration_sample_number;
+	gyro->gyroZ /= calibration_sample_number;
+
+	char buff[4096];
+
+	sprintf(buff, "%d	%d	%d\n\r", gyro->gyroX, gyro->gyroY, gyro->gyroZ);
+	uart2_putstr("Calibration gyroscope");
+	uart2_putstr(buff);
+}
+
+void check_gyroscope_position(struct s_gyro *gyro) {
+	struct s_gyro control;
+
+	read_gyro(control);
+	control.gyroX -= gyro->gyroX;
+	control.gyroY -= gyro->gyroY;
+	control.gyroZ -= gyro->gyroZ;
+
+	if ((INVALID_VALUE(control->gyroX)) && (INVALID_VALUE(control->gyroY)) && (INVALID_VALUE(control->gyroZ))
+		Nop();
+	else {
+		calibration(10);
+		calibration_gyro(gyro, 10);
+	}
 }

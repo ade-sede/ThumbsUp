@@ -8,8 +8,9 @@
 
 /* Create generic report with Mouse data
 **/
+extern u8 g_button;
 
-s16  *create_report(u8 button, s16 x_move, s16 y_move) {
+s16  *create_report(s16 x_move, s16 y_move) {
     s16 report[7];
     u16 pot = pot_report();
 	// If you want activate sensibily with potentiometre add pot variable to report[4] and [5]
@@ -17,16 +18,18 @@ s16  *create_report(u8 button, s16 x_move, s16 y_move) {
 	report[0] = (u8)0xFD; // Format mouse raw
 	report[1] = 5; // Length
 	report[2] = 2; // Data descriptor -> Mouse
-	report[3] = button;
+	report[3] = g_button;
 	report[4] = (x_move / 100);// * pot;
 	report[5] = (y_move / 100);// * pot;
 	report[6] = 0; // Wheel
+	/* DEBUG GYRO & report **/
 //	read_gyro();
 //	char buff[4096];
 //
 //    sprintf(buff, "%d       %d		%d    %d\n\r", report[3], report[4], report[5], pot);
 //	uart2_putstr("Report :\n\r");
 //	uart2_putstr(buff);
+	g_button = 0;
 	return (report);
 }
 
@@ -48,7 +51,7 @@ void send_report(s16 *report) {
 		uart1_transmit_idle(report[i]);
 		i++;
 	}
-        while (i < 30000)
+	while (i < 30000)
 		++i;
 	Nop();
 

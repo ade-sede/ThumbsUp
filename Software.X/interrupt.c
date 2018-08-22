@@ -1,9 +1,8 @@
 #include "header.h"
 #include "RN42.h"
+#include "interrupt.h"
 
-#define FALLING 0
-#define RISING 1
-
+extern u8 g_button;
 u8 g_edge_int2 = RISING;
 u8 g_edge_int3 = RISING;
 
@@ -29,10 +28,7 @@ void __ISR (_EXTERNAL_2_VECTOR, IPL6SRS) left_click (void){
 	IEC0bits.INT2IE = 0;
 	LATFbits.LATF1 = 1;
 	if (g_edge_int2 == FALLING)
-	{
-		while (PORTDbits.RD9 == FALLING)
-			send_report(create_report(1, 0, 0));
-	}
+		g_button = 1;
 	T2CONbits.ON = 1;
 }
 
@@ -40,7 +36,7 @@ void __ISR (_EXTERNAL_3_VECTOR, IPL6SRS) right_click (void){
 	IEC0bits.INT3IE = 0;
 	LATFbits.LATF1 = 1;
 	if (g_edge_int3 == FALLING)
-		send_report(create_report(2, 0, 0));
+		g_button = 2;
 	T3CONbits.ON = 1;
 }
 

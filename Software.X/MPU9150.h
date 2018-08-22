@@ -21,6 +21,11 @@ struct s_velocity {
 	s32 velocityZ;
 };
 
+struct s_gyro {
+	s32 gyroX;
+	s32 gyroY;
+	s32 gyroZ;
+};
  /*
   * Those variables represent the acceleration present on each axis, in a no-move condition 
   *	They are mesured during calibration. We have to remove this bias from each measurement
@@ -68,8 +73,10 @@ s32 g_zbias;
 void MPU9150_write(u8 register_name, u8 bit_config);
 void MPU9150_read(u8 source, u8 *dest);
 void read_accel(struct s_accel *accel);
-void read_gyro(void);
-void calibration(void);
+void read_gyro(struct s_gyro *gyro);
+void calibration(calibration_sample_number);
+void calibration_gyroscope(struct s_gyro *gyro, u8 calibration_sample_number);
+void check_gyroscope_position(struct s_gyro *gyro);
 
 #endif	/* MPU9150_H */
 
