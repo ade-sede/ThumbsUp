@@ -2,6 +2,7 @@
 #include "header.h"
 #include "MPU9150.h"
 #include "uart.h"
+#include "movement.h"
 #include "debug.h"
 
 extern s32 g_xbias;
@@ -79,7 +80,7 @@ void read_gyro(struct s_gyro *gyro) {
 	gyro->gyroZ = (s16)(gyroZ_HIGH << 8 | gyroZ_LOW);
 
 	sprintf(buff, "%d		%d		%d\n\r", gyro->gyroX, gyro->gyroY, gyro->gyroZ);
-    uart2_putstr("Gyroscope :\n\r");
+        uart2_putstr("Gyroscope :\n\r");
 	uart2_putstr(buff);
 }
 /* Fonction used to update any register of the MPU9150 */
@@ -107,7 +108,7 @@ void calibration(u8 calibration_sample_number) {
 	u16 count = 0;
 	struct s_accel sample;
 
-	while (count <= calibration_sample_number) {
+	while (count <= CALIBRATION_SAMPLE_NUMBER) {
 		memset(&sample, 0, sizeof(struct s_accel));
 		read_accel(&sample);
 		g_xbias += sample.accelX;
@@ -117,14 +118,13 @@ void calibration(u8 calibration_sample_number) {
 		//print_accel(sample);
 	}
 
-	g_xbias /= calibration_sample_number;
-	g_ybias /= calibration_sample_number;
-	g_zbias /= calibration_sample_number;
+	g_xbias /= CALIBRATION_SAMPLE_NUMBER;
+	g_ybias /= CALIBRATION_SAMPLE_NUMBER;
+	g_zbias /= CALIBRATION_SAMPLE_NUMBER;
 
 	char buff[4096];
 
 	sprintf(buff, "%d	%d	%d\n\r", g_xbias, g_ybias, g_zbias);
-	uart2_putstr("Calibration");
 	uart2_putstr(buff);
 }
 
@@ -132,18 +132,18 @@ void calibration_gyroscope(struct s_gyro *gyro, u8 calibration_sample_number) {
 	u16 count = 0;
 	struct s_gyro sample;
 
-	while (count <= calibration_sample_number) {
+	while (count <= CALIBRATION_SAMPLE_NUMBER) {
 		memset(&sample, 0, sizeof(struct s_gyro));
 		read_gyro(&sample);
 		gyro->gyroX += sample.gyroX;
 		gyro->gyroY += sample.gyroY;
-		gyro->gyroZ += sample.accelZ;
+		gyro->gyroZ += sample.gyroZ;
 		++count;
 	}
 
-	gyro->gyroX /= calibration_sample_number;
-	gyro->gyroY /= calibration_sample_number;
-	gyro->gyroZ /= calibration_sample_number;
+	gyro->gyroX /= CALIBRATION_SAMPLE_NUMBER;
+	gyro->gyroY /= CALIBRATION_SAMPLE_NUMBER;
+	gyro->gyroZ /= CALIBRATION_SAMPLE_NUMBER;
 
 	char buff[4096];
 
@@ -153,17 +153,15 @@ void calibration_gyroscope(struct s_gyro *gyro, u8 calibration_sample_number) {
 }
 
 void check_gyroscope_position(struct s_gyro *gyro) {
-	struct s_gyro control;
+	struct s_gyro ctrl;
 
-	read_gyro(control);
-	control.gyroX -= gyro->gyroX;
-	control.gyroY -= gyro->gyroY;
-	control.gyroZ -= gyro->gyroZ;
+	read_gyro(&ctrl);
+	ctrl.gyroX -= gyro->gyroX;
+	ctrl.gyroY -= gyro->gyroY;
+	ctrl.gyroZ -= gyro->gyroZ;
 
-	if ((INVALID_VALUE(control->gyroX)) && (INVALID_VALUE(control->gyroY)) && (INVALID_VALUE(control->gyroZ))
+	if ((INVALID_VALUE(ctrl.gyroX)) && (INVALID_VALUE(ctrl.gyroY)) && (INVALID_VALUE(ctrl.gyroZ)))
 		Nop();
-	else {
-		calibration(10);
-		calibration_gyro(gyro, 10);
-	}
+	calibration(10);
+	calibration_gyroscope(gyro, 10);
 }

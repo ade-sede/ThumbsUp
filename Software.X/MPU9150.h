@@ -32,7 +32,7 @@ struct s_gyro {
   * so that it is accurate.
   */
 
-s32	g_xbias;
+s32 g_xbias;
 s32 g_ybias;
 s32 g_zbias;
 
@@ -74,7 +74,7 @@ void MPU9150_write(u8 register_name, u8 bit_config);
 void MPU9150_read(u8 source, u8 *dest);
 void read_accel(struct s_accel *accel);
 void read_gyro(struct s_gyro *gyro);
-void calibration(calibration_sample_number);
+void calibration(u8 calibration_sample_number);
 void calibration_gyroscope(struct s_gyro *gyro, u8 calibration_sample_number);
 void check_gyroscope_position(struct s_gyro *gyro);
 

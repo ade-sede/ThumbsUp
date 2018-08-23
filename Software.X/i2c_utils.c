@@ -8,6 +8,7 @@ void i2c_config_and_start(u8 brg) {
 	I2C1CONbits.ON = 1;
 }
 
+/** Creer une interrupt non bloquante **/
 void i2c_master_send(u8 data) {
 	I2C1TRN = data;
 	while (I2C1STATbits.TRSTAT == 1)

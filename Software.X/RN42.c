@@ -12,7 +12,8 @@ extern u8 g_button;
 
 s16  *create_report(s16 x_move, s16 y_move) {
     s16 report[7];
-    u16 pot = pot_report();
+    u16 pot = 0;
+    //u16 pot = pot_report();
 	// If you want activate sensibily with potentiometre add pot variable to report[4] and [5]
 
 	report[0] = (u8)0xFD; // Format mouse raw
@@ -25,8 +26,8 @@ s16  *create_report(s16 x_move, s16 y_move) {
 	/* DEBUG GYRO & report **/
 //	read_gyro();
 //	char buff[4096];
-//
-//    sprintf(buff, "%d       %d		%d    %d\n\r", report[3], report[4], report[5], pot);
+////
+//        sprintf(buff, "%d       %d		%d    %d\n\r", report[3], report[4], report[5], pot);
 //	uart2_putstr("Report :\n\r");
 //	uart2_putstr(buff);
 	g_button = 0;
@@ -51,7 +52,7 @@ void send_report(s16 *report) {
 		uart1_transmit_idle(report[i]);
 		i++;
 	}
-	while (i < 30000)
+	while (i < 40000)
 		++i;
 	Nop();
 
