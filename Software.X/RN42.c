@@ -25,11 +25,12 @@ s16  *create_report(s16 x_move, s16 y_move) {
 	report[6] = 0; // Wheel
 	/* DEBUG GYRO & report **/
 //	read_gyro();
-//	char buff[4096];
+	char buff[4096];
 ////
-//        sprintf(buff, "%d       %d		%d    %d\n\r", report[3], report[4], report[5], pot);
-//	uart2_putstr("Report :\n\r");
-//	uart2_putstr(buff);
+        /// uncommeting the following will cause random behaviour ///
+        sprintf(buff, "%d       %d		%d    %d\n\r", report[3], report[4], report[5], pot);
+	uart2_putstr("Report :\n\r");
+        uart2_putstr(buff);
 	g_button = 0;
 	return (report);
 }
