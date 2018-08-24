@@ -38,7 +38,7 @@ void	init(void) {
 int main(void) {
 	struct s_accel accel[2];
 	struct s_velocity velocity[2];
-	struct s_gyro gyro;
+	struct s_gyro *gyro;
 	unsigned int original_priority;
 
 
@@ -47,7 +47,7 @@ int main(void) {
 	memset(&gyro, 0, sizeof(struct s_gyro));
 
 	init();
-	//init_pot();
+	init_pot();
 	set_interrupt();
 	calibration_gyroscope(&gyro, 100);	/* Gyroscope calibration, in a no movement condition */
 	while (1) {
@@ -55,7 +55,7 @@ int main(void) {
 		original_priority = __builtin_get_isr_state();
 		__builtin_set_isr_state(7);
 		movement(accel, velocity);
-		//check_gyroscope_position(&gyro);
+		check_gyroscope_position(&gyro);
 		/* Restoring priority */
 		__builtin_set_isr_state(original_priority);
 		Nop();

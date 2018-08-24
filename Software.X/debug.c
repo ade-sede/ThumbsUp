@@ -3,6 +3,28 @@
 #include "header.h"
 #include "debug.h"
 
+inline void	print_gyro(struct s_gyro *sample) {
+	char buff[4096];
+        u16 gyroX;
+        u16 gyroY;
+        u16 gyroZ;
+
+        if (sample->gyroX <= WIN_HIGH && sample->gyroX >= WIN_LOW)
+            gyroX = 0;
+        else
+            gyroX = sample->gyroX;
+        if (sample->gyroY <= WIN_HIGH && sample->gyroY >= WIN_LOW)
+            gyroY = 0;
+        else
+            gyroY = sample->gyroY;
+        if (sample->gyroZ <= WIN_HIGH && sample->gyroZ >= WIN_LOW)
+            gyroZ = 0;
+        else
+            gyroZ = sample->gyroZ;
+	sprintf(buff, "%d		%d		%d\n\r", gyroX, gyroY, gyroZ);
+	uart2_putstr(buff);
+}
+
 inline void	print_accel(struct s_accel sample) {
 	char buff[4096];
 	

@@ -27,7 +27,7 @@ void __ISR (_TIMER_3_VECTOR, IPL7SRS) int3_debounce (void){
 void __ISR (_EXTERNAL_2_VECTOR, IPL6SRS) left_click (void){
 	IEC0bits.INT2IE = 0;
 	LATFbits.LATF1 = 1;
-	if (g_edge_int2 == FALLING)
+//	if (g_edge_int2 == FALLING)
 		g_button = 1;
 	T2CONbits.ON = 1;
 }
@@ -35,7 +35,7 @@ void __ISR (_EXTERNAL_2_VECTOR, IPL6SRS) left_click (void){
 void __ISR (_EXTERNAL_3_VECTOR, IPL6SRS) right_click (void){
 	IEC0bits.INT3IE = 0;
 	LATFbits.LATF1 = 1;
-	if (g_edge_int3 == FALLING)
+//	if (g_edge_int3 == FALLING)
 		g_button = 2;
 	T3CONbits.ON = 1;
 }

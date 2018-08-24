@@ -48,12 +48,12 @@ s32 g_zbias;
 # define AVERAGE_SAMPLE_NUMBER 64 /* Max value is 65335*/
 
 /* Defines for the discrimination window for gyroscope value */
-# define WIN_LOW -800 /* Must be < 0 */
-# define WIN_HIGH 800 /* Must be > 0 */
+# define WIN_LOW -1000 /* Must be < 0 */
+# define WIN_HIGH 1000 /* Must be > 0 */
 
 /* Macro for the window */
 /* (value non comprise entre 0 et low) || (value non comprise entre 0 et high)*/
-# define OUTSIDE_VALUE(value) (value >= WIN_HIGH && value <= WIN_LOW)
+# define OUTSIDE_VALUE(value) (value >= WIN_HIGH || value <= WIN_LOW)
 
 /* Registers and their address */
 # define ACCEL_XOUT_L 0x3C
