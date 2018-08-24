@@ -3,4 +3,5 @@ RN42.c  \
 header.h  \
 uart.h  \
 clock.h  \
-MPU9150.h 
+MPU9150.h  \
+ debug.h 

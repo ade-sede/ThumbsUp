@@ -112,12 +112,10 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 
 	/* Output */
 	
-        //uart2_putstr("Velocity / Movement\n\r");
-	//print_velocity(velocity[CURR]);
+        uart2_putstr("Velocity / Movement\n\r");
+	print_velocity(velocity[CURR]);
 
-	//build_report(&velocity[CURRENT]);
-	send_report(create_report(0, velocity[CURR].velocityX, velocity[CURR].velocityY));
-        //send_movement(&velocity[CURR]);
+	send_report(create_report(velocity[CURR].velocityX, velocity[CURR].velocityY));
 	check_no_movement(accel, velocity);
         
 	/* Curr becomes prev */

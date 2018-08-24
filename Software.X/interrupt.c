@@ -1,9 +1,8 @@
 #include "header.h"
 #include "RN42.h"
+#include "interrupt.h"
 
-#define FALLING 0
-#define RISING 1
-
+extern u8 g_button;
 u8 g_edge_int2 = RISING;
 u8 g_edge_int3 = RISING;
 
@@ -28,19 +27,16 @@ void __ISR (_TIMER_3_VECTOR, IPL7SRS) int3_debounce (void){
 void __ISR (_EXTERNAL_2_VECTOR, IPL6SRS) left_click (void){
 	IEC0bits.INT2IE = 0;
 	LATFbits.LATF1 = 1;
-	if (g_edge_int2 == FALLING)
-	{
-		while (PORTDbits.RD9 == FALLING)
-			send_report(create_report(1, 0, 0));
-	}
+//	if (g_edge_int2 == FALLING)
+		g_button = 1;
 	T2CONbits.ON = 1;
 }
 
 void __ISR (_EXTERNAL_3_VECTOR, IPL6SRS) right_click (void){
 	IEC0bits.INT3IE = 0;
 	LATFbits.LATF1 = 1;
-	if (g_edge_int3 == FALLING)
-		send_report(create_report(2, 0, 0));
+//	if (g_edge_int3 == FALLING)
+		g_button = 2;
 	T3CONbits.ON = 1;
 }
 
@@ -52,7 +48,6 @@ void set_interrupt_left_click() {
 		g_edge_int2 = FALLING;
 	INTCONbits.INT2EP = g_edge_int2;
 
-//	INTCONbits.INT2EP ^= 1;
 	IPC2bits.INT2IP = 6;
 	IPC2bits.INT2IS = 0;
 	IFS0bits.INT2IF = 0;
@@ -67,7 +62,6 @@ void set_interrupt_right_click() {
 		g_edge_int3 = FALLING;
 	INTCONbits.INT3EP = g_edge_int3;
 
-//	INTCONbits.INT3EP ^= 1;
 	IPC3bits.INT3IP = 6;
 	IPC3bits.INT3IS = 0;
 	IFS0bits.INT3IF = 0;

@@ -2,6 +2,7 @@
 #include "header.h"
 #include "MPU9150.h"
 #include "uart.h"
+#include "movement.h"
 #include "debug.h"
 
 extern s32 g_xbias;
@@ -58,17 +59,13 @@ void read_accel(struct s_accel *accel) {
 /*
  * This function retrieves all the gyroscope measurement
  */
-void read_gyro(void) {
-	char buff[4096];
+void read_gyro(struct s_gyro *gyro) {
 	u8 gyroX_LOW;
 	u8 gyroX_HIGH;
 	u8 gyroY_LOW;
 	u8 gyroY_HIGH;
 	u8 gyroZ_LOW;
 	u8 gyroZ_HIGH;
-	s16 gyroX;
-	s16 gyroY;
-	s16 gyroZ;
 
 	MPU9150_read(GYRO_XOUT_L, &gyroX_LOW);
 	MPU9150_read(GYRO_XOUT_H, &gyroX_HIGH);
@@ -77,22 +74,11 @@ void read_gyro(void) {
 	MPU9150_read(GYRO_ZOUT_L, &gyroZ_LOW);
 	MPU9150_read(GYRO_ZOUT_H, &gyroZ_HIGH);
 
-	gyroX = (s16)(gyroX_HIGH << 8 | gyroX_LOW);
-	gyroY = (s16)(gyroY_HIGH << 8 | gyroY_LOW);
-	gyroZ = (s16)(gyroZ_HIGH << 8 | gyroZ_LOW);
-
-	
-	/*
-	 *  Calibrating the Gyroscope
-	 * 
-	 */
-	
-	calibration_gyro(void);
-
-	sprintf(buff, "%d		%d		%d\n\r", gyroX, gyroY, gyroZ);
-    uart2_putstr("Gyroscope :\n\r");
-	uart2_putstr(buff);
+	gyro->gyroX = (s16)(gyroX_HIGH << 8 | gyroX_LOW);
+	gyro->gyroY = (s16)(gyroY_HIGH << 8 | gyroY_LOW);
+	gyro->gyroZ = (s16)(gyroZ_HIGH << 8 | gyroZ_LOW);
 }
+
 /* Fonction used to update any register of the MPU9150 */
 
 void MPU9150_write(u8 register_addr, u8 value) {
@@ -109,49 +95,76 @@ void MPU9150_write(u8 register_addr, u8 value) {
 
 /*
  * This is the function that measures the forces present in the system, 
- * during a no-move condition
- * We average those measures using 1024 samples
+ * during a no-move condition at the beginnig
+ * and shorter during execution
+ * We average those measures using calibration_sample_number samples
  */
 
-void	calibration_gyro(void){
-	u16 count = 0;
-	struct s_gyro sample;
-
-	while (count <= CALIBRATION_SAMPLE_NUMBER) {
-		memset(&sample, 0, sizeof(struct s_gyro));
-		read_gyro(&sample);
-		g_xgyro += sample.gyroX;
-		g_ygyro += sample.gyroY;
-		g_zgyro += sample.gyroZ;
-		++count;
-	}
-
-	g_xgyro /= CALIBRATION_SAMPLE_NUMBER;
-	g_ygyro /= CALIBRATION_SAMPLE_NUMBER;
-	g_zgyro /= CALIBRATION_SAMPLE_NUMBER;
-
-}
-
-void calibration(void) {
+void calibration(u8 calibration_sample_number) {
 	u16 count = 0;
 	struct s_accel sample;
 
-	while (count <= CALIBRATION_SAMPLE_NUMBER) {
+	while (count <= calibration_sample_number) {
 		memset(&sample, 0, sizeof(struct s_accel));
 		read_accel(&sample);
 		g_xbias += sample.accelX;
 		g_ybias += sample.accelY;
 		g_zbias += sample.accelZ;
 		++count;
-		//print_accel(sample);
 	}
 
-	g_xbias /= CALIBRATION_SAMPLE_NUMBER;
-	g_ybias /= CALIBRATION_SAMPLE_NUMBER;
-	g_zbias /= CALIBRATION_SAMPLE_NUMBER;
+	g_xbias /= calibration_sample_number;
+	g_ybias /= calibration_sample_number;
+	g_zbias /= calibration_sample_number;
 
 	char buff[4096];
-
+        uart2_putstr("Calibration accelerometre : \n\r");
 	sprintf(buff, "%d	%d	%d\n\r", g_xbias, g_ybias, g_zbias);
 	uart2_putstr(buff);
+}
+
+void calibration_gyroscope(struct s_gyro *gyro, u8 calibration_sample_number) {
+	u16 count = 0;
+	struct s_gyro sample;
+
+	while (count <= calibration_sample_number) {
+		memset(&sample, 0, sizeof(struct s_gyro));
+		read_gyro(&sample);
+		gyro->gyroX += sample.gyroX;
+		gyro->gyroY += sample.gyroY;
+		gyro->gyroZ += sample.gyroZ;
+		++count;
+	}
+	gyro->gyroX /= calibration_sample_number;
+	gyro->gyroY /= calibration_sample_number;
+	gyro->gyroZ /= calibration_sample_number;
+        uart2_putstr("Calibration gyroscope : \n\r");
+        print_gyro(gyro);
+}
+
+/*
+* This function interpret gyroscope value close to 0, as if they were 0
+** Everything beetwen wind_low and wind_high is considered to be 0.
+** Window_low is a negative integer, window_high a positive one
+** If the value is outside launch a quick calibration of accelerometer and gyroscope
+*/
+
+void check_gyroscope_position(struct s_gyro *gyro) {
+	struct s_gyro ctrl;
+
+	read_gyro(&ctrl);
+	ctrl.gyroX -= gyro->gyroX;
+	ctrl.gyroY -= gyro->gyroY;
+	ctrl.gyroZ -= gyro->gyroZ;
+
+        uart2_putstr("Control Gyroscope \n\r");
+        print_gyro(&ctrl);
+	if ((OUTSIDE_VALUE(ctrl.gyroX)) || (OUTSIDE_VALUE(ctrl.gyroY)) || (OUTSIDE_VALUE(ctrl.gyroZ)))
+        {
+                uart2_putstr("CALIBRATION \n\r");
+                uart2_putstr("CALIBRATION \n\r");
+
+//		calibration(20);
+//		calibration_gyroscope(gyro, 20);
+	}
 }
