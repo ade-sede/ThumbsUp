@@ -48,7 +48,6 @@ void set_interrupt_left_click() {
 		g_edge_int2 = FALLING;
 	INTCONbits.INT2EP = g_edge_int2;
 
-//	INTCONbits.INT2EP ^= 1;
 	IPC2bits.INT2IP = 6;
 	IPC2bits.INT2IS = 0;
 	IFS0bits.INT2IF = 0;
@@ -63,7 +62,6 @@ void set_interrupt_right_click() {
 		g_edge_int3 = FALLING;
 	INTCONbits.INT3EP = g_edge_int3;
 
-//	INTCONbits.INT3EP ^= 1;
 	IPC3bits.INT3IP = 6;
 	IPC3bits.INT3IS = 0;
 	IFS0bits.INT3IF = 0;

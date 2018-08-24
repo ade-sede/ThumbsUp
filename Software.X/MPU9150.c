@@ -108,7 +108,7 @@ void calibration(u8 calibration_sample_number) {
 	u16 count = 0;
 	struct s_accel sample;
 
-	while (count <= CALIBRATION_SAMPLE_NUMBER) {
+	while (count <= calibration_sample_number) {
 		memset(&sample, 0, sizeof(struct s_accel));
 		read_accel(&sample);
 		g_xbias += sample.accelX;
@@ -118,9 +118,9 @@ void calibration(u8 calibration_sample_number) {
 		//print_accel(sample);
 	}
 
-	g_xbias /= CALIBRATION_SAMPLE_NUMBER;
-	g_ybias /= CALIBRATION_SAMPLE_NUMBER;
-	g_zbias /= CALIBRATION_SAMPLE_NUMBER;
+	g_xbias /= calibration_sample_number;
+	g_ybias /= calibration_sample_number;
+	g_zbias /= calibration_sample_number;
 
 	char buff[4096];
 
@@ -132,7 +132,7 @@ void calibration_gyroscope(struct s_gyro *gyro, u8 calibration_sample_number) {
 	u16 count = 0;
 	struct s_gyro sample;
 
-	while (count <= CALIBRATION_SAMPLE_NUMBER) {
+	while (count <= calibration_sample_number) {
 		memset(&sample, 0, sizeof(struct s_gyro));
 		read_gyro(&sample);
 		gyro->gyroX += sample.gyroX;
@@ -141,9 +141,9 @@ void calibration_gyroscope(struct s_gyro *gyro, u8 calibration_sample_number) {
 		++count;
 	}
 
-	gyro->gyroX /= CALIBRATION_SAMPLE_NUMBER;
-	gyro->gyroY /= CALIBRATION_SAMPLE_NUMBER;
-	gyro->gyroZ /= CALIBRATION_SAMPLE_NUMBER;
+	gyro->gyroX /= calibration_sample_number;
+	gyro->gyroY /= calibration_sample_number;
+	gyro->gyroZ /= calibration_sample_number;
 
 	char buff[4096];
 
@@ -151,6 +151,13 @@ void calibration_gyroscope(struct s_gyro *gyro, u8 calibration_sample_number) {
 	uart2_putstr("Calibration gyroscope");
 	uart2_putstr(buff);
 }
+
+/*
+* This function interpret gyroscope value close to 0, as if they were 0
+** Everything beetwen wind_low and wind_high is considered to be 0.
+** Window_low is a negative integer, window_high a positive one
+** If the value is outside launch a quick calibration of accelerometer and gyroscope
+*/
 
 void check_gyroscope_position(struct s_gyro *gyro) {
 	struct s_gyro ctrl;
@@ -160,8 +167,8 @@ void check_gyroscope_position(struct s_gyro *gyro) {
 	ctrl.gyroY -= gyro->gyroY;
 	ctrl.gyroZ -= gyro->gyroZ;
 
-	if ((INVALID_VALUE(ctrl.gyroX)) && (INVALID_VALUE(ctrl.gyroY)) && (INVALID_VALUE(ctrl.gyroZ)))
-		Nop();
-	calibration(10);
-	calibration_gyroscope(gyro, 10);
+	if ((OUTSIDE_VALUE(ctrl.gyroX)) || (OUTSIDE_VALUE(ctrl.gyroY)) || (OUTSIDE_VALUE(ctrl.gyroZ))) {
+		calibration(10);
+		calibration_gyroscope(gyro, 10);
+	}
 }
