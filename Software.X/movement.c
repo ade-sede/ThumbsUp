@@ -7,6 +7,10 @@ extern s32 g_xbias;
 extern s32 g_ybias;
 extern s32 g_zbias;
 
+extern s32 g_xctrl;
+extern s32 g_yctrl;
+extern s32 g_zctrl;
+
 /*
 ** If the accel is null during too long, we consider velocity is null
 */
@@ -111,9 +115,12 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
     */
 
 	/* Output */
-	
-        uart2_putstr("Velocity / Movement\n\r");
-	print_velocity(velocity[CURR]);
+
+        if (velocity[CURR].velocityX != 0 || velocity[CURR].velocityY != 0 || velocity[CURR].velocityZ != 0){
+            uart2_putstr("Velocity / Movement\n\r");
+            print_velocity(velocity[CURR]);
+            print_ctrl();
+        }
 
 	send_report(create_report(velocity[CURR].velocityX, velocity[CURR].velocityY));
 	check_no_movement(accel, velocity);

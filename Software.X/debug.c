@@ -3,26 +3,22 @@
 #include "header.h"
 #include "debug.h"
 
+extern s32 g_xctrl;
+extern s32 g_yctrl;
+extern s32 g_zctrl;
+
 inline void	print_gyro(struct s_gyro *sample) {
 	char buff[4096];
-        u16 gyroX;
-        u16 gyroY;
-        u16 gyroZ;
 
-        if (sample->gyroX <= WIN_HIGH && sample->gyroX >= WIN_LOW)
-            gyroX = 0;
-        else
-            gyroX = sample->gyroX;
-        if (sample->gyroY <= WIN_HIGH && sample->gyroY >= WIN_LOW)
-            gyroY = 0;
-        else
-            gyroY = sample->gyroY;
-        if (sample->gyroZ <= WIN_HIGH && sample->gyroZ >= WIN_LOW)
-            gyroZ = 0;
-        else
-            gyroZ = sample->gyroZ;
-	sprintf(buff, "%d		%d		%d\n\r", gyroX, gyroY, gyroZ);
+	sprintf(buff, "%d		%d		%d\n\r", sample->gyroX, sample->gyroY, sample->gyroZ);
 	uart2_putstr(buff);
+}
+
+inline void     print_ctrl(){
+    	char buff[4096];
+            uart2_putstr("Gyroscope : \n\r");
+            sprintf(buff, "%d		%d		%d\n\r", g_xctrl, g_yctrl, g_zctrl);
+            uart2_putstr(buff);
 }
 
 inline void	print_accel(struct s_accel sample) {

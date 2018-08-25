@@ -9,6 +9,10 @@ extern s32 g_xbias;
 extern s32 g_ybias;
 extern s32 g_zbias;
 
+extern s32 g_xctrl;
+extern s32 g_yctrl;
+extern s32 g_zctrl;
+
 /*
 ** Request a read from register addr source, stores
 ** Result at addr dest
@@ -143,28 +147,14 @@ void calibration_gyroscope(struct s_gyro *gyro, u8 calibration_sample_number) {
 }
 
 /*
-* This function interpret gyroscope value close to 0, as if they were 0
-** Everything beetwen wind_low and wind_high is considered to be 0.
-** Window_low is a negative integer, window_high a positive one
-** If the value is outside launch a quick calibration of accelerometer and gyroscope
+* This function calculate gyroscope value less calibration number
 */
 
 void check_gyroscope_position(struct s_gyro *gyro) {
 	struct s_gyro ctrl;
 
 	read_gyro(&ctrl);
-	ctrl.gyroX -= gyro->gyroX;
-	ctrl.gyroY -= gyro->gyroY;
-	ctrl.gyroZ -= gyro->gyroZ;
-
-        uart2_putstr("Control Gyroscope \n\r");
-        print_gyro(&ctrl);
-	if ((OUTSIDE_VALUE(ctrl.gyroX)) || (OUTSIDE_VALUE(ctrl.gyroY)) || (OUTSIDE_VALUE(ctrl.gyroZ)))
-        {
-                uart2_putstr("CALIBRATION \n\r");
-                uart2_putstr("CALIBRATION \n\r");
-
-//		calibration(20);
-//		calibration_gyroscope(gyro, 20);
-	}
+	g_xctrl = ctrl.gyroX - gyro->gyroX;
+	g_yctrl = ctrl.gyroY - gyro->gyroY;
+	g_zctrl = ctrl.gyroZ - gyro->gyroZ;
 }

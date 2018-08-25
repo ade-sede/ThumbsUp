@@ -9,6 +9,11 @@
 s32 g_xbias = 0;
 s32 g_ybias = 0;
 s32 g_zbias = 0;
+
+s32 g_xctrl = 0;
+s32 g_yctrl = 0;
+s32 g_zctrl = 0;
+
 u8 g_button = 0;
 
 /*

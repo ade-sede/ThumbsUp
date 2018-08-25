@@ -36,6 +36,10 @@ s32 g_xbias;
 s32 g_ybias;
 s32 g_zbias;
 
+s32 g_xctrl;
+s32 g_yctrl;
+s32 g_zctrl;
+
 /* Config bits */
 # define PWR_MGMT_ON_NO_TEMP 0b1000  /* Goes to PWR_MGMT_1. Disable temp sensor */
 
