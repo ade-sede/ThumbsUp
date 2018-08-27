@@ -11,6 +11,8 @@ extern s32 g_xctrl;
 extern s32 g_yctrl;
 extern s32 g_zctrl;
 
+extern u16 mtime;
+
 /*
 ** If the accel is null during too long, we consider velocity is null
 */
@@ -62,11 +64,33 @@ static void	check_no_movement(struct s_accel *accel, struct s_velocity *velocity
 ** 1) At the end of processing, shift the current accel to the previous
 ** 2) Clean the space for the next measurement.
 */
+
+void	mouvement_gyro()
+{
+	u16 count = 0;
+	struct s_gyro sample;
+
+	while (count <= calibration_sample_number) {
+		memset(&sample, 0, sizeof(struct s_gyro));
+		read_gyro(&sample);
+		gyro->gyroX += sample.gyroX;
+		gyro->gyroY += sample.gyroY;
+		gyro->gyroZ += sample.gyroZ;
+		++count;
+	}
+	gyro->gyroX /= calibration_sample_number;
+	gyro->gyroY /= calibration_sample_number;
+	gyro->gyroZ /= calibration_sample_number;
+}
+
 void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	u16 count = 0;
 
 	struct s_accel sample;
-	 
+
+	TMR4 = 0;
+	T4CONbits.ON = 1;
+
 	/* SAMPLING */
 	while (count <= AVERAGE_SAMPLE_NUMBER) {
 		memset(&sample, 0, sizeof(struct s_velocity));
@@ -107,7 +131,9 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	if (INVALID_VALUE(accel[CURR].accelZ))
  		accel[CURR].accelZ = 0;
 
-
+	T4CONbits.ON = 0;
+	
+	g_mtime = TMR4 / 62500.0 * 1000;
 //	char buff[4096];
 //        uart2_putstr("transf : \n\r");
 //	sprintf(buff, "%f	%f	%f\n\r", ((((2.0 * (accel[CURR].accelX)) / 32768.0)) * 9.81), TRANS_ACCEL_TO_MS2(accel[CURR].accelY), TRANS_ACCEL_TO_MS2(accel[CURR].accelZ));
@@ -125,6 +151,11 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	** consider time to be 1. Thus :
 	** Movement = Velocity
     */
+
+	/* calcul  de l'angle */
+
+
+
 
 	/* Output */
 

@@ -19,6 +19,8 @@
 /* Transformation de l'accel em m/s2 : 2g * val / valeur_max * aceleration_pesanteur */
 #define TRANS_ACCEL_TO_MS2(x) (((2.0 * x / 32768.0) * 9.81))
 
+#define TRANS_GYRO_TO_DEGRE(x) (((2.0 * x / 32768.0) * 9.81))
+
 void	movement(struct s_accel *accel, struct s_velocity *velocity);
 
 #endif

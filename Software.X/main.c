@@ -14,6 +14,8 @@ s32 g_xctrl = 0;
 s32 g_yctrl = 0;
 s32 g_zctrl = 0;
 
+u16 g_mtime = 0;
+
 u8 g_button = 0;
 
 /*
@@ -43,18 +45,18 @@ void	init(void) {
 int main(void) {
 	struct s_accel accel[2];
 	struct s_velocity velocity[2];
-	struct s_gyro *gyro;
+	struct s_gyro gyro[2];
 	unsigned int original_priority;
 
 
 	memset(accel, 0, sizeof(struct s_accel) * 2);
 	memset(velocity, 0, sizeof(struct s_velocity) * 2);
-	memset(&gyro, 0, sizeof(struct s_gyro));
-//
-//	T4CON = 0;//reset
-//	T4CONbits.TCKPS = 0b110; //1:64
-//	TMR4 = 0;//set timer 0
-//	PR4 = 1;//2ms 62500 -> 1s
+	memset(gyro, 0, sizeof(struct s_gyro) * 2);
+
+	T4CON = 0;//reset
+	T4CONbits.TCKPS = 0b110; //1:64
+	TMR4 = 0;//set timer 0
+	PR4 = 62500;//2ms 62500 -> 1s
 
 	init();
 	init_pot();
