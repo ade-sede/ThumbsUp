@@ -18,12 +18,10 @@ u8 g_button = 0;
 
 /*
  * Function in charge of doing everything that needs to be done ONCE in order for the system to be ready
-
  */
 
-
 void	init(void) {
-	TRISFbits.TRISF1 = 0;	/* Setting up tri-state */
+	TRISFbits.TRISF1 = 0;	/* Setting up tri-state led */
 	TRISDbits.TRISD8 = 1;	// int1 board button
 	TRISDbits.TRISD9 = 1;	/* Setting up tri-state int2 input*/
 	TRISDbits.TRISD10 = 1;	/* Setting up tri-state int3 input*/
