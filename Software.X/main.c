@@ -18,7 +18,9 @@ u8 g_button = 0;
 
 /*
  * Function in charge of doing everything that needs to be done ONCE in order for the system to be ready
+
  */
+
 
 void	init(void) {
 	TRISFbits.TRISF1 = 0;	/* Setting up tri-state */
