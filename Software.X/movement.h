@@ -16,6 +16,8 @@
 # define INVALID_VALUE(value) (value <= WINDOW_HIGH && value >= WINDOW_LOW)
 /* The number of no accel in a row before we consider velocity = 0 */
 # define NO_ACCEL_TRESHOLD 25
+/* Transformation de l'accel em m/s2 : 2g * val / valeur_max * aceleration_pesanteur */
+#define TRANS_ACCEL_TO_MS2(x) (((2.0 * x / 32768.0) * 9.81))
 
 void	movement(struct s_accel *accel, struct s_velocity *velocity);
 

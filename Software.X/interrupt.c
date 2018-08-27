@@ -87,7 +87,7 @@ void set_timer() {
 	T3CON = 0;//reset
 	T3CONbits.TCKPS = 0b110; //1:64
 	TMR3 = 0;//set timer 0
-	PR3 = 1250;//2ms 625000 -> 1s
+	PR3 = 1250;//2ms 62500 -> 1s
 	IPC3bits.T3IP = 7;
 	IFS0bits.T3IF = 0;
 	IEC0bits.T3IE = 1;

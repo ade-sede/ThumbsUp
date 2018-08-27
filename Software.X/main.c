@@ -50,6 +50,11 @@ int main(void) {
 	memset(accel, 0, sizeof(struct s_accel) * 2);
 	memset(velocity, 0, sizeof(struct s_velocity) * 2);
 	memset(&gyro, 0, sizeof(struct s_gyro));
+//
+//	T4CON = 0;//reset
+//	T4CONbits.TCKPS = 0b110; //1:64
+//	TMR4 = 0;//set timer 0
+//	PR4 = 1;//2ms 62500 -> 1s
 
 	init();
 	init_pot();

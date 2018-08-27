@@ -64,6 +64,7 @@ static void	check_no_movement(struct s_accel *accel, struct s_velocity *velocity
 */
 void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	u16 count = 0;
+
 	struct s_accel sample;
 	 
 	/* SAMPLING */
@@ -84,7 +85,9 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	accel[CURR].accelX -= g_xbias;
 	accel[CURR].accelY -= g_ybias;
 	accel[CURR].accelZ -= g_zbias;
-	
+
+
+
 	/*
 	** Interpret acceleration close to 0, as if they were 0
 	** Everything beetwen window _low and window_high is considered to be 0.
@@ -92,14 +95,23 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	*/
 //	uart2_putstr("Acceleration before filter\n\r");
 //	print_accel(accel[CURR]);
-	
+//	char buff[4096];
+//        uart2_putstr("Calibration accelerometre : \n\r");
+//	sprintf(buff, "%d	%d	%d\n\r", g_xbias, g_ybias, g_zbias);
+//	uart2_putstr(buff);
+
 	if (INVALID_VALUE(accel[CURR].accelX))
  		accel[CURR].accelX = 0;
 	if (INVALID_VALUE(accel[CURR].accelY))
  		accel[CURR].accelY = 0;
 	if (INVALID_VALUE(accel[CURR].accelZ))
  		accel[CURR].accelZ = 0;
-	
+
+
+//	char buff[4096];
+//        uart2_putstr("transf : \n\r");
+//	sprintf(buff, "%f	%f	%f\n\r", ((((2.0 * (accel[CURR].accelX)) / 32768.0)) * 9.81), TRANS_ACCEL_TO_MS2(accel[CURR].accelY), TRANS_ACCEL_TO_MS2(accel[CURR].accelZ));
+//	uart2_putstr(buff);
 
 //	uart2_putstr("Acceleration after filter\n\r");
 //	print_accel(accel[CURR]);
@@ -122,7 +134,7 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
             print_ctrl();
         }
 
-	send_report(create_report(velocity[CURR].velocityX, velocity[CURR].velocityY));
+	send_report(create_report(TRANS_ACCEL_TO_MS2(velocity[CURR].velocityX), TRANS_ACCEL_TO_MS2(velocity[CURR].velocityY)));
 	check_no_movement(accel, velocity);
         
 	/* Curr becomes prev */
