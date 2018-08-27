@@ -21,6 +21,12 @@ struct s_velocity {
 	s32 velocityZ;
 };
 
+struct s_position {
+	s32 positionX;
+	s32 positionY;
+	s32 positionZ;
+};
+
 struct s_gyro {
 	s32 gyroX;
 	s32 gyroY;

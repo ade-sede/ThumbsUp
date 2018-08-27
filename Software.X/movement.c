@@ -10,7 +10,7 @@ extern s32 g_zbias;
 /*
 ** If the accel is null during too long, we consider velocity is null
 */
-static void	check_no_movement(struct s_accel *accel, struct s_velocity *velocity) {
+static void	check_no_movement(struct s_accel *accel, struct s_velocity *velocity, struct s_position *position) {
 	static u32 countX = 0;
 	static u32 countY = 0;
 	static u32 countZ = 0;
@@ -86,24 +86,22 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	** Everything beetwen window _low and window_high is considered to be 0.
 	** Window_low is a negative integer, window_high a positive one
 	*/
-//	uart2_putstr("Acceleration before filter\n\r");
-//	print_accel(accel[CURR]);
-	
 	if (INVALID_VALUE(accel[CURR].accelX))
  		accel[CURR].accelX = 0;
 	if (INVALID_VALUE(accel[CURR].accelY))
  		accel[CURR].accelY = 0;
 	if (INVALID_VALUE(accel[CURR].accelZ))
  		accel[CURR].accelZ = 0;
-	
 
-//	uart2_putstr("Acceleration after filter\n\r");
-//	print_accel(accel[CURR]);
 	/* Integration */
 	velocity[CURR].velocityX = velocity[PREV].velocityX + accel[PREV].accelX + ((accel[CURR].accelX - accel[PREV].accelX) / 2);
 	velocity[CURR].velocityY = velocity[PREV].velocityY + accel[PREV].accelY + ((accel[CURR].accelY - accel[PREV].accelY) / 2);
 	velocity[CURR].velocityZ = velocity[PREV].velocityZ + accel[PREV].accelZ + ((accel[CURR].accelZ - accel[PREV].accelZ) / 2);
-	
+
+	/* Second integration */
+	position[CURR].positionX = position[PREV].positionX + velocity[PREV].velocityX + ((velocity[CURR].velocityX - velocity[PREV].velocityX) / 2);
+	position[CURR].positionY = position[PREV].positionY + velocity[PREV].velocityY + ((velocity[CURR].velocityY - velocity[PREV].velocityY) / 2);
+	position[CURR].positionZ = position[PREV].positionZ + velocity[PREV].velocityZ + ((velocity[CURR].velocityZ - velocity[PREV].velocityZ) / 2);
 	/*
 	** Movement = Velocity * time, but as we sample at a regular time we can
 	** consider time to be 1. Thus :
@@ -111,18 +109,19 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
     */
 
 	/* Output */
-	
-        uart2_putstr("Velocity / Movement\n\r");
+	uart2_putstr("Velocity / Movement\n\r");
 	print_velocity(velocity[CURR]);
 
-	send_report(create_report(velocity[CURR].velocityX, velocity[CURR].velocityY));
+	send_report(create_report(position[CURR].positionX, position[CURR].positionY));
 	check_no_movement(accel, velocity);
         
 	/* Curr becomes prev */
+	memcpy(&position[PREVIOUS], &position[CURRENT], sizeof(struct s_position));
 	memcpy(&velocity[PREVIOUS], &velocity[CURRENT], sizeof(struct s_velocity));
 	memcpy(&accel[PREVIOUS], &accel[CURRENT], sizeof(struct s_accel));
 
 	/* Blank spot for new values */
+	memset(&position[CURR], 0, sizeof(struct s_position));
 	memset(&velocity[CURR], 0, sizeof(struct s_velocity));
 	memset(&accel[CURR], 0, sizeof(struct s_accel));
 }

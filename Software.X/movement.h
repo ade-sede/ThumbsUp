@@ -17,6 +17,6 @@
 /* The number of no accel in a row before we consider velocity = 0 */
 # define NO_ACCEL_TRESHOLD 25
 
-void	movement(struct s_accel *accel, struct s_velocity *velocity);
+void	movement(struct s_accel *accel, struct s_velocity *velocity, struct s_position *position);
 
 #endif

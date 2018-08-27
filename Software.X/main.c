@@ -38,12 +38,14 @@ void	init(void) {
 int main(void) {
 	struct s_accel accel[2];
 	struct s_velocity velocity[2];
+	struct s_position position[2];
 	struct s_gyro *gyro;
 	unsigned int original_priority;
 
 
 	memset(accel, 0, sizeof(struct s_accel) * 2);
 	memset(velocity, 0, sizeof(struct s_velocity) * 2);
+	memset(position, 0, sizeof(struct s_position) * 2);
 	memset(&gyro, 0, sizeof(struct s_gyro));
 
 	init();
@@ -54,7 +56,7 @@ int main(void) {
 		/* Storing priority on entry, jumping to highest */
 		original_priority = __builtin_get_isr_state();
 		__builtin_set_isr_state(7);
-		movement(accel, velocity);
+		movement(accel, velocity, position);
 		check_gyroscope_position(&gyro);
 		/* Restoring priority */
 		__builtin_set_isr_state(original_priority);

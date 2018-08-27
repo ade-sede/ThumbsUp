@@ -11,11 +11,11 @@
 extern u8 g_button;
 
 s16  *create_report(s16 x_move, s16 y_move) {
-    s16 static report[7];
-    u16 pot = pot_report();
+	s16 static report[7];
+	u16 pot = pot_report();
     // If you want activate sensibily with potentiometre add pot variable to report[4] and [5]
 
-        memset(report, 0, sizeof(s16) * 7);
+	memset(report, 0, sizeof(s16) * 7);
 	report[0] = (s16)0xFD; // Format mouse raw
 	report[1] = (s16)5; // Length
 	report[2] = (s16)2; // Data descriptor -> Mouse
