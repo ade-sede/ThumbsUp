@@ -5,9 +5,8 @@
 #include "movement.h"
 #include "debug.h"
 
-extern s32 g_xbias;
-extern s32 g_ybias;
-extern s32 g_zbias;
+extern struct s_accel g_accel_bias;
+extern struct s_gyro g_gyro_bias;
 
 /*
 ** Request a read from register addr source, stores
@@ -97,74 +96,38 @@ void MPU9150_write(u8 register_addr, u8 value) {
  * This is the function that measures the forces present in the system, 
  * during a no-move condition at the beginnig
  * and shorter during execution
- * We average those measures using calibration_sample_number samples
+ * We average those measures using CALIBRATION_SAMPLE_NUMBER samples
  */
 
-void calibration(u8 calibration_sample_number) {
+void calibration() {
 	u16 count = 0;
-	struct s_accel sample;
+	struct s_accel sample_accel;
+	struct s_gyro sample_gyro;
 
-	while (count <= calibration_sample_number) {
-		memset(&sample, 0, sizeof(struct s_accel));
-		read_accel(&sample);
-		g_xbias += sample.accelX;
-		g_ybias += sample.accelY;
-		g_zbias += sample.accelZ;
+	while (count <= CALIBRATION_SAMPLE_NUMBER) {
+		memset(&sample_accel, 0, sizeof(struct s_accel));
+		memset(&sample_gyro, 0, sizeof(struct s_gyro));
+		read_accel(&sample_accel);
+		read_gyro(&sample_gyro);
+		g_accel_bias.accelX += sample_accel.accelX;
+		g_accel_bias.accelY += sample_accel.accelY;
+		g_accel_bias.accelZ += sample_accel.accelZ;
+		g_gyro_bias.gyroX += sample_gyro.gyroX;
+		g_gyro_bias.gyroY += sample_gyro.gyroY;
+		g_gyro_bias.gyroZ += sample_gyro.gyroZ;
 		++count;
 	}
 
-	g_xbias /= calibration_sample_number;
-	g_ybias /= calibration_sample_number;
-	g_zbias /= calibration_sample_number;
+	g_accel_bias.accelX /= CALIBRATION_SAMPLE_NUMBER;
+	g_accel_bias.accelY /= CALIBRATION_SAMPLE_NUMBER;
+	g_accel_bias.accelZ /= CALIBRATION_SAMPLE_NUMBER;
+	g_gyro_bias.gyroX /= CALIBRATION_SAMPLE_NUMBER;
+	g_gyro_bias.gyroY /= CALIBRATION_SAMPLE_NUMBER;
+	g_gyro_bias.gyroZ /= CALIBRATION_SAMPLE_NUMBER;
 
-	char buff[4096];
-        uart2_putstr("Calibration accelerometre : \n\r");
-	sprintf(buff, "%d	%d	%d\n\r", g_xbias, g_ybias, g_zbias);
-	uart2_putstr(buff);
-}
+	uart2_putstr("Calibration acceleration : \n\r");
+	print_accel(&g_accel_bias);
 
-void calibration_gyroscope(struct s_gyro *gyro, u8 calibration_sample_number) {
-	u16 count = 0;
-	struct s_gyro sample;
-
-	while (count <= calibration_sample_number) {
-		memset(&sample, 0, sizeof(struct s_gyro));
-		read_gyro(&sample);
-		gyro->gyroX += sample.gyroX;
-		gyro->gyroY += sample.gyroY;
-		gyro->gyroZ += sample.gyroZ;
-		++count;
-	}
-	gyro->gyroX /= calibration_sample_number;
-	gyro->gyroY /= calibration_sample_number;
-	gyro->gyroZ /= calibration_sample_number;
-        uart2_putstr("Calibration gyroscope : \n\r");
-        print_gyro(gyro);
-}
-
-/*
-* This function interpret gyroscope value close to 0, as if they were 0
-** Everything beetwen wind_low and wind_high is considered to be 0.
-** Window_low is a negative integer, window_high a positive one
-** If the value is outside launch a quick calibration of accelerometer and gyroscope
-*/
-
-void check_gyroscope_position(struct s_gyro *gyro) {
-	struct s_gyro ctrl;
-
-	read_gyro(&ctrl);
-	ctrl.gyroX -= gyro->gyroX;
-	ctrl.gyroY -= gyro->gyroY;
-	ctrl.gyroZ -= gyro->gyroZ;
-
-        uart2_putstr("Control Gyroscope \n\r");
-        print_gyro(&ctrl);
-	if ((OUTSIDE_VALUE(ctrl.gyroX)) || (OUTSIDE_VALUE(ctrl.gyroY)) || (OUTSIDE_VALUE(ctrl.gyroZ)))
-        {
-                uart2_putstr("CALIBRATION \n\r");
-                uart2_putstr("CALIBRATION \n\r");
-
-//		calibration(20);
-//		calibration_gyroscope(gyro, 20);
-	}
+	uart2_putstr("Calibration gyroscope : \n\r");
+	print_gyro(&g_gyro_bias);
 }

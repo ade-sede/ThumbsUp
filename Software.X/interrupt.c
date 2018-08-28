@@ -1,6 +1,7 @@
 #include "header.h"
 #include "RN42.h"
 #include "interrupt.h"
+#include "movement.h"
 
 extern u8 g_button;
 u8 g_edge_int2 = RISING;
@@ -22,6 +23,12 @@ void __ISR (_TIMER_3_VECTOR, IPL7SRS) int3_debounce (void){
 	TMR3 = 0;
 	LATFbits.LATF1 = 0;
 	set_interrupt_right_click();
+}
+
+void __ISR (_TIMER_4_VECTOR, IPL5SRS) launch_movement (void){
+	IFS0bits.T4IF = 0;
+	TMR4 = 0;
+	movement();
 }
 
 void __ISR (_EXTERNAL_2_VECTOR, IPL6SRS) left_click (void){
@@ -91,6 +98,15 @@ void set_timer() {
 	IPC3bits.T3IP = 7;
 	IFS0bits.T3IF = 0;
 	IEC0bits.T3IE = 1;
+
+	// Timer 4 link to MPU9150
+	T4CON = 0;//reset
+	T4CONbits.TCKPS = 0b110; //1:64
+	TMR4 = 0;//set timer 0
+	PR4 = 625;//1ms 625000 -> 1s
+	IPC4bits.T4IP = 5;
+	IFS0bits.T4IF = 0;
+	IEC0bits.T4IE = 1;
 }
 
 void set_interrupt() {
