@@ -12,6 +12,7 @@
       <itemPath>movement.h</itemPath>
       <itemPath>debug.h</itemPath>
       <itemPath>RN42.h</itemPath>
+      <itemPath>interrupt.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"

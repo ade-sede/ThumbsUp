@@ -14,6 +14,9 @@ s32 g_xctrl = 0;
 s32 g_yctrl = 0;
 s32 g_zctrl = 0;
 
+struct s_gyro g_cal_gyro;
+struct s_gyro g_degres_gyro;
+
 u16 g_mtime = 0;
 
 u8 g_button = 0;
@@ -52,22 +55,26 @@ int main(void) {
 	memset(accel, 0, sizeof(struct s_accel) * 2);
 	memset(velocity, 0, sizeof(struct s_velocity) * 2);
 	memset(gyro, 0, sizeof(struct s_gyro) * 2);
+        memset(&g_cal_gyro, 0, sizeof(struct s_gyro));
+        memset(&g_degres_gyro, 0, sizeof(struct s_gyro));
 
 	T4CON = 0;//reset
 	T4CONbits.TCKPS = 0b110; //1:64
 	TMR4 = 0;//set timer 0
 	PR4 = 62500;//2ms 62500 -> 1s
 
+
+
 	init();
 	init_pot();
 	set_interrupt();
-	calibration_gyroscope(&gyro, 100);	/* Gyroscope calibration, in a no movement condition */
+	calibration_gyroscope(100);	/* Gyroscope calibration, in a no movement condition */
 	while (1) {
 		/* Storing priority on entry, jumping to highest */
 		original_priority = __builtin_get_isr_state();
 		__builtin_set_isr_state(7);
 		movement(accel, velocity);
-		check_gyroscope_position(&gyro);
+		check_gyroscope_position(gyro);
 		/* Restoring priority */
 		__builtin_set_isr_state(original_priority);
 		Nop();

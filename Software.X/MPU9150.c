@@ -1,4 +1,4 @@
-#include "i2c.h"
+ #include "i2c.h"
 #include "header.h"
 #include "MPU9150.h"
 #include "uart.h"
@@ -12,6 +12,8 @@ extern s32 g_zbias;
 extern s32 g_xctrl;
 extern s32 g_yctrl;
 extern s32 g_zctrl;
+
+extern struct s_gyro g_cal_gyro;
 
 /*
 ** Request a read from register addr source, stores
@@ -47,7 +49,9 @@ void read_accel(struct s_accel *accel) {
 	u8 accelY_HIGH;
 	u8 accelZ_LOW;
 	u8 accelZ_HIGH;
-	
+
+        /* Reading the raw data of the Accelerometer from the MPU */
+
 	MPU9150_read(ACCEL_XOUT_L, &accelX_LOW);
 	MPU9150_read(ACCEL_XOUT_H, &accelX_HIGH);
 	MPU9150_read(ACCEL_YOUT_L, &accelY_LOW);
@@ -63,6 +67,7 @@ void read_accel(struct s_accel *accel) {
 /*
  * This function retrieves all the gyroscope measurement
  */
+
 void read_gyro(struct s_gyro *gyro) {
 	u8 gyroX_LOW;
 	u8 gyroX_HIGH;
@@ -70,6 +75,9 @@ void read_gyro(struct s_gyro *gyro) {
 	u8 gyroY_HIGH;
 	u8 gyroZ_LOW;
 	u8 gyroZ_HIGH;
+
+
+        /* Reading the raw data of the Gyroscope from the MPU */
 
 	MPU9150_read(GYRO_XOUT_L, &gyroX_LOW);
 	MPU9150_read(GYRO_XOUT_H, &gyroX_HIGH);
@@ -115,6 +123,10 @@ void calibration(u8 calibration_sample_number) {
 		g_ybias += sample.accelY;
 		g_zbias += sample.accelZ;
 		++count;
+//                char buff[4096];
+//                uart2_putstr("accelerometre : \n\r");
+//                sprintf(buff, "%d	%d	%d\n\r", sample.accelX, sample.accelY, sample.accelZ);
+//                uart2_putstr(buff);
 	}
 
 	g_xbias /= calibration_sample_number;
@@ -127,23 +139,23 @@ void calibration(u8 calibration_sample_number) {
 	uart2_putstr(buff);
 }
 
-void calibration_gyroscope(struct s_gyro *gyro, u8 calibration_sample_number) {
+void calibration_gyroscope(u8 calibration_sample_number) {
 	u16 count = 0;
 	struct s_gyro sample;
 
 	while (count <= calibration_sample_number) {
 		memset(&sample, 0, sizeof(struct s_gyro));
 		read_gyro(&sample);
-		gyro->gyroX += sample.gyroX;
-		gyro->gyroY += sample.gyroY;
-		gyro->gyroZ += sample.gyroZ;
+		g_cal_gyro.gyroX += sample.gyroX;
+		g_cal_gyro.gyroY += sample.gyroY;
+		g_cal_gyro.gyroZ += sample.gyroZ;
 		++count;
 	}
-	gyro->gyroX /= calibration_sample_number;
-	gyro->gyroY /= calibration_sample_number;
-	gyro->gyroZ /= calibration_sample_number;
-        uart2_putstr("Calibration gyroscope : \n\r");
-        print_gyro(gyro);
+	g_cal_gyro.gyroX /= calibration_sample_number;
+	g_cal_gyro.gyroY /= calibration_sample_number;
+	g_cal_gyro.gyroZ /= calibration_sample_number;
+//        uart2_putstr("Calibration gyroscope : \n\r");
+//        print_gyro(&g_cal_gyro);
 }
 
 /*

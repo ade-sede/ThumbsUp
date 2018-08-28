@@ -11,4 +11,9 @@
 */
 u8 g_button;
 
+void set_interrupt_left_click();
+void set_interrupt_right_click();
+void set_external_interrupt();
+void set_timer();
+
 #endif

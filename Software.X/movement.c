@@ -11,7 +11,10 @@ extern s32 g_xctrl;
 extern s32 g_yctrl;
 extern s32 g_zctrl;
 
-extern u16 mtime;
+extern struct s_gyro g_cal_gyro;
+extern struct s_gyro g_degres_gyro;
+
+extern u16 g_mtime;
 
 /*
 ** If the accel is null during too long, we consider velocity is null
@@ -65,12 +68,14 @@ static void	check_no_movement(struct s_accel *accel, struct s_velocity *velocity
 ** 2) Clean the space for the next measurement.
 */
 
-void	mouvement_gyro()
+void	mouvement_gyro(struct s_gyro *gyro)
 {
 	u16 count = 0;
+        u8 i = 0;
 	struct s_gyro sample;
 
-	while (count <= calibration_sample_number) {
+        /* Echantillonnage */
+	while (count <= AVERAGE_SAMPLE_NUMBER) {
 		memset(&sample, 0, sizeof(struct s_gyro));
 		read_gyro(&sample);
 		gyro->gyroX += sample.gyroX;
@@ -78,15 +83,48 @@ void	mouvement_gyro()
 		gyro->gyroZ += sample.gyroZ;
 		++count;
 	}
-	gyro->gyroX /= calibration_sample_number;
-	gyro->gyroY /= calibration_sample_number;
-	gyro->gyroZ /= calibration_sample_number;
+	gyro->gyroX /= AVERAGE_SAMPLE_NUMBER;
+	gyro->gyroY /= AVERAGE_SAMPLE_NUMBER;
+	gyro->gyroZ /= AVERAGE_SAMPLE_NUMBER;
+
+        /* calibration */
+        gyro->gyroX -= g_cal_gyro.gyroX;
+	gyro->gyroY -= g_cal_gyro.gyroY;
+	gyro->gyroZ -= g_cal_gyro.gyroZ;
+
+        /* Filtre */
+        if (INVALID_VALUE_GYRO(gyro->gyroX))
+        {
+ 		gyro->gyroX = 0;
+                i = 1;
+        }
+	if (INVALID_VALUE_GYRO(gyro->gyroY))
+ 		gyro->gyroY = 0;
+	if (INVALID_VALUE_GYRO(gyro->gyroZ))
+ 		gyro->gyroZ = 0;
+
+        /* Transformation en degres */
+        if (i)
+        {
+            g_degres_gyro.gyroX += (250.0 * (gyro->gyroX / 32768.0));                     //    (TRANS_GYRO_TO_DEGRE(gyro->gyroX));// * g_mtime) / 1000);
+            g_degres_gyro.gyroY += (TRANS_GYRO_TO_DEGRE(gyro->gyroY));// * g_mtime) / 1000);
+            g_degres_gyro.gyroZ += (TRANS_GYRO_TO_DEGRE(gyro->gyroZ));// * g_mtime) / 1000);
+            i = 0;
+        }
+
+
+//        uart2_putstr("gyroscope : \n\r");
+//        print_gyro(gyro);
+
+    uart2_putstr("gyroscope degres : \n\r");
+    print_gyro(&g_degres_gyro);
 }
 
 void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	u16 count = 0;
 
 	struct s_accel sample;
+        struct s_gyro gyro;
 
 	TMR4 = 0;
 	T4CONbits.ON = 1;
@@ -134,8 +172,12 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	T4CONbits.ON = 0;
 	
 	g_mtime = TMR4 / 62500.0 * 1000;
+        mouvement_gyro(&gyro);
 //	char buff[4096];
-//        uart2_putstr("transf : \n\r");
+//        uart2_putstr("accel : \n\r");
+//	sprintf(buff, "%d	%d	%d\n\r", accel[CURR].accelX, accel[CURR].accelY,accel[CURR].accelZ);
+
+        //        uart2_putstr("transf : \n\r");
 //	sprintf(buff, "%f	%f	%f\n\r", ((((2.0 * (accel[CURR].accelX)) / 32768.0)) * 9.81), TRANS_ACCEL_TO_MS2(accel[CURR].accelY), TRANS_ACCEL_TO_MS2(accel[CURR].accelZ));
 //	uart2_putstr(buff);
 
@@ -159,11 +201,11 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 
 	/* Output */
 
-        if (velocity[CURR].velocityX != 0 || velocity[CURR].velocityY != 0 || velocity[CURR].velocityZ != 0){
-            uart2_putstr("Velocity / Movement\n\r");
-            print_velocity(velocity[CURR]);
-            print_ctrl();
-        }
+//        if (velocity[CURR].velocityX != 0 || velocity[CURR].velocityY != 0 || velocity[CURR].velocityZ != 0){
+//            uart2_putstr("Velocity / Movement\n\r");
+//            print_velocity(velocity[CURR]);
+//            print_ctrl();
+//        }
 
 	send_report(create_report(TRANS_ACCEL_TO_MS2(velocity[CURR].velocityX), TRANS_ACCEL_TO_MS2(velocity[CURR].velocityY)));
 	check_no_movement(accel, velocity);
