@@ -14,6 +14,11 @@ extern s32 g_yctrl;
 extern s32 g_zctrl;
 
 extern struct s_gyro g_cal_gyro;
+extern struct s_g g_angle;
+
+extern float g_accelR;
+
+extern struct s_g g_accel;
 
 /*
 ** Request a read from register addr source, stores
@@ -123,19 +128,32 @@ void calibration(u8 calibration_sample_number) {
 		g_ybias += sample.accelY;
 		g_zbias += sample.accelZ;
 		++count;
-                char buff[4096];
-                uart2_putstr("accelerometre : \n\r");
-                sprintf(buff, "%f	%f	%f\n\r", sample.accelX / 16384.0, sample.accelY / 16384.0, sample.accelZ / 16384.0);
-                uart2_putstr(buff);
+//                char buff[4096];
+//                uart2_putstr("accelerometre : \n\r");
+//                sprintf(buff, "%f	%f	%f\n\r", sample.accelX / 16384.0, sample.accelY / 16384.0, sample.accelZ / 16384.0);
+//                uart2_putstr(buff);
 	}
 
 	g_xbias /= calibration_sample_number;
 	g_ybias /= calibration_sample_number;
 	g_zbias /= calibration_sample_number;
 
-	char buff[4096];
-        uart2_putstr("Calibration accelerometre : \n\r");
-	sprintf(buff, "%d	%d	%d\n\r", g_xbias, g_ybias, g_zbias);
-	uart2_putstr(buff);
+	/* calibartion angle */
+	g_accel.accelX = TRANS_ACCEL_TO_G(g_xbias);
+	g_accel.accelY = TRANS_ACCEL_TO_G(g_ybias);
+	g_accel.accelZ = TRANS_ACCEL_TO_G(g_zbias);
+
+//	T4CONbits.ON = 0;
+
+	g_accelR = sqrt(powf(g_accel.accelX, 2.0) + powf(g_accel.accelY, 2.0) + powf(g_accel.accelZ, 2.0));
+
+	/* Give angle in degrees of the vector */
+	g_angle.accelX = acosf(g_accel.accelX/ g_accelR) * 57.2958;
+	g_angle.accelY = acosf(g_accel.accelY/ g_accelR) * 57.2958;
+	g_angle.accelZ = acosf(g_accel.accelZ/ g_accelR) * 57.2958;
+//	char buff[4096];
+////        uart2_putstr("Calibration accelerometre : \n\r");
+////	sprintf(buff, "%d	%d	%d\n\r", g_xbias, g_ybias, g_zbias);
+////	uart2_putstr(buff);
 }
 

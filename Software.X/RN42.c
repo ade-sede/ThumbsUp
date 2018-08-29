@@ -20,8 +20,8 @@ s16  *create_report(s16 x_move, s16 y_move) {
 	report[1] = (s16)5; // Length
 	report[2] = (s16)2; // Data descriptor -> Mouse
 	report[3] = (s16)g_button;
-	report[4] = (s16)(x_move / 100);// * pot;
-	report[5] = (s16)(y_move / 100);// * pot;
+	report[4] = (s16)(x_move);// * pot;
+	report[5] = (s16)(y_move);// * pot;
 	report[6] = (s16)0; // Wheel
 	g_button = 0;
 	return (report);
@@ -44,7 +44,7 @@ void send_report(s16 *report) {
 		uart1_transmit_idle(report[i]);
 		i++;
 	}
-	while (i < 30000)
+	while (i < 3000)
 		++i;
 	Nop();
 	/* Restoring priority */

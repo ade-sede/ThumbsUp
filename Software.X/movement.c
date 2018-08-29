@@ -13,8 +13,9 @@ extern s32 g_zctrl;
 
 extern struct s_gyro g_cal_gyro;
 extern struct s_gyro g_degres_gyro;
+extern struct s_g g_angle;
 
-extern u16 g_mtime;
+extern float g_mtime;
 
 extern float g_accelR;
 
@@ -82,8 +83,8 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	struct s_g arcos;
 	struct s_g ms2;
 
-	TMR4 = 0;
-	T4CONbits.ON = 1;
+//	TMR4 = 0;
+//	T4CONbits.ON = 1;
 
 	memset(&ms2, 0, sizeof(struct s_g));
 	memset(&g_accel, 0, sizeof(struct s_g));
@@ -113,12 +114,13 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 //	accel[CURR].accelY -= g_ybias;
 //	accel[CURR].accelZ -= g_zbias;
 
+
 	/* giving value between -2 +2 */
 	g_accel.accelX = TRANS_ACCEL_TO_G(accel[CURR].accelX);
 	g_accel.accelY = TRANS_ACCEL_TO_G(accel[CURR].accelY);
 	g_accel.accelZ = TRANS_ACCEL_TO_G(accel[CURR].accelZ);
 
-
+//	T4CONbits.ON = 0;
 
 	g_accelR = sqrt(powf(g_accel.accelX, 2.0)+powf(g_accel.accelY, 2.0)+ powf(g_accel.accelZ, 2.0));
 
@@ -128,24 +130,32 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	arcos.accelZ = acosf(g_accel.accelZ/ g_accelR) * 57.2958;
 
 	/* calibration */
-	g_accel.accelX -= TRANS_ACCEL_TO_G(g_xbias);
-	g_accel.accelY -= TRANS_ACCEL_TO_G(g_ybias);
-	g_accel.accelZ -= TRANS_ACCEL_TO_G(g_zbias);
+	arcos.accelX -= g_angle.accelX;
+	arcos.accelY -= g_angle.accelY;
+	arcos.accelZ -= g_angle.accelZ;
 
-	/* transform to ms2 */
-	ms2.accelX = TRANS_G_TO_MS2(g_accel.accelX) * cosf(arcos.accelX);
-	ms2.accelY = TRANS_G_TO_MS2(g_accel.accelY) * cosf(arcos.accelY);
-	ms2.accelZ = TRANS_G_TO_MS2(g_accel.accelZ) * cosf(arcos.accelZ);
+
+//
+//	/* transform to ms2 */
+//	ms2.accelX = TRANS_G_TO_MS2(g_accel.accelX) * cosf(arcos.accelX);
+//	ms2.accelY = TRANS_G_TO_MS2(g_accel.accelY) * cosf(arcos.accelY);
+//	ms2.accelZ = TRANS_G_TO_MS2(g_accel.accelZ) * cosf(arcos.accelZ);
 
 //	char buff[4096];
 //                uart2_putstr("accelerometre : \n\r");
 //                sprintf(buff, "%f	%f	%f  \n\r", (TRANS_G_TO_MS2(g_accel.accelX) * cosf(arcos.accelX)), TRANS_G_TO_MS2(g_accel.accelY), TRANS_G_TO_MS2(g_accel.accelZ));
 //                uart2_putstr(buff);
 
+char buff[4096];
+                uart2_putstr("accelerometre angle : \n\r");
+                sprintf(buff, "%f    %f	    %f\n\r",(arcos.accelX), (arcos.accelY), (arcos.accelZ));
+                uart2_putstr(buff);
+
 //char buff[4096];
 //                uart2_putstr("accelerometre angle : \n\r");
-//                sprintf(buff, "%f    %f	    %f	  %f\n\r", g_accelR, (arcos.accelX), (arcos.accelY), (arcos.accelZ));
+//                sprintf(buff, "%f	    %f	  %f\n\r", ms2.accelX, ms2.accelY, ms2.accelZ);
 //                uart2_putstr(buff);
+
 
 
 
@@ -168,10 +178,9 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 //	if (INVALID_VALUE(accel[CURR].accelZ))
 // 		accel[CURR].accelZ = 0;
 
-	T4CONbits.ON = 0;
-	
-	g_mtime = TMR4 / 62500.0 * 1000;
-        movement_gyro(&gyro);
+//	g_mtime = TMR4 / 625000.0 * 1000;
+
+//        movement_gyro(&gyro);
 //	char buff[4096];
 //        uart2_putstr("accel : \n\r");
 //	sprintf(buff, "%d	%d	%d\n\r", accel[CURR].accelX, accel[CURR].accelY,accel[CURR].accelZ);
@@ -206,7 +215,17 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 //            print_ctrl();
 //        }
 
-//	send_report(create_report(TRANS_ACCEL_TO_MS2(velocity[CURR].velocityX), TRANS_ACCEL_TO_MS2(velocity[CURR].velocityY)));
+//	char buff[4096];
+//                uart2_putstr("cursor data : \n\r");
+//                sprintf(buff, "%f    %f	    \n\r", 0.5 *(ms2.accelX / 1000.0) * powf(g_mtime, 2.0), 1000* 0.5 * (ms2.accelY / 1000) * powf(g_mtime, 2.0));
+//                uart2_putstr(buff);
+//	send_report(create_report(0.5 *(ms2.accelX / 1000.0) * powf(g_mtime, 2.0), 1000* 0.5 * (ms2.accelY / 1000) * powf(g_mtime, 2.0)));
+
+				if (arcos.accelX < 20 && arcos.accelX > -20)
+					arcos.accelX = 0;
+				if (arcos.accelZ < 20 && arcos.accelZ > -20)
+					arcos.accelY = 0;
+				send_report(create_report(arcos.accelX / 2, -arcos.accelZ / 2));
 	check_no_movement(accel, velocity);
         
 	/* Curr becomes prev */

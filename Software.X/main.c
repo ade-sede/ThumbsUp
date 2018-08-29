@@ -18,8 +18,9 @@ float g_accelR = 0;
 
 struct s_gyro g_cal_gyro;
 struct s_gyro g_degres_gyro;
+struct s_g g_angle;
 
-u16 g_mtime = 0;
+float g_mtime = 0;
 
 u8 g_button = 0;
 
@@ -59,6 +60,7 @@ int main(void) {
 	memset(gyro, 0, sizeof(struct s_gyro) * 2);
         memset(&g_cal_gyro, 0, sizeof(struct s_gyro));
         memset(&g_degres_gyro, 0, sizeof(struct s_gyro));
+		memset(&g_angle, 0, sizeof(struct s_g));
 
 	T4CON = 0;//reset
 	T4CONbits.TCKPS = 0b110; //1:64
