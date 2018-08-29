@@ -91,7 +91,6 @@ void	movement(void) {
 	g_gyro[CURR].gyroX /= AVERAGE_SAMPLE_NUMBER;
 	g_gyro[CURR].gyroY /= AVERAGE_SAMPLE_NUMBER;
 	g_gyro[CURR].gyroZ /= AVERAGE_SAMPLE_NUMBER;
-	//print_accel(g_accel[CURR]);
 	/* Remove priously calibrated values */
 	g_accel[CURR].accelX -= g_accel_bias.accelX;
 	g_accel[CURR].accelY -= g_accel_bias.accelY;
@@ -100,11 +99,6 @@ void	movement(void) {
 	g_gyro[CURR].gyroY -= g_gyro_bias.gyroY;
 	g_gyro[CURR].gyroZ -= g_gyro_bias.gyroZ;
 
-//	g_accel[CURR].accelX = g_accel[CURR].accelX * 981 / 100 * 2);// - (g_gyro[CURR].gyroX * 250 / 32768);
-//	g_accel[CURR].accelY = (g_accel[CURR].accelY * 981 / 100 * 2);//- (g_gyro[CURR].gyroZ * 250 / 32768);
-//	g_accel[CURR].accelZ = (g_accel[CURR].accelZ * 981 / 100 * 2);// - (g_gyro[CURR].gyroY * 250 / 32768);
-
-	//print_accel(g_accel[CURR]);
 	/*
 	** Interpret acceleration close to 0, as if they were 0
 	** Everything beetwen window _low and window_high is considered to be 0.
@@ -125,13 +119,13 @@ void	movement(void) {
  		g_gyro[CURR].gyroZ = 0;
 
 	/* Integration */
-	g_velocity[CURR].velocityX = g_velocity[PREV].velocityX + g_accel[PREV].accelX + ((g_accel[CURR].accelX - g_accel[PREV].accelX) / 2);
-	g_velocity[CURR].velocityY = g_velocity[PREV].velocityY + g_accel[PREV].accelY + ((g_accel[CURR].accelY - g_accel[PREV].accelY) / 2);
-	g_velocity[CURR].velocityZ = g_velocity[PREV].velocityZ + g_accel[PREV].accelZ + ((g_accel[CURR].accelZ - g_accel[PREV].accelZ) / 2);
+	g_velocity[CURR].velocityX = g_velocity[PREV].velocityX + g_accel[PREV].accelX / 1000 + ((g_accel[CURR].accelX - g_accel[PREV].accelX) / 2 / 1000);
+	g_velocity[CURR].velocityY = g_velocity[PREV].velocityY + g_accel[PREV].accelY / 1000 + ((g_accel[CURR].accelY - g_accel[PREV].accelY) / 2 / 1000);
+	g_velocity[CURR].velocityZ = g_velocity[PREV].velocityZ + g_accel[PREV].accelZ * 1000 + ((g_accel[CURR].accelZ - g_accel[PREV].accelZ) / 2 * 1000);
 
-	test[CURR].velocityX = test[PREV].velocityX + g_velocity[PREV].velocityX + ((g_velocity[CURR].velocityX - g_velocity[PREV].velocityX) / 2);
-	test[CURR].velocityY = test[PREV].velocityY + g_velocity[PREV].velocityY + ((g_velocity[CURR].velocityY - g_velocity[PREV].velocityY) / 2);
-	test[CURR].velocityZ = test[PREV].velocityZ + g_velocity[PREV].velocityZ + ((g_velocity[CURR].velocityZ - g_velocity[PREV].velocityZ) / 2);
+//	test[CURR].velocityX = test[PREV].velocityX + g_velocity[PREV].velocityX + ((g_velocity[CURR].velocityX - g_velocity[PREV].velocityX) / 2);
+//	test[CURR].velocityY = test[PREV].velocityY + g_velocity[PREV].velocityY + ((g_velocity[CURR].velocityY - g_velocity[PREV].velocityY) / 2);
+//	test[CURR].velocityZ = test[PREV].velocityZ + g_velocity[PREV].velocityZ + ((g_velocity[CURR].velocityZ - g_velocity[PREV].velocityZ) / 2);
 	//print_velocity(test[CURR]);
 	/*
 	** Movement = Velocity * time, but as we sample at a regular time we can
