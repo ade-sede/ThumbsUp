@@ -15,6 +15,12 @@ struct s_accel {
 	s32 accelZ;
 };
 
+struct s_g {
+	float accelX;
+	float accelY;
+	float accelZ;
+};
+
 struct s_velocity {
 	s32 velocityX;
 	s32 velocityY;

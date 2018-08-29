@@ -16,6 +16,10 @@ extern struct s_gyro g_degres_gyro;
 
 extern u16 g_mtime;
 
+extern float g_accelR;
+
+struct s_g g_accel;
+
 /*
 ** If the accel is null during too long, we consider velocity is null
 */
@@ -68,85 +72,80 @@ static void	check_no_movement(struct s_accel *accel, struct s_velocity *velocity
 ** 2) Clean the space for the next measurement.
 */
 
-void	mouvement_gyro(struct s_gyro *gyro)
-{
-	u16 count = 0;
-        u8 i = 0;
-	struct s_gyro sample;
 
-        /* Echantillonnage */
-	while (count <= AVERAGE_SAMPLE_NUMBER) {
-		memset(&sample, 0, sizeof(struct s_gyro));
-		read_gyro(&sample);
-		gyro->gyroX += sample.gyroX;
-		gyro->gyroY += sample.gyroY;
-		gyro->gyroZ += sample.gyroZ;
-		++count;
-	}
-	gyro->gyroX /= AVERAGE_SAMPLE_NUMBER;
-	gyro->gyroY /= AVERAGE_SAMPLE_NUMBER;
-	gyro->gyroZ /= AVERAGE_SAMPLE_NUMBER;
-
-        /* calibration */
-        gyro->gyroX -= g_cal_gyro.gyroX;
-	gyro->gyroY -= g_cal_gyro.gyroY;
-	gyro->gyroZ -= g_cal_gyro.gyroZ;
-
-        /* Filtre */
-        if (INVALID_VALUE_GYRO(gyro->gyroX))
-        {
- 		gyro->gyroX = 0;
-                i = 1;
-        }
-	if (INVALID_VALUE_GYRO(gyro->gyroY))
- 		gyro->gyroY = 0;
-	if (INVALID_VALUE_GYRO(gyro->gyroZ))
- 		gyro->gyroZ = 0;
-
-        /* Transformation en degres */
-        if (i)
-        {
-            g_degres_gyro.gyroX += (250.0 * (gyro->gyroX / 32768.0));                     //    (TRANS_GYRO_TO_DEGRE(gyro->gyroX));// * g_mtime) / 1000);
-            g_degres_gyro.gyroY += (TRANS_GYRO_TO_DEGRE(gyro->gyroY));// * g_mtime) / 1000);
-            g_degres_gyro.gyroZ += (TRANS_GYRO_TO_DEGRE(gyro->gyroZ));// * g_mtime) / 1000);
-            i = 0;
-        }
-
-
-//        uart2_putstr("gyroscope : \n\r");
-//        print_gyro(gyro);
-
-    uart2_putstr("gyroscope degres : \n\r");
-    print_gyro(&g_degres_gyro);
-}
 
 void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 	u16 count = 0;
 
 	struct s_accel sample;
-        struct s_gyro gyro;
+    struct s_gyro gyro;
+	struct s_g arcos;
+	struct s_g ms2;
 
 	TMR4 = 0;
 	T4CONbits.ON = 1;
 
+	memset(&ms2, 0, sizeof(struct s_g));
+	memset(&g_accel, 0, sizeof(struct s_g));
+	memset(&arcos, 0, sizeof(struct s_g));
+
 	/* SAMPLING */
 	while (count <= AVERAGE_SAMPLE_NUMBER) {
-		memset(&sample, 0, sizeof(struct s_velocity));
+		memset(&sample, 0, sizeof(struct s_accel));
 		read_accel(&sample);
 		accel[CURR].accelX += sample.accelX;
 		accel[CURR].accelY += sample.accelY;
 		accel[CURR].accelZ += sample.accelZ;
 		++count;
+
+//	                char buff[4096];
+//                uart2_putstr("accelerometre : \n\r");
+//                sprintf(buff, "%f	%f	%f\n\r", (sample.accelX / 16384.0), (sample.accelY / 16384.0), (sample.accelZ / 16384.0));
+//                uart2_putstr(buff);
 	}
 	/* Retrieving average */
 	accel[CURR].accelX /= AVERAGE_SAMPLE_NUMBER;
 	accel[CURR].accelY /= AVERAGE_SAMPLE_NUMBER;
 	accel[CURR].accelZ /= AVERAGE_SAMPLE_NUMBER;
 
-	/* Remove priously calibrated values */
-	accel[CURR].accelX -= g_xbias;
-	accel[CURR].accelY -= g_ybias;
-	accel[CURR].accelZ -= g_zbias;
+//	/* Remove priously calibrated values */
+//	accel[CURR].accelX -= g_xbias;
+//	accel[CURR].accelY -= g_ybias;
+//	accel[CURR].accelZ -= g_zbias;
+
+	/* giving value between -2 +2 */
+	g_accel.accelX = TRANS_ACCEL_TO_G(accel[CURR].accelX);
+	g_accel.accelY = TRANS_ACCEL_TO_G(accel[CURR].accelY);
+	g_accel.accelZ = TRANS_ACCEL_TO_G(accel[CURR].accelZ);
+
+
+
+	g_accelR = sqrt(powf(g_accel.accelX, 2.0)+powf(g_accel.accelY, 2.0)+ powf(g_accel.accelZ, 2.0));
+
+	/* Give angle in degrees of the vector */
+	arcos.accelX = acosf(g_accel.accelX/ g_accelR) * 57.2958;
+	arcos.accelY = acosf(g_accel.accelY/ g_accelR) * 57.2958;
+	arcos.accelZ = acosf(g_accel.accelZ/ g_accelR) * 57.2958;
+
+	/* calibration */
+	g_accel.accelX -= TRANS_ACCEL_TO_G(g_xbias);
+	g_accel.accelY -= TRANS_ACCEL_TO_G(g_ybias);
+	g_accel.accelZ -= TRANS_ACCEL_TO_G(g_zbias);
+
+	/* transform to ms2 */
+	ms2.accelX = TRANS_G_TO_MS2(g_accel.accelX) * cosf(arcos.accelX);
+	ms2.accelY = TRANS_G_TO_MS2(g_accel.accelY) * cosf(arcos.accelY);
+	ms2.accelZ = TRANS_G_TO_MS2(g_accel.accelZ) * cosf(arcos.accelZ);
+
+//	char buff[4096];
+//                uart2_putstr("accelerometre : \n\r");
+//                sprintf(buff, "%f	%f	%f  \n\r", (TRANS_G_TO_MS2(g_accel.accelX) * cosf(arcos.accelX)), TRANS_G_TO_MS2(g_accel.accelY), TRANS_G_TO_MS2(g_accel.accelZ));
+//                uart2_putstr(buff);
+
+//char buff[4096];
+//                uart2_putstr("accelerometre angle : \n\r");
+//                sprintf(buff, "%f    %f	    %f	  %f\n\r", g_accelR, (arcos.accelX), (arcos.accelY), (arcos.accelZ));
+//                uart2_putstr(buff);
 
 
 
@@ -162,17 +161,17 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 //	sprintf(buff, "%d	%d	%d\n\r", g_xbias, g_ybias, g_zbias);
 //	uart2_putstr(buff);
 
-	if (INVALID_VALUE(accel[CURR].accelX))
- 		accel[CURR].accelX = 0;
-	if (INVALID_VALUE(accel[CURR].accelY))
- 		accel[CURR].accelY = 0;
-	if (INVALID_VALUE(accel[CURR].accelZ))
- 		accel[CURR].accelZ = 0;
+//	if (INVALID_VALUE(accel[CURR].accelX))
+// 		accel[CURR].accelX = 0;
+//	if (INVALID_VALUE(accel[CURR].accelY))
+// 		accel[CURR].accelY = 0;
+//	if (INVALID_VALUE(accel[CURR].accelZ))
+// 		accel[CURR].accelZ = 0;
 
 	T4CONbits.ON = 0;
 	
 	g_mtime = TMR4 / 62500.0 * 1000;
-        mouvement_gyro(&gyro);
+        movement_gyro(&gyro);
 //	char buff[4096];
 //        uart2_putstr("accel : \n\r");
 //	sprintf(buff, "%d	%d	%d\n\r", accel[CURR].accelX, accel[CURR].accelY,accel[CURR].accelZ);
@@ -184,9 +183,9 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 //	uart2_putstr("Acceleration after filter\n\r");
 //	print_accel(accel[CURR]);
 	/* Integration */
-	velocity[CURR].velocityX = velocity[PREV].velocityX + accel[PREV].accelX + ((accel[CURR].accelX - accel[PREV].accelX) / 2);
-	velocity[CURR].velocityY = velocity[PREV].velocityY + accel[PREV].accelY + ((accel[CURR].accelY - accel[PREV].accelY) / 2);
-	velocity[CURR].velocityZ = velocity[PREV].velocityZ + accel[PREV].accelZ + ((accel[CURR].accelZ - accel[PREV].accelZ) / 2);
+//	velocity[CURR].velocityX = velocity[PREV].velocityX + accel[PREV].accelX + ((accel[CURR].accelX - accel[PREV].accelX) / 2);
+//	velocity[CURR].velocityY = velocity[PREV].velocityY + accel[PREV].accelY + ((accel[CURR].accelY - accel[PREV].accelY) / 2);
+//	velocity[CURR].velocityZ = velocity[PREV].velocityZ + accel[PREV].accelZ + ((accel[CURR].accelZ - accel[PREV].accelZ) / 2);
 	
 	/*
 	** Movement = Velocity * time, but as we sample at a regular time we can
@@ -207,7 +206,7 @@ void	movement(struct s_accel *accel, struct s_velocity *velocity) {
 //            print_ctrl();
 //        }
 
-	send_report(create_report(TRANS_ACCEL_TO_MS2(velocity[CURR].velocityX), TRANS_ACCEL_TO_MS2(velocity[CURR].velocityY)));
+//	send_report(create_report(TRANS_ACCEL_TO_MS2(velocity[CURR].velocityX), TRANS_ACCEL_TO_MS2(velocity[CURR].velocityY)));
 	check_no_movement(accel, velocity);
         
 	/* Curr becomes prev */

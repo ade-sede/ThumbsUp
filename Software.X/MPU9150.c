@@ -123,10 +123,10 @@ void calibration(u8 calibration_sample_number) {
 		g_ybias += sample.accelY;
 		g_zbias += sample.accelZ;
 		++count;
-//                char buff[4096];
-//                uart2_putstr("accelerometre : \n\r");
-//                sprintf(buff, "%d	%d	%d\n\r", sample.accelX, sample.accelY, sample.accelZ);
-//                uart2_putstr(buff);
+                char buff[4096];
+                uart2_putstr("accelerometre : \n\r");
+                sprintf(buff, "%f	%f	%f\n\r", sample.accelX / 16384.0, sample.accelY / 16384.0, sample.accelZ / 16384.0);
+                uart2_putstr(buff);
 	}
 
 	g_xbias /= calibration_sample_number;
@@ -139,34 +139,3 @@ void calibration(u8 calibration_sample_number) {
 	uart2_putstr(buff);
 }
 
-void calibration_gyroscope(u8 calibration_sample_number) {
-	u16 count = 0;
-	struct s_gyro sample;
-
-	while (count <= calibration_sample_number) {
-		memset(&sample, 0, sizeof(struct s_gyro));
-		read_gyro(&sample);
-		g_cal_gyro.gyroX += sample.gyroX;
-		g_cal_gyro.gyroY += sample.gyroY;
-		g_cal_gyro.gyroZ += sample.gyroZ;
-		++count;
-	}
-	g_cal_gyro.gyroX /= calibration_sample_number;
-	g_cal_gyro.gyroY /= calibration_sample_number;
-	g_cal_gyro.gyroZ /= calibration_sample_number;
-//        uart2_putstr("Calibration gyroscope : \n\r");
-//        print_gyro(&g_cal_gyro);
-}
-
-/*
-* This function calculate gyroscope value less calibration number
-*/
-
-void check_gyroscope_position(struct s_gyro *gyro) {
-	struct s_gyro ctrl;
-
-	read_gyro(&ctrl);
-	g_xctrl = ctrl.gyroX - gyro->gyroX;
-	g_yctrl = ctrl.gyroY - gyro->gyroY;
-	g_zctrl = ctrl.gyroZ - gyro->gyroZ;
-}

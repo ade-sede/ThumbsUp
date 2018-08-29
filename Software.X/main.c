@@ -14,6 +14,8 @@ s32 g_xctrl = 0;
 s32 g_yctrl = 0;
 s32 g_zctrl = 0;
 
+float g_accelR = 0;
+
 struct s_gyro g_cal_gyro;
 struct s_gyro g_degres_gyro;
 

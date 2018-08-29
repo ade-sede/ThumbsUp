@@ -19,10 +19,14 @@
 /* The number of no accel in a row before we consider velocity = 0 */
 # define NO_ACCEL_TRESHOLD 25
 /* Transformation de l'accel em m/s2 : 2g * val / valeur_max * aceleration_pesanteur */
-#define TRANS_ACCEL_TO_MS2(x) (((2.0 * x / 32768.0) * 9.81))
+#define TRANS_ACCEL_TO_G(x) (x / 16384.0)
 
-#define TRANS_GYRO_TO_DEGRE(x) (250.0 * (x / 32768.0))
+#define TRANS_G_TO_MS2(x) (x * 9.81)
+
+
+#define TRANS_GYRO_TO_DEGRE(x) (x / 131.0)
 
 void	movement(struct s_accel *accel, struct s_velocity *velocity);
+void	movement_gyro(struct s_gyro *gyro);
 
 #endif

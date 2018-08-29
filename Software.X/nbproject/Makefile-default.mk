@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=main.c i2c_utils.c config.c MPU9150.c movement.c debug.c uart2.c uart1.c RN42.c interrupt.c Potentiometre.c
+SOURCEFILES_QUOTED_IF_SPACED=main.c i2c_utils.c config.c MPU9150.c movement.c debug.c uart2.c uart1.c RN42.c interrupt.c Potentiometre.c gyro.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/i2c_utils.o ${OBJECTDIR}/config.o ${OBJECTDIR}/MPU9150.o ${OBJECTDIR}/movement.o ${OBJECTDIR}/debug.o ${OBJECTDIR}/uart2.o ${OBJECTDIR}/uart1.o ${OBJECTDIR}/RN42.o ${OBJECTDIR}/interrupt.o ${OBJECTDIR}/Potentiometre.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/i2c_utils.o.d ${OBJECTDIR}/config.o.d ${OBJECTDIR}/MPU9150.o.d ${OBJECTDIR}/movement.o.d ${OBJECTDIR}/debug.o.d ${OBJECTDIR}/uart2.o.d ${OBJECTDIR}/uart1.o.d ${OBJECTDIR}/RN42.o.d ${OBJECTDIR}/interrupt.o.d ${OBJECTDIR}/Potentiometre.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/i2c_utils.o ${OBJECTDIR}/config.o ${OBJECTDIR}/MPU9150.o ${OBJECTDIR}/movement.o ${OBJECTDIR}/debug.o ${OBJECTDIR}/uart2.o ${OBJECTDIR}/uart1.o ${OBJECTDIR}/RN42.o ${OBJECTDIR}/interrupt.o ${OBJECTDIR}/Potentiometre.o ${OBJECTDIR}/gyro.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/i2c_utils.o.d ${OBJECTDIR}/config.o.d ${OBJECTDIR}/MPU9150.o.d ${OBJECTDIR}/movement.o.d ${OBJECTDIR}/debug.o.d ${OBJECTDIR}/uart2.o.d ${OBJECTDIR}/uart1.o.d ${OBJECTDIR}/RN42.o.d ${OBJECTDIR}/interrupt.o.d ${OBJECTDIR}/Potentiometre.o.d ${OBJECTDIR}/gyro.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/i2c_utils.o ${OBJECTDIR}/config.o ${OBJECTDIR}/MPU9150.o ${OBJECTDIR}/movement.o ${OBJECTDIR}/debug.o ${OBJECTDIR}/uart2.o ${OBJECTDIR}/uart1.o ${OBJECTDIR}/RN42.o ${OBJECTDIR}/interrupt.o ${OBJECTDIR}/Potentiometre.o
+OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/i2c_utils.o ${OBJECTDIR}/config.o ${OBJECTDIR}/MPU9150.o ${OBJECTDIR}/movement.o ${OBJECTDIR}/debug.o ${OBJECTDIR}/uart2.o ${OBJECTDIR}/uart1.o ${OBJECTDIR}/RN42.o ${OBJECTDIR}/interrupt.o ${OBJECTDIR}/Potentiometre.o ${OBJECTDIR}/gyro.o
 
 # Source Files
-SOURCEFILES=main.c i2c_utils.c config.c MPU9150.c movement.c debug.c uart2.c uart1.c RN42.c interrupt.c Potentiometre.c
+SOURCEFILES=main.c i2c_utils.c config.c MPU9150.c movement.c debug.c uart2.c uart1.c RN42.c interrupt.c Potentiometre.c gyro.c
 
 
 CFLAGS=
@@ -160,6 +160,12 @@ ${OBJECTDIR}/Potentiometre.o: Potentiometre.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/Potentiometre.o 
 	@${FIXDEPS} "${OBJECTDIR}/Potentiometre.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Potentiometre.o.d" -o ${OBJECTDIR}/Potentiometre.o Potentiometre.c   
 	
+${OBJECTDIR}/gyro.o: gyro.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/gyro.o.d 
+	@${RM} ${OBJECTDIR}/gyro.o 
+	@${FIXDEPS} "${OBJECTDIR}/gyro.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/gyro.o.d" -o ${OBJECTDIR}/gyro.o gyro.c   
+	
 else
 ${OBJECTDIR}/main.o: main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -226,6 +232,12 @@ ${OBJECTDIR}/Potentiometre.o: Potentiometre.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/Potentiometre.o.d 
 	@${RM} ${OBJECTDIR}/Potentiometre.o 
 	@${FIXDEPS} "${OBJECTDIR}/Potentiometre.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Potentiometre.o.d" -o ${OBJECTDIR}/Potentiometre.o Potentiometre.c   
+	
+${OBJECTDIR}/gyro.o: gyro.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/gyro.o.d 
+	@${RM} ${OBJECTDIR}/gyro.o 
+	@${FIXDEPS} "${OBJECTDIR}/gyro.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/gyro.o.d" -o ${OBJECTDIR}/gyro.o gyro.c   
 	
 endif
 
