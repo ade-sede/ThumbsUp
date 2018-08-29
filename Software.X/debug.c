@@ -7,10 +7,10 @@ extern s32 g_xctrl;
 extern s32 g_yctrl;
 extern s32 g_zctrl;
 
-inline void	print_gyro(struct s_gyro *sample) {
+inline void	print_gyro(struct s_gyro sample) {
 	char buff[4096];
 
-	sprintf(buff, "%d		%d		%d\n\r", sample->gyroX, sample->gyroY, sample->gyroZ);
+	sprintf(buff, "%d		%d		%d\n\r", sample.gyroX, sample.gyroY, sample.gyroZ);
 	uart2_putstr(buff);
 }
 

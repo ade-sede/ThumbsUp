@@ -7,46 +7,6 @@ extern u8 g_button;
 u8 g_edge_int2 = RISING;
 u8 g_edge_int3 = RISING;
 
-void __ISR (_TIMER_2_VECTOR, IPL7SRS) int2_debounce (void){
-	// Relaunch interrupt2 after left click debounce
-	T2CONbits.ON = 0;
-	IFS0bits.T2IF = 0;
-	TMR2 = 0;
-	LATFbits.LATF1 = 0;
-	set_interrupt_left_click();
-}
-
-void __ISR (_TIMER_3_VECTOR, IPL7SRS) int3_debounce (void){
-	// Relaunch interrupt3 after right click debounce
-	T3CONbits.ON = 0;
-	IFS0bits.T3IF = 0;
-	TMR3 = 0;
-	LATFbits.LATF1 = 0;
-	set_interrupt_right_click();
-}
-
-void __ISR (_TIMER_4_VECTOR, IPL5SRS) launch_movement (void){
-	IFS0bits.T4IF = 0;
-	TMR4 = 0;
-	movement();
-}
-
-void __ISR (_EXTERNAL_2_VECTOR, IPL6SRS) left_click (void){
-	IEC0bits.INT2IE = 0;
-	LATFbits.LATF1 = 1;
-//	if (g_edge_int2 == FALLING)
-		g_button = 1;
-	T2CONbits.ON = 1;
-}
-
-void __ISR (_EXTERNAL_3_VECTOR, IPL6SRS) right_click (void){
-	IEC0bits.INT3IE = 0;
-	LATFbits.LATF1 = 1;
-//	if (g_edge_int3 == FALLING)
-		g_button = 2;
-	T3CONbits.ON = 1;
-}
-
 void set_interrupt_left_click() {
 	// Interrupt Button left click
 	if (g_edge_int2 == FALLING)
@@ -73,6 +33,54 @@ void set_interrupt_right_click() {
 	IPC3bits.INT3IS = 0;
 	IFS0bits.INT3IF = 0;
 	IEC0bits.INT3IE = 1;
+}
+
+void __ISR (_TIMER_2_VECTOR, IPL7SRS) int2_debounce (void){
+	// Relaunch interrupt2 after left click debounce
+	T2CONbits.ON = 0;
+	IFS0bits.T2IF = 0;
+	TMR2 = 0;
+	LATFbits.LATF1 = 0;
+	set_interrupt_left_click();
+}
+
+void __ISR (_TIMER_3_VECTOR, IPL7SRS) int3_debounce (void){
+	// Relaunch interrupt3 after right click debounce
+	T3CONbits.ON = 0;
+	IFS0bits.T3IF = 0;
+	TMR3 = 0;
+	LATFbits.LATF1 = 0;
+	set_interrupt_right_click();
+}
+
+void __ISR (_TIMER_4_VECTOR, IPL5SRS) launch_movement (void){
+	unsigned int original_priority;
+	T4CONbits.ON = 0;
+	IFS0bits.T4IF = 0;
+	TMR4 = 0;
+	/* Storing priority on entry, jumping to highest */
+	original_priority = __builtin_get_isr_state();
+	__builtin_set_isr_state(7);
+	movement();
+	/* Restoring priority */
+	__builtin_set_isr_state(original_priority);
+	T4CONbits.ON = 1;
+}
+
+void __ISR (_EXTERNAL_2_VECTOR, IPL6SRS) left_click (void){
+	IEC0bits.INT2IE = 0;
+	LATFbits.LATF1 = 1;
+//	if (g_edge_int2 == FALLING)
+		g_button = 1;
+	T2CONbits.ON = 1;
+}
+
+void __ISR (_EXTERNAL_3_VECTOR, IPL6SRS) right_click (void){
+	IEC0bits.INT3IE = 0;
+	LATFbits.LATF1 = 1;
+//	if (g_edge_int3 == FALLING)
+		g_button = 2;
+	T3CONbits.ON = 1;
 }
 
 void set_external_interrupt() {
@@ -107,6 +115,7 @@ void set_timer() {
 	IPC4bits.T4IP = 5;
 	IFS0bits.T4IF = 0;
 	IEC0bits.T4IE = 1;
+	T4CONbits.ON = 1;
 }
 
 void set_interrupt() {

@@ -8,9 +8,9 @@
 
 struct s_accel g_accel_bias;
 struct s_gyro g_gyro_bias;
-struct s_accel accel[2];
-struct s_velocity velocity[2];
-struct s_gyro gyro[2];
+struct s_accel g_accel[2];
+struct s_velocity g_velocity[2];
+struct s_gyro g_gyro[2];
 
 u8 g_button = 0;
 
@@ -41,22 +41,22 @@ void	init(void) {
 int main(void) {
 	unsigned int original_priority;
 
-	memset(accel, 0, sizeof(struct s_accel) * 2);
-	memset(velocity, 0, sizeof(struct s_velocity) * 2);
-	memset(gyro, 0, sizeof(struct s_gyro) * 2);
-	memset(&g_accel_bias, 0, sizeof(struct s_bias));
-	memset(&g_gyro_bias, 0, sizeof(struct s_bias));
+	memset(g_accel, 0, sizeof(struct s_accel) * 2);
+	memset(g_velocity, 0, sizeof(struct s_velocity) * 2);
+	memset(g_gyro, 0, sizeof(struct s_gyro) * 2);
+	memset(&g_accel_bias, 0, sizeof(struct s_accel));
+	memset(&g_gyro_bias, 0, sizeof(struct s_gyro));
 
 	init();
 	init_pot();
 	set_interrupt();
 	while (1) {
 		/* Storing priority on entry, jumping to highest */
-		original_priority = __builtin_get_isr_state();
-		__builtin_set_isr_state(7);
-		movement(accel, velocity, gyro);
+//		original_priority = __builtin_get_isr_state();
+//		__builtin_set_isr_state(7);
+		//movement();
 		/* Restoring priority */
-		__builtin_set_isr_state(original_priority);
+//		__builtin_set_isr_state(original_priority);
 		Nop();
 	}
 }

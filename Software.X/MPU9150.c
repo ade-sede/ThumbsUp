@@ -126,8 +126,8 @@ void calibration() {
 	g_gyro_bias.gyroZ /= CALIBRATION_SAMPLE_NUMBER;
 
 	uart2_putstr("Calibration acceleration : \n\r");
-	print_accel(&g_accel_bias);
+	print_accel(g_accel_bias);
 
 	uart2_putstr("Calibration gyroscope : \n\r");
-	print_gyro(&g_gyro_bias);
+	print_gyro(g_gyro_bias);
 }

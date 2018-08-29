@@ -1,7 +1,8 @@
 #ifndef RN42_H
 # define RN42_H
 
-# include "uart.h" 
+# include "uart.h"
+# include "MPU9150.h"
 # define RN42_BAUD_RATE ((PBCLK /(115200 * 16) - 1))
 # define UART1_BAUD_RATE RN42_BAUD_RATE
 

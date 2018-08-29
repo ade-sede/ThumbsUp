@@ -15,7 +15,7 @@
 /* (value comprise entre 0 et low) || (value comprise entre 0 et high)*/
 # define INVALID_VALUE(value) (value <= WINDOW_HIGH && value >= WINDOW_LOW)
 /* The number of no accel in a row before we consider velocity = 0 */
-# define NO_ACCEL_TRESHOLD 25
+# define NO_ACCEL_TRESHOLD 5
 
 void	movement();
 

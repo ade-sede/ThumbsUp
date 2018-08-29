@@ -24,6 +24,7 @@ static void	check_no_movement() {
 	if (countX >= NO_ACCEL_TRESHOLD) {
 		g_velocity[CURR].velocityX = 0;
 		g_velocity[PREV].velocityX = 0;
+		countX = 0;
 	}
  
 	if (g_accel[CURR].accelY == 0)
@@ -31,6 +32,7 @@ static void	check_no_movement() {
 	if (countY >= NO_ACCEL_TRESHOLD) {
 		g_velocity[CURR].velocityY = 0;
 		g_velocity[PREV].velocityY = 0;
+		countY = 0;
 	}
 	 
 	if (g_accel[CURR].accelZ == 0)
@@ -38,6 +40,7 @@ static void	check_no_movement() {
 	if (countZ >= NO_ACCEL_TRESHOLD) {
 		g_velocity[CURR].velocityZ = 0;
 		g_velocity[PREV].velocityZ = 0;
+		countZ = 0;
 	}
 }
 
@@ -65,7 +68,7 @@ static void	check_no_movement() {
 void	movement(void) {
 	u16 count = 0;
 	struct s_accel sample;
-	struct s_accel sample_gyro;
+	struct s_gyro sample_gyro;
 	 
 	/* SAMPLING */
 	while (count <= AVERAGE_SAMPLE_NUMBER) {
@@ -101,12 +104,19 @@ void	movement(void) {
 	** Everything beetwen window _low and window_high is considered to be 0.
 	** Window_low is a negative integer, window_high a positive one
 	*/
-	if (INVALID_VALUE(accel[CURR].accelX))
+	if (INVALID_VALUE(g_accel[CURR].accelX))
  		g_accel[CURR].accelX = 0;
-	if (INVALID_VALUE(accel[CURR].accelY))
+	if (INVALID_VALUE(g_accel[CURR].accelY))
  		g_accel[CURR].accelY = 0;
-	if (INVALID_VALUE(accel[CURR].accelZ))
+	if (INVALID_VALUE(g_accel[CURR].accelZ))
  		g_accel[CURR].accelZ = 0;
+
+//	if (INVALID_VALUE(g_gyro[CURR].gyroX))
+// 		g_gyro[CURR].gyroX = 0;
+//	if (INVALID_VALUE(g_gyro[CURR].gyroY))
+// 		g_gyro[CURR].gyroY = 0;
+//	if (INVALID_VALUE(g_gyro[CURR].gyroZ))
+// 		g_gyro[CURR].gyroZ = 0;
 
 	/* Integration */
 	g_velocity[CURR].velocityX = g_velocity[PREV].velocityX + g_accel[PREV].accelX + ((g_accel[CURR].accelX - g_accel[PREV].accelX) / 2);
@@ -123,8 +133,8 @@ void	movement(void) {
 
 	if (g_velocity[CURR].velocityX != 0 || g_velocity[CURR].velocityY != 0 || g_velocity[CURR].velocityZ != 0){
 		uart2_putstr("Velocity / Movement\n\r");
-		print_velocity(velocity[CURR]);
-//		print_gyro();
+		print_velocity(g_velocity[CURR]);
+		print_gyro(g_gyro[CURR]);
 	}
 
 	send_report(create_report(g_velocity[CURR].velocityX, g_velocity[CURR].velocityY));
