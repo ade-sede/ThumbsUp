@@ -9,6 +9,7 @@ extern struct s_gyro g_gyro_bias;
 extern struct s_accel g_accel[2];
 extern struct s_velocity g_velocity[2];
 extern struct s_gyro g_gyro[2];
+struct s_velocity test[2];
 
 /*
 ** If the accel is null during too long, we consider velocity is null
@@ -69,7 +70,7 @@ void	movement(void) {
 	u16 count = 0;
 	struct s_accel sample;
 	struct s_gyro sample_gyro;
-	 
+	
 	/* SAMPLING */
 	while (count <= AVERAGE_SAMPLE_NUMBER) {
 		memset(&sample, 0, sizeof(struct s_velocity));
@@ -90,7 +91,7 @@ void	movement(void) {
 	g_gyro[CURR].gyroX /= AVERAGE_SAMPLE_NUMBER;
 	g_gyro[CURR].gyroY /= AVERAGE_SAMPLE_NUMBER;
 	g_gyro[CURR].gyroZ /= AVERAGE_SAMPLE_NUMBER;
-
+	//print_accel(g_accel[CURR]);
 	/* Remove priously calibrated values */
 	g_accel[CURR].accelX -= g_accel_bias.accelX;
 	g_accel[CURR].accelY -= g_accel_bias.accelY;
@@ -99,6 +100,11 @@ void	movement(void) {
 	g_gyro[CURR].gyroY -= g_gyro_bias.gyroY;
 	g_gyro[CURR].gyroZ -= g_gyro_bias.gyroZ;
 
+//	g_accel[CURR].accelX = g_accel[CURR].accelX * 981 / 100 * 2);// - (g_gyro[CURR].gyroX * 250 / 32768);
+//	g_accel[CURR].accelY = (g_accel[CURR].accelY * 981 / 100 * 2);//- (g_gyro[CURR].gyroZ * 250 / 32768);
+//	g_accel[CURR].accelZ = (g_accel[CURR].accelZ * 981 / 100 * 2);// - (g_gyro[CURR].gyroY * 250 / 32768);
+
+	//print_accel(g_accel[CURR]);
 	/*
 	** Interpret acceleration close to 0, as if they were 0
 	** Everything beetwen window _low and window_high is considered to be 0.
@@ -111,18 +117,22 @@ void	movement(void) {
 	if (INVALID_VALUE(g_accel[CURR].accelZ))
  		g_accel[CURR].accelZ = 0;
 
-//	if (INVALID_VALUE(g_gyro[CURR].gyroX))
-// 		g_gyro[CURR].gyroX = 0;
-//	if (INVALID_VALUE(g_gyro[CURR].gyroY))
-// 		g_gyro[CURR].gyroY = 0;
-//	if (INVALID_VALUE(g_gyro[CURR].gyroZ))
-// 		g_gyro[CURR].gyroZ = 0;
+	if (INVALID_VALUE(g_gyro[CURR].gyroX))
+ 		g_gyro[CURR].gyroX = 0;
+	if (INVALID_VALUE(g_gyro[CURR].gyroY))
+ 		g_gyro[CURR].gyroY = 0;
+	if (INVALID_VALUE(g_gyro[CURR].gyroZ))
+ 		g_gyro[CURR].gyroZ = 0;
 
 	/* Integration */
 	g_velocity[CURR].velocityX = g_velocity[PREV].velocityX + g_accel[PREV].accelX + ((g_accel[CURR].accelX - g_accel[PREV].accelX) / 2);
 	g_velocity[CURR].velocityY = g_velocity[PREV].velocityY + g_accel[PREV].accelY + ((g_accel[CURR].accelY - g_accel[PREV].accelY) / 2);
 	g_velocity[CURR].velocityZ = g_velocity[PREV].velocityZ + g_accel[PREV].accelZ + ((g_accel[CURR].accelZ - g_accel[PREV].accelZ) / 2);
 
+	test[CURR].velocityX = test[PREV].velocityX + g_velocity[PREV].velocityX + ((g_velocity[CURR].velocityX - g_velocity[PREV].velocityX) / 2);
+	test[CURR].velocityY = test[PREV].velocityY + g_velocity[PREV].velocityY + ((g_velocity[CURR].velocityY - g_velocity[PREV].velocityY) / 2);
+	test[CURR].velocityZ = test[PREV].velocityZ + g_velocity[PREV].velocityZ + ((g_velocity[CURR].velocityZ - g_velocity[PREV].velocityZ) / 2);
+	//print_velocity(test[CURR]);
 	/*
 	** Movement = Velocity * time, but as we sample at a regular time we can
 	** consider time to be 1. Thus :
@@ -131,11 +141,11 @@ void	movement(void) {
 
 	/* Output */
 
-	if (g_velocity[CURR].velocityX != 0 || g_velocity[CURR].velocityY != 0 || g_velocity[CURR].velocityZ != 0){
-		uart2_putstr("Velocity / Movement\n\r");
-		print_velocity(g_velocity[CURR]);
-		print_gyro(g_gyro[CURR]);
-	}
+	//if (g_velocity[CURR].velocityX != 0 || g_velocity[CURR].velocityY != 0 || g_velocity[CURR].velocityZ != 0){
+	//	uart2_putstr("Velocity / Movement\n\r");
+	//	print_velocity(g_velocity[CURR]);
+	//	print_gyro(g_gyro[CURR]);
+	//}
 
 	send_report(create_report(g_velocity[CURR].velocityX, g_velocity[CURR].velocityY));
 	check_no_movement();

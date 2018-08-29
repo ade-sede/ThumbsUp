@@ -8,8 +8,8 @@
 # define CURR 1
 
 /* Defines for the discrimination window. */
-# define WINDOW_LOW -800 /* Must be < 0 */
-# define WINDOW_HIGH 800 /* Must be > 0 */
+# define WINDOW_LOW -600 /* Must be < 0 */
+# define WINDOW_HIGH 600 /* Must be > 0 */
 
 /* Macro for the window */
 /* (value comprise entre 0 et low) || (value comprise entre 0 et high)*/

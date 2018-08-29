@@ -41,7 +41,7 @@ void __ISR (_TIMER_2_VECTOR, IPL7SRS) int2_debounce (void){
 	IFS0bits.T2IF = 0;
 	TMR2 = 0;
 	LATFbits.LATF1 = 0;
-	set_interrupt_left_click();
+	set_interrupt_right_click();
 }
 
 void __ISR (_TIMER_3_VECTOR, IPL7SRS) int3_debounce (void){
@@ -50,7 +50,7 @@ void __ISR (_TIMER_3_VECTOR, IPL7SRS) int3_debounce (void){
 	IFS0bits.T3IF = 0;
 	TMR3 = 0;
 	LATFbits.LATF1 = 0;
-	set_interrupt_right_click();
+	set_interrupt_left_click();
 }
 
 void __ISR (_TIMER_4_VECTOR, IPL5SRS) launch_movement (void){

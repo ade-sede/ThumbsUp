@@ -20,8 +20,8 @@ s16  *create_report(s16 x_move, s16 y_move) {
 	report[1] = (s16)5; // Length
 	report[2] = (s16)2; // Data descriptor -> Mouse
 	report[3] = (s16)g_button;
-	report[4] = (s16)(-x_move / 100) * pot / 100;
-	report[5] = (s16)(y_move / 100) * pot / 100;
+	report[4] = (s16)(-x_move / 10);// / 200) * pot / 100;
+	report[5] = (s16)(y_move / 10);// / 200) * pot / 100;
 	report[6] = (s16)0; // Wheel
 	g_button = 0;
 //	uart2_putstr("Send Report\n\r");
@@ -29,7 +29,7 @@ s16  *create_report(s16 x_move, s16 y_move) {
 //
 //	sprintf(buff, "%d		%d		%d		%d\n\r", report[3], report[4], report[5], pot);
 //	uart2_putstr(buff);
-//	return (report);
+	return (report);
 }
 
 /*
