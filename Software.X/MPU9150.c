@@ -37,6 +37,7 @@ void MPU9150_read(u8 source, u8 *dest) {
 	i2c_master_send(ADDR_READ_MODE(SLAVE_ADDR));
 	i2c_master_receive(dest);
 	i2c_master_answer(NACK);
+        /// if NACK is received you should trigger the interrupt ///
 	I2C1CONbits.PEN = 1;
 	while (I2C1CONbits.PEN == 1)
 		Nop();

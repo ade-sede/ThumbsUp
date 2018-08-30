@@ -44,7 +44,7 @@ void send_report(s16 *report) {
 		uart1_transmit_idle(report[i]);
 		i++;
 	}
-	while (i < 3000)
+	while (i < 5000)
 		++i;
 	Nop();
 	/* Restoring priority */
