@@ -36,3 +36,14 @@
 #pragma config PWP = OFF                // Program Flash Write Protect (Disable)
 #pragma config BWP = OFF                // Boot Flash Write Protect bit (Protection Disabled)
 #pragma config CP = OFF                 // Code Protect (Protection Disabled)
+
+/* Following this configuration,  SYSCLK is 80MHz and PBCLK is 40MHz */
+
+/* IF ANY OF THOSE DEFINES ARE CHANGED YOU NEED TO ADJUST THE DEFINES IN CLOCK.H */
+/*
+#undef SYSCLK
+#define SYSCLK (8000000 / 2 * 20 / 1)
+
+#undef PBCLK
+#define PBCLK (SYSCLK / 2)
+*/

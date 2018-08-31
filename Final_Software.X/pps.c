@@ -5,7 +5,6 @@
 */
 void	set_pps() {
 
-
 	ANSELA = 0;
 	ANSELB = 0;
 /*

@@ -25,6 +25,8 @@ typedef signed short s16;
 typedef unsigned long u32;
 typedef signed long s32;
 
-void	set_pps();
+void set_pps();
+void init_pot();
+u16 pot_report();
 
 #endif	/* HEADER_H */
