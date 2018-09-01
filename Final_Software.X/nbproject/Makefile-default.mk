@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=config.c main.c Potentiometre.c pps.c
+SOURCEFILES_QUOTED_IF_SPACED=config.c main.c Potentiometre.c pps.c uart1.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/config.o ${OBJECTDIR}/main.o ${OBJECTDIR}/Potentiometre.o ${OBJECTDIR}/pps.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/config.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/Potentiometre.o.d ${OBJECTDIR}/pps.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/config.o ${OBJECTDIR}/main.o ${OBJECTDIR}/Potentiometre.o ${OBJECTDIR}/pps.o ${OBJECTDIR}/uart1.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/config.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/Potentiometre.o.d ${OBJECTDIR}/pps.o.d ${OBJECTDIR}/uart1.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/config.o ${OBJECTDIR}/main.o ${OBJECTDIR}/Potentiometre.o ${OBJECTDIR}/pps.o
+OBJECTFILES=${OBJECTDIR}/config.o ${OBJECTDIR}/main.o ${OBJECTDIR}/Potentiometre.o ${OBJECTDIR}/pps.o ${OBJECTDIR}/uart1.o
 
 # Source Files
-SOURCEFILES=config.c main.c Potentiometre.c pps.c
+SOURCEFILES=config.c main.c Potentiometre.c pps.c uart1.c
 
 
 CFLAGS=
@@ -118,6 +118,12 @@ ${OBJECTDIR}/pps.o: pps.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/pps.o 
 	@${FIXDEPS} "${OBJECTDIR}/pps.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/pps.o.d" -o ${OBJECTDIR}/pps.o pps.c   
 	
+${OBJECTDIR}/uart1.o: uart1.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/uart1.o.d 
+	@${RM} ${OBJECTDIR}/uart1.o 
+	@${FIXDEPS} "${OBJECTDIR}/uart1.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/uart1.o.d" -o ${OBJECTDIR}/uart1.o uart1.c   
+	
 else
 ${OBJECTDIR}/config.o: config.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -142,6 +148,12 @@ ${OBJECTDIR}/pps.o: pps.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/pps.o.d 
 	@${RM} ${OBJECTDIR}/pps.o 
 	@${FIXDEPS} "${OBJECTDIR}/pps.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/pps.o.d" -o ${OBJECTDIR}/pps.o pps.c   
+	
+${OBJECTDIR}/uart1.o: uart1.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/uart1.o.d 
+	@${RM} ${OBJECTDIR}/uart1.o 
+	@${FIXDEPS} "${OBJECTDIR}/uart1.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/uart1.o.d" -o ${OBJECTDIR}/uart1.o uart1.c   
 	
 endif
 

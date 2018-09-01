@@ -6,6 +6,8 @@
                    projectFiles="true">
       <itemPath>header.h</itemPath>
       <itemPath>clock.h</itemPath>
+      <itemPath>uart.h</itemPath>
+      <itemPath>RN42.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -18,6 +20,7 @@
       <itemPath>main.c</itemPath>
       <itemPath>Potentiometre.c</itemPath>
       <itemPath>pps.c</itemPath>
+      <itemPath>uart1.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

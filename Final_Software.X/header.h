@@ -5,7 +5,6 @@
  * Created on July 9, 2018, 2:52 PM
  */
 
-
 #ifndef HEADER_H
 # define HEADER_H
 

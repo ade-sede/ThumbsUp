@@ -18,4 +18,3 @@
 
 
 #endif	/* CLOCK_H */
-

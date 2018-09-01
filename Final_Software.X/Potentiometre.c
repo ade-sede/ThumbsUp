@@ -8,7 +8,7 @@ void    init_pot() {
 	AD1CON2bits.BUFM = 0;// buff fill mode one big buff
 	/* Buffer configured as one 16-word buffer ADC1BUFF-ADC1BUF0 */
 	AD1CON2bits.ALTS = 0; // Always MUX Sample A
-	AD1CHSbits.CH0SA = 0b0101;;// select MUX A sur AN9
+	AD1CHSbits.CH0SA = 9;// select MUX A sur AN9
 	AD1CON3bits.ADRC = 1;// Clock and prescale 1 -> ADC internal RC clock FRC
 	AD1CON1bits.ON = 1;//ACD ON
 	AD1CON1bits.ASAM = 0; //sampling begins when SAMP bit is set
@@ -17,10 +17,13 @@ void    init_pot() {
 
 u16    pot_report() {
     u16 data;
+    u16 i = 0;
 
     data = 0;
     AD1CON1bits.DONE = 0; //conversion not started or in progress
     AD1CON1bits.SAMP = 1; //Echantillonage
+    while (i < 10000)
+        i++;
     AD1CON1bits.SAMP = 0; //Conversion
     while(AD1CON1bits.DONE == 0)
         Nop();
