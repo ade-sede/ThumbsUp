@@ -32,6 +32,7 @@
 
 // DEVCFG0
 #pragma config JTAGEN = OFF             // JTAG Enable (JTAG Disabled)
+//#pragma config DEBUG = OFF
 #pragma config ICESEL = ICS_PGx1        // ICE/ICD Comm Channel Select (Communicate on PGEC1/PGED1)
 #pragma config PWP = OFF                // Program Flash Write Protect (Disable)
 #pragma config BWP = OFF                // Boot Flash Write Protect bit (Protection Disabled)

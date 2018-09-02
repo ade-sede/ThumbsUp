@@ -15,6 +15,7 @@ s16  *create_report(s16 x_move, s16 y_move) {
     u16 pot = pot_report();
     // If you want activate sensibily with potentiometre add pot variable to report[4] and [5]
 
+
         memset(report, 0, sizeof(s16) * 7);
 	report[0] = (s16)0xFD; // Format mouse raw
 	report[1] = (s16)5; // Length

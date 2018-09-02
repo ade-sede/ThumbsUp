@@ -15,6 +15,18 @@ struct s_accel {
 	s32 accelZ;
 };
 
+struct s_g {
+	float accelX;
+	float accelY;
+	float accelZ;
+};
+
+struct s_gyro {
+	s32 gyroX;
+	s32 gyroY;
+	s32 gyroZ;
+};
+
  /*
   * Those variables represent the acceleration present on each axis, in a no-move condition 
   *	They are mesured during calibration. We have to remove this bias from each measurement

@@ -18,7 +18,7 @@ void    init_pot() {
 u16    pot_report() {
     u16 data;
     u16 i = 0;
-
+	
     data = 0;
     AD1CON1bits.DONE = 0; //conversion not started or in progress
     AD1CON1bits.SAMP = 1; //Echantillonage
@@ -28,5 +28,5 @@ u16    pot_report() {
     while(AD1CON1bits.DONE == 0)
         Nop();
     data = ADC1BUF0; //value on 16bits
-    return (data);
+	return (data);
 }
