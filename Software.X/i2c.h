@@ -12,7 +12,7 @@
 #ifndef PBCLK
 # include "clock.h"
 #endif
-#define FSCK 2000 // 400kHz
+#define FSCK 4000 // 400kHz
 #define I2CBRG (PBCLK / (2 * FSCK)) - 2
 
 #define RW_READ 1
