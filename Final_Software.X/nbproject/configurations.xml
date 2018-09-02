@@ -8,6 +8,10 @@
       <itemPath>clock.h</itemPath>
       <itemPath>uart.h</itemPath>
       <itemPath>RN42.h</itemPath>
+      <itemPath>interrupt.h</itemPath>
+      <itemPath>i2c.h</itemPath>
+      <itemPath>MPU9150.h</itemPath>
+      <itemPath>debug.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -21,6 +25,11 @@
       <itemPath>Potentiometre.c</itemPath>
       <itemPath>pps.c</itemPath>
       <itemPath>uart1.c</itemPath>
+      <itemPath>interrupt.c</itemPath>
+      <itemPath>i2c_utils.c</itemPath>
+      <itemPath>MPU9150.c</itemPath>
+      <itemPath>RN42.c</itemPath>
+      <itemPath>debug.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

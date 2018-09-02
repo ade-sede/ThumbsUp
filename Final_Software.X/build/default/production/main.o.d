@@ -1,6 +1,9 @@
 build/default/production/main.o:  \
 main.c  \
 header.h  \
-uart.h  \
+MPU9150.h  \
+i2c.h  \
 clock.h  \
-RN42.h 
+ uart.h  \
+RN42.h  \
+interrupt.h 
