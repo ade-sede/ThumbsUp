@@ -15,7 +15,7 @@ struct s_accel {
 	s32 accelZ;
 };
 
-struct s_g {
+struct s_gravity {
 	float accelX;
 	float accelY;
 	float accelZ;

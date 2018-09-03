@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=config.c main.c Potentiometre.c pps.c uart1.c interrupt.c i2c_utils.c MPU9150.c RN42.c debug.c
+SOURCEFILES_QUOTED_IF_SPACED=config.c main.c Potentiometre.c pps.c uart1.c interrupt.c i2c_utils.c MPU9150.c RN42.c debug.c movement.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/config.o ${OBJECTDIR}/main.o ${OBJECTDIR}/Potentiometre.o ${OBJECTDIR}/pps.o ${OBJECTDIR}/uart1.o ${OBJECTDIR}/interrupt.o ${OBJECTDIR}/i2c_utils.o ${OBJECTDIR}/MPU9150.o ${OBJECTDIR}/RN42.o ${OBJECTDIR}/debug.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/config.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/Potentiometre.o.d ${OBJECTDIR}/pps.o.d ${OBJECTDIR}/uart1.o.d ${OBJECTDIR}/interrupt.o.d ${OBJECTDIR}/i2c_utils.o.d ${OBJECTDIR}/MPU9150.o.d ${OBJECTDIR}/RN42.o.d ${OBJECTDIR}/debug.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/config.o ${OBJECTDIR}/main.o ${OBJECTDIR}/Potentiometre.o ${OBJECTDIR}/pps.o ${OBJECTDIR}/uart1.o ${OBJECTDIR}/interrupt.o ${OBJECTDIR}/i2c_utils.o ${OBJECTDIR}/MPU9150.o ${OBJECTDIR}/RN42.o ${OBJECTDIR}/debug.o ${OBJECTDIR}/movement.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/config.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/Potentiometre.o.d ${OBJECTDIR}/pps.o.d ${OBJECTDIR}/uart1.o.d ${OBJECTDIR}/interrupt.o.d ${OBJECTDIR}/i2c_utils.o.d ${OBJECTDIR}/MPU9150.o.d ${OBJECTDIR}/RN42.o.d ${OBJECTDIR}/debug.o.d ${OBJECTDIR}/movement.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/config.o ${OBJECTDIR}/main.o ${OBJECTDIR}/Potentiometre.o ${OBJECTDIR}/pps.o ${OBJECTDIR}/uart1.o ${OBJECTDIR}/interrupt.o ${OBJECTDIR}/i2c_utils.o ${OBJECTDIR}/MPU9150.o ${OBJECTDIR}/RN42.o ${OBJECTDIR}/debug.o
+OBJECTFILES=${OBJECTDIR}/config.o ${OBJECTDIR}/main.o ${OBJECTDIR}/Potentiometre.o ${OBJECTDIR}/pps.o ${OBJECTDIR}/uart1.o ${OBJECTDIR}/interrupt.o ${OBJECTDIR}/i2c_utils.o ${OBJECTDIR}/MPU9150.o ${OBJECTDIR}/RN42.o ${OBJECTDIR}/debug.o ${OBJECTDIR}/movement.o
 
 # Source Files
-SOURCEFILES=config.c main.c Potentiometre.c pps.c uart1.c interrupt.c i2c_utils.c MPU9150.c RN42.c debug.c
+SOURCEFILES=config.c main.c Potentiometre.c pps.c uart1.c interrupt.c i2c_utils.c MPU9150.c RN42.c debug.c movement.c
 
 
 CFLAGS=
@@ -154,6 +154,12 @@ ${OBJECTDIR}/debug.o: debug.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/debug.o 
 	@${FIXDEPS} "${OBJECTDIR}/debug.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/debug.o.d" -o ${OBJECTDIR}/debug.o debug.c   
 	
+${OBJECTDIR}/movement.o: movement.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/movement.o.d 
+	@${RM} ${OBJECTDIR}/movement.o 
+	@${FIXDEPS} "${OBJECTDIR}/movement.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/movement.o.d" -o ${OBJECTDIR}/movement.o movement.c   
+	
 else
 ${OBJECTDIR}/config.o: config.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}" 
@@ -214,6 +220,12 @@ ${OBJECTDIR}/debug.o: debug.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/debug.o.d 
 	@${RM} ${OBJECTDIR}/debug.o 
 	@${FIXDEPS} "${OBJECTDIR}/debug.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/debug.o.d" -o ${OBJECTDIR}/debug.o debug.c   
+	
+${OBJECTDIR}/movement.o: movement.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/movement.o.d 
+	@${RM} ${OBJECTDIR}/movement.o 
+	@${FIXDEPS} "${OBJECTDIR}/movement.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/movement.o.d" -o ${OBJECTDIR}/movement.o movement.c   
 	
 endif
 

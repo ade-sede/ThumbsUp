@@ -3,8 +3,19 @@
 #include "i2c.h"
 #include "uart.h"
 #include "RN42.h"
-//#include "movement.h"
+#include "movement.h"
 #include "interrupt.h"
+
+ /*
+  * This variable bias represent the acceleration present on each axis, in a no-move condition
+  *	They are mesured during calibration. We have to remove this bias from each measurement
+  * so that it is accurate.
+  */
+
+struct s_accel g_calibration;
+struct s_gravity g_accel;
+struct s_gravity g_angle;
+float g_accelR = 0;
 
 u8 g_button = 0;
 
@@ -23,26 +34,22 @@ void	init(void) {
         set_interrupt();                    /* Buttons */
 
 	uart1_putstr("Start\n\r");
-        
+
 	i2c_config_and_start((u8)I2CBRG);   /* After this line i2c module is running with baud rate I2CBRG */
 	MPU9150_write(PWR_MGMT_1, PWR_MGMT_ON_NO_TEMP);  /* Initialisation Power management -> no temp sensor */
+        calibration();	/* Accelerometer and Gyroscope calibration, in a no movement condition durgin CALIBRATION_SAMPLE_NUMBER cycles */
+        T4CONbits.ON = 1; /* Launch movement transmission */
 }
 
-void     main(void) {
-        u32 i = 0;
-        u16 pot = 0;
-        struct s_accel accel;
-
-        memset(&accel, 0, sizeof(struct s_accel));
+int     main(void) {
+	memset(&g_calibration, 0, sizeof(struct s_accel));
+        memset(&g_accel, 0 ,sizeof(struct s_gravity));
+        memset(&g_angle, 0 ,sizeof(struct s_gravity));
         
 	set_pps();
         init();
+
 	while(1){
-                while (i < 10000)
-                    i++;
-                i = 0;
-                read_accel(&accel);
-                send_report(create_report(accel.accelX, accel.accelY));
-            Nop();
+		Nop();
 	}
 }

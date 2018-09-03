@@ -15,15 +15,11 @@ struct s_accel {
 	s32 accelZ;
 };
 
- /*
-  * Those variables represent the acceleration present on each axis, in a no-move condition 
-  *	They are mesured during calibration. We have to remove this bias from each measurement
-  * so that it is accurate.
-  */
-
-s32 g_xbias;
-s32 g_ybias;
-s32 g_zbias;
+struct s_gravity {
+	float accelX;
+	float accelY;
+	float accelZ;
+};
 
 /* Config bits */
 # define PWR_MGMT_ON_NO_TEMP 0b1000  /* Goes to PWR_MGMT_1. Disable temp sensor */
@@ -61,7 +57,6 @@ s32 g_zbias;
 void MPU9150_write(u8 register_name, u8 bit_config);
 void MPU9150_read(u8 source, u8 *dest);
 void read_accel(struct s_accel *accel);
-void calibration(void);
 
 #endif	/* MPU9150_H */
 

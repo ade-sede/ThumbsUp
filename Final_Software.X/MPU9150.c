@@ -2,12 +2,7 @@
 #include "header.h"
 #include "MPU9150.h"
 #include "uart.h"
-//#include "movement.h"
 #include "debug.h"
-
-extern s32 g_xbias;
-extern s32 g_ybias;
-extern s32 g_zbias;
 
 /*
 ** Request a read from register addr source, stores
@@ -71,29 +66,4 @@ void MPU9150_write(u8 register_addr, u8 value) {
 	I2C1CONbits.PEN = 1; // Master stop
 	while (I2C1CONbits.PEN == 1)
 		Nop();
-}
-
-/*
- * This is the function that measures the forces present in the system, 
- * during a no-move condition at the beginnig
- * and shorter during execution
- * We average those measures using calibration_sample_number samples
- */
-
-void calibration(void) {
-	u16 count = 0;
-	struct s_accel sample;
-
-	while (count <=  CALIBRATION_SAMPLE_NUMBER) {
-		memset(&sample, 0, sizeof(struct s_accel));
-		read_accel(&sample);
-		g_xbias += sample.accelX;
-		g_ybias += sample.accelY;
-		g_zbias += sample.accelZ;
-		++count;
-	}
-
-	g_xbias /= CALIBRATION_SAMPLE_NUMBER;
-	g_ybias /= CALIBRATION_SAMPLE_NUMBER;
-	g_zbias /= CALIBRATION_SAMPLE_NUMBER;
 }

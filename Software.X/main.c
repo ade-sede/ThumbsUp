@@ -18,7 +18,7 @@ float g_accelR = 0;
 
 struct s_gyro g_cal_gyro;
 struct s_gyro g_degres_gyro;
-struct s_g g_angle;
+struct s_gravity g_angle;
 
 float g_mtime = 0;
 
