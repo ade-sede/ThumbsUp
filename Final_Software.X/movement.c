@@ -9,31 +9,6 @@ extern struct s_gravity g_angle;
 
 extern float g_accelR;
 
-/*
- * This is the function that measures the forces present in the system, 
- * during a no-move condition at the beginnig
- * and shorter during execution
- * We average those measures using calibration_sample_number samples
- */
-
-void calibration(void) {
-	u16 count = 0;
-	struct s_accel sample_accel;
-
-	while (count <= CALIBRATION_SAMPLE_NUMBER) {
-		memset(&sample_accel, 0, sizeof(struct s_accel));
-		read_accel(&sample_accel);
-		g_calibration.accelX += sample_accel.accelX;
-		g_calibration.accelY += sample_accel.accelY;
-		g_calibration.accelZ += sample_accel.accelZ;
-		++count;
-	}
-
-	g_calibration.accelX /= CALIBRATION_SAMPLE_NUMBER;
-	g_calibration.accelY /= CALIBRATION_SAMPLE_NUMBER;
-	g_calibration.accelZ /= CALIBRATION_SAMPLE_NUMBER;
-}
-
 void    accel_to_angle_value() {
 	/* accelometre value translate to g value between -/+2 */
 	g_accel.accelX = TRANS_ACCEL_TO_G(g_calibration.accelX);
@@ -69,10 +44,6 @@ void    sampling_acceleration_value() {
 	accel.accelY /= AVERAGE_SAMPLE_NUMBER;
 	accel.accelZ /= AVERAGE_SAMPLE_NUMBER;
 
-//	/* Remove priously calibrated values */
-//	accel.accelX -= g_calibration.accelX;
-//	accel.accelY -= g_calibration.accelY;
-//	accel.accelZ -= g_calibration.accelZ;
         /* giving value between -2 +2 */
 	g_accel.accelX = TRANS_ACCEL_TO_G(accel.accelX);
 	g_accel.accelY = TRANS_ACCEL_TO_G(accel.accelY);
@@ -80,8 +51,21 @@ void    sampling_acceleration_value() {
 }
 
 void    angle_calculation(struct s_gravity *arcos){
+
+        float x = 0;
+        float y = 0;
+        float z = 0;
+
 	g_accelR = sqrt(powf(g_accel.accelX, 2.0)+powf(g_accel.accelY, 2.0)+ powf(g_accel.accelZ, 2.0));
 
+        x = (g_accel.accelX - 1) * 9.81;
+        y = (g_accel.accelY - 1) * 9.81;
+        z = (g_accel.accelZ - 1) * 9.81;
+
+        print_accelR(g_accel.accelX * 100);
+        print_accelR(g_accel.accelY * 100);
+        print_accelR(g_accel.accelZ * 100);
+        
 	/* Give angle in degrees of the vector */
 	arcos->accelX = acosf(g_accel.accelX/ g_accelR) * 57.2958;
 	arcos->accelY = acosf(g_accel.accelY/ g_accelR) * 57.2958;
@@ -93,27 +77,6 @@ void    angle_calculation(struct s_gravity *arcos){
 	arcos->accelZ -= g_angle.accelZ;
 }
 
-/* 
-** This function is meant to:
-** 1) Compute any movement
-** 2) Send it to the bluetooth module.
-**
-** To make sure the measurements are meaningful,
-** this code make 2 things :
-** 1) Average the samples taken, AVERAGE_SAMPLE_NUMBER time
-** 2) Apply a discrimination window, that every measurement
-** comprised in a window going from WINDOW_LOW and WINDOW_HIGH
-** is not considered a valid acceleration and is seen as accel = 0
-**
-** accel is an array len 2. Index 0 holds info about the previously
-** measured accel. Index 1 about the current accel.
-**
-** velocity works on the same model
-**
-** It is this function's responsibility to :
-** 1) At the end of processing, shift the current accel to the previous
-** 2) Clean the space for the next measurement.
-*/
 void	movement(void) {
         struct s_gravity arcos;
 
@@ -131,7 +94,6 @@ void	movement(void) {
 //	if (INVALID_VALUE(g_accel[CURR].accelZ))
 // 		g_accel[CURR].accelZ = 0;
 
-        calibration();
         sampling_acceleration_value();
         angle_calculation(&arcos);
 	/* Output */
@@ -139,7 +101,8 @@ void	movement(void) {
 //            arcos.accelX = 0;
 //	if (arcos.accelZ < 20 && arcos.accelZ > -20)
 //            arcos.accelY = 0;
-	//send_report(create_report(arcos.accelX / 2, -arcos.accelZ / 2));
+	send_report(create_report(arcos.accelX / 2, -arcos.accelZ / 2));
+
         print_arcos(&arcos);
 	/* Blank spot for new values */
 	memset(&g_accel, 0, sizeof(struct s_accel));

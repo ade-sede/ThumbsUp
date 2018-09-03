@@ -18,7 +18,10 @@ void	set_pps() {
 */
 	CFGCONbits.IOLOCK = 0;
 	RPB4Rbits.RPB4R = 0b0001; // RPB4 -> U1TX
+        RPB10Rbits.RPB10R = 0b0010;// RPB10 -> U2TX
 	CFGCONbits.IOLOCK = 1;
 	TRISBbits.TRISB6 = 1;
 	U1RXRbits.U1RXR = 0b0001; // RPB6 -> U1RX
+        TRISBbits.TRISB11 = 1;
+	U2RXRbits.U2RXR = 0b0011; // RPB11 -> U2RX
 }

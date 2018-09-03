@@ -23,7 +23,7 @@ s16  *create_report(s16 x_move, s16 y_move) {
 	report[4] = (s16)(x_move);// * pot;
 	report[5] = (s16)(y_move);// * pot;
 	report[6] = (s16)pot; // Wheel
-        print_report(report);
+//        print_report(report);
         if (g_button > 1)
             g_button = 0;
 	return (report);
@@ -43,11 +43,11 @@ void send_report(s16 *report) {
 	original_priority = __builtin_get_isr_state();
 	__builtin_set_isr_state(7);
 	while (i < 7) {
-//		uart1_transmit_idle(report[i]);
+		uart1_transmit_idle(report[i]);
 		i++;
 	}
-//	while (i < 5000)
-//		++i;
+	while (i < 5000)
+		++i;
 	Nop();
 	/* Restoring priority */
 	__builtin_set_isr_state(original_priority);

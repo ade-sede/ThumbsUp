@@ -24,6 +24,7 @@ u8 g_button = 0;
  */
 
 void	init(void) {
+
         TRISBbits.TRISB14 = 0;              /* Setting up tri-state led */
         TRISAbits.TRISA2 = 1;               /* Setting up tri-state int2 input*/
 	TRISAbits.TRISA3 = 1;               /* Setting up tri-state int3 input*/
@@ -33,19 +34,23 @@ void	init(void) {
         init_pot();                         /* Potentiometre */
         set_interrupt();                    /* Buttons */
 
-	uart1_putstr("Start\n\r");
-
 	i2c_config_and_start((u8)I2CBRG);   /* After this line i2c module is running with baud rate I2CBRG */
 	MPU9150_write(PWR_MGMT_1, PWR_MGMT_ON_NO_TEMP);  /* Initialisation Power management -> no temp sensor */
-        calibration();	/* Accelerometer and Gyroscope calibration, in a no movement condition durgin CALIBRATION_SAMPLE_NUMBER cycles */
+   //     calibration();	/* Accelerometer and Gyroscope calibration, in a no movement condition durgin CALIBRATION_SAMPLE_NUMBER cycles */
         T4CONbits.ON = 1; /* Launch movement transmission */
 }
 
 int     main(void) {
-	memset(&g_calibration, 0, sizeof(struct s_accel));
+
+        u32 a = 0;
+
+        while (a < 100000)
+            a++;
+        memset(&g_calibration, 0, sizeof(struct s_accel));
         memset(&g_accel, 0 ,sizeof(struct s_gravity));
         memset(&g_angle, 0 ,sizeof(struct s_gravity));
-        
+
+        uart2_putstr("Start MAIN \n\r");
 	set_pps();
         init();
 
