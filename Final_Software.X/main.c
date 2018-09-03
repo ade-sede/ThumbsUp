@@ -23,11 +23,9 @@ void	init(void) {
         set_interrupt();                    /* Buttons */
 
 	uart1_putstr("Start\n\r");
-
+        
 	i2c_config_and_start((u8)I2CBRG);   /* After this line i2c module is running with baud rate I2CBRG */
-
 	MPU9150_write(PWR_MGMT_1, PWR_MGMT_ON_NO_TEMP);  /* Initialisation Power management -> no temp sensor */
-	//calibration();	/* Accelerometer calibration, in a no movement condition durgin 100 cycles */
 }
 
 void     main(void) {

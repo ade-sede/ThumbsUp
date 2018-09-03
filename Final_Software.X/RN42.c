@@ -24,7 +24,8 @@ s16  *create_report(s16 x_move, s16 y_move) {
 	report[5] = (s16)(y_move);// * pot;
 	report[6] = (s16)pot; // Wheel
         print_report(report);
-        g_button = 0;
+        if (g_button > 1)
+            g_button = 0;
 	return (report);
 }
 

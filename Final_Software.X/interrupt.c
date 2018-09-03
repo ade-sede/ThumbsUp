@@ -27,8 +27,10 @@ void __ISR (_TIMER_3_VECTOR, IPL7SOFT) int3_debounce (void){
 void __ISR (_EXTERNAL_2_VECTOR, IPL6SOFT) left_click (void){
 	IEC0bits.INT2IE = 0;
 	LATBbits.LATB14 = 1;
-	//if (g_edge_int2 == FALLING)
-		g_button = 1;
+	if (g_edge_int2 == FALLING)
+            g_button = 1;
+        if (g_edge_int2 == RISING)
+            g_button = 0;
 	T2CONbits.ON = 1;
 }
 
@@ -78,7 +80,7 @@ void set_timer() {
 	T2CON = 0;//reset
 	T2CONbits.TCKPS = 0b110; //1:64
 	TMR2 = 0;//set timer 0
-	PR2 = 1250;//4ms 312500 -> 1s
+	PR2 = 625;//2ms 312500 -> 1s
 	IPC2bits.T2IP = 7;
 	IFS0bits.T2IF = 0;
 	IEC0bits.T2IE = 1;
