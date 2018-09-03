@@ -51,20 +51,20 @@ void    sampling_acceleration_value() {
 }
 
 void    angle_calculation(struct s_gravity *arcos){
-
-        float x = 0;
-        float y = 0;
-        float z = 0;
+//
+//        float x = 0;
+//        float y = 0;
+//        float z = 0;
 
 	g_accelR = sqrt(powf(g_accel.accelX, 2.0)+powf(g_accel.accelY, 2.0)+ powf(g_accel.accelZ, 2.0));
 
-        x = (g_accel.accelX - 1) * 9.81;
-        y = (g_accel.accelY - 1) * 9.81;
-        z = (g_accel.accelZ - 1) * 9.81;
+//        x = (g_accel.accelX - 1) * 9.81;
+//        y = (g_accel.accelY - 1) * 9.81;
+//        z = (g_accel.accelZ - 1) * 9.81;
 
-        print_accelR(g_accel.accelX * 100);
-        print_accelR(g_accel.accelY * 100);
-        print_accelR(g_accel.accelZ * 100);
+//        print_accelR(g_accel.accelX * 100);
+//        print_accelR(g_accel.accelY * 100);
+//        print_accelR(g_accel.accelZ * 100);
         
 	/* Give angle in degrees of the vector */
 	arcos->accelX = acosf(g_accel.accelX/ g_accelR) * 57.2958;
@@ -103,7 +103,7 @@ void	movement(void) {
 //            arcos.accelY = 0;
 	send_report(create_report(arcos.accelX / 2, -arcos.accelZ / 2));
 
-        print_arcos(&arcos);
+       // print_arcos(&arcos);
 	/* Blank spot for new values */
 	memset(&g_accel, 0, sizeof(struct s_accel));
         memset(&arcos, 0, sizeof(struct s_gravity));

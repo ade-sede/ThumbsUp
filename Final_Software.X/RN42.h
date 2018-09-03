@@ -8,6 +8,5 @@
 void	test_run(void);
 void	send_report(s16 *report);
 s16      *create_report(s32 x_move, s32 y_move);
-//void    send_movement(struct s_velocity *velocity);
 
 #endif

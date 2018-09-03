@@ -31,6 +31,7 @@ void	init(void) {
         LATBbits.LATB14 = 0;                /* Turn off led on the test board */
 
 	uart1_init((u32)RN42_BAUD_RATE + 1);/* Bluetooth */
+        uart2_init((u32)RN42_BAUD_RATE + 1);
         init_pot();                         /* Potentiometre */
         set_interrupt();                    /* Buttons */
 
@@ -41,8 +42,8 @@ void	init(void) {
 }
 
 int     main(void) {
-
         u32 a = 0;
+        unsigned int original_priority;
 
         while (a < 100000)
             a++;
@@ -50,11 +51,16 @@ int     main(void) {
         memset(&g_accel, 0 ,sizeof(struct s_gravity));
         memset(&g_angle, 0 ,sizeof(struct s_gravity));
 
-        uart2_putstr("Start MAIN \n\r");
+
 	set_pps();
         init();
-
+        uart2_putstr("Start MAIN \n\r");
 	while(1){
+                    uart2_putstr("Start MAIN \n\r");
+            original_priority = __builtin_get_isr_state();
+            __builtin_set_isr_state(7);
+            movement();
+            __builtin_set_isr_state(original_priority);
 		Nop();
 	}
 }
