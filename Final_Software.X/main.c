@@ -16,6 +16,7 @@ struct s_accel g_calibration;
 struct s_gravity g_accel;
 struct s_gravity g_angle;
 float g_accelR = 0;
+float g_wheel = 0;
 
 u8 g_button = 0;
 

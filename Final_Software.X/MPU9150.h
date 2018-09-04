@@ -29,8 +29,8 @@ struct s_gravity {
 ** to compare is only 16 bit long
 */
 
-# define CALIBRATION_SAMPLE_NUMBER 100 /* Max value is 65335*/
-# define AVERAGE_SAMPLE_NUMBER 25 /* Max value is 65335*/
+# define CALIBRATION_SAMPLE_NUMBER 25 /* Max value is 65335*/
+# define AVERAGE_SAMPLE_NUMBER 1 /* Max value is 65335*/
 
 /* Registers and their address */
 # define ACCEL_XOUT_L 0x3C

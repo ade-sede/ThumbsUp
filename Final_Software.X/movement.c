@@ -8,6 +8,7 @@ extern struct s_gravity g_accel;
 extern struct s_gravity g_angle;
 
 extern float g_accelR;
+extern float g_wheel;
 
 void    accel_to_angle_value() {
 	/* accelometre value translate to g value between -/+2 */
@@ -40,7 +41,7 @@ void    accel_to_angle_value() {
 		g_calibration.accelX += sample_accel.accelX;	
 		g_calibration.accelY += sample_accel.accelY;	
 		g_calibration.accelZ += sample_accel.accelZ;	
-		++count;	
+		++count;
 	}	
  	g_calibration.accelX /= CALIBRATION_SAMPLE_NUMBER;	
 	g_calibration.accelY /= CALIBRATION_SAMPLE_NUMBER;	
@@ -112,22 +113,38 @@ void	movement(void) {
         sampling_acceleration_value();
         angle_calculation(&arcos);
 
-        /*
-	** Interpret acceleration close to 0, as if they were 0
-	** Everything beetwen window _low and window_high is considered to be 0.
-	** Window_low is a negative integer, window_high a positive one
-	*/
-        if (INVALID_VALUE(arcos.accelX))
-            arcos.accelX = 0;
-        if (INVALID_VALUE(arcos.accelY))
-            arcos.accelY = 0;
-        if (INVALID_VALUE(arcos.accelZ))
-            arcos.accelZ = 0;
-
-	send_report(create_report(-arcos.accelX / 2, arcos.accelY / 2));
-
         //print_arcos(&arcos);
+        /* Wheel */
+        if (arcos.accelZ >= 110)
+        {
+            if(!(INVALID_VALUE(arcos.accelX)))
+                g_wheel = -arcos.accelX / 2;
+            send_report(create_report(0, 0));
+        }
+        /* Movement */
+        else
+        {
+            /*
+            ** Interpret acceleration close to 0, as if they were 0
+            ** Everything beetwen window _low and window_high is considered to be 0.
+            ** Window_low is a negative integer, window_high a positive one
+            */
+            if (INVALID_VALUE(arcos.accelX) || arcos.accelX > 85)
+               arcos.accelX = 0;
+            if (INVALID_VALUE(arcos.accelY) || arcos.accelY > 85)
+                arcos.accelY = 0;
+            if (INVALID_VALUE(arcos.accelZ) || arcos.accelZ > 85)
+                arcos.accelZ = 0;
+
+
+            send_report(create_report(arcos.accelY / 2, -arcos.accelX / 2));
+        }
+        /* Blink LED */
+        if(LATBbits.LATB14 == 1 || !(arcos.accelY == 0 && arcos.accelX == 0))
+            LATBbits.LATB14 ^= 1;
+
 	/* Blank spot for new values */
 	memset(&g_accel, 0, sizeof(struct s_accel));
         memset(&arcos, 0, sizeof(struct s_gravity));
+        g_wheel = 0;
 }

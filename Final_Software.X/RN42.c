@@ -9,6 +9,7 @@
 /* Create generic report with Mouse data
 **/
 extern u8 g_button;
+extern float g_wheel;
 
 s16  *create_report(s16 x_move, s16 y_move) {
     s16 static report[7];
@@ -20,10 +21,11 @@ s16  *create_report(s16 x_move, s16 y_move) {
 	report[1] = (s16)5; // Length
 	report[2] = (s16)2; // Data descriptor -> Mouse
 	report[3] = (s16)g_button;
-	report[4] = (s16)(x_move) * (pot / 100);// * pot;
-	report[5] = (s16)(y_move) * (pot / 100);// * pot;
-	report[6] = (s16)0; // Wheel
-        print_report(report);
+	report[4] = (s16)(x_move) * (pot / 300.0);// * pot;
+	report[5] = (s16)(y_move) * (pot / 300.0);// * pot;
+	report[6] = (s16)g_wheel * (pot > 100 ? 1 : 0); // Wheel
+        //print_report(report);
+
         if (g_button > 1)
             g_button = 0;
 	return (report);
