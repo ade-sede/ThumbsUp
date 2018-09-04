@@ -20,10 +20,10 @@ s16  *create_report(s16 x_move, s16 y_move) {
 	report[1] = (s16)5; // Length
 	report[2] = (s16)2; // Data descriptor -> Mouse
 	report[3] = (s16)g_button;
-	report[4] = (s16)(x_move);// * pot;
-	report[5] = (s16)(y_move);// * pot;
-	report[6] = (s16)pot; // Wheel
-//        print_report(report);
+	report[4] = (s16)(x_move) * (pot / 100);// * pot;
+	report[5] = (s16)(y_move) * (pot / 100);// * pot;
+	report[6] = (s16)0; // Wheel
+        print_report(report);
         if (g_button > 1)
             g_button = 0;
 	return (report);

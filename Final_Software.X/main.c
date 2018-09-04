@@ -31,19 +31,18 @@ void	init(void) {
         LATBbits.LATB14 = 0;                /* Turn off led on the test board */
 
 	uart1_init((u32)RN42_BAUD_RATE + 1);/* Bluetooth */
-        uart2_init((u32)RN42_BAUD_RATE + 1);
+        uart2_init((u32)RN42_BAUD_RATE + 1);/* Debug */
         init_pot();                         /* Potentiometre */
         set_interrupt();                    /* Buttons */
 
 	i2c_config_and_start((u8)I2CBRG);   /* After this line i2c module is running with baud rate I2CBRG */
 	MPU9150_write(PWR_MGMT_1, PWR_MGMT_ON_NO_TEMP);  /* Initialisation Power management -> no temp sensor */
-   //     calibration();	/* Accelerometer and Gyroscope calibration, in a no movement condition durgin CALIBRATION_SAMPLE_NUMBER cycles */
+        calibration();	/* Accelerometer and Gyroscope calibration, in a no movement condition durgin CALIBRATION_SAMPLE_NUMBER cycles */
         T4CONbits.ON = 1; /* Launch movement transmission */
 }
 
 int     main(void) {
         u32 a = 0;
-        unsigned int original_priority;
 
         while (a < 100000)
             a++;
@@ -51,16 +50,10 @@ int     main(void) {
         memset(&g_accel, 0 ,sizeof(struct s_gravity));
         memset(&g_angle, 0 ,sizeof(struct s_gravity));
 
-
 	set_pps();
         init();
-        uart2_putstr("Start MAIN \n\r");
+        uart2_putstr("Start \n\r");
 	while(1){
-                    uart2_putstr("Start MAIN \n\r");
-            original_priority = __builtin_get_isr_state();
-            __builtin_set_isr_state(7);
-            movement();
-            __builtin_set_isr_state(original_priority);
 		Nop();
 	}
 }

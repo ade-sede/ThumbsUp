@@ -24,6 +24,33 @@ void    accel_to_angle_value() {
 	g_angle.accelZ = acosf(g_accel.accelZ/ g_accelR) * 57.2958;
 }
 
+/*	
+ * This is the function that measures the forces present in the system, 	
+ * during a no-move condition at the beginnig	
+ * and shorter during execution	
+ * We average those measures using calibration_sample_number samples	
+ */
+
+ void calibration(void) {	
+	u16 count = 0;	
+	struct s_accel sample_accel;	
+ 	while (count <= CALIBRATION_SAMPLE_NUMBER) {	
+		memset(&sample_accel, 0, sizeof(struct s_accel));	
+		read_accel(&sample_accel);	
+		g_calibration.accelX += sample_accel.accelX;	
+		g_calibration.accelY += sample_accel.accelY;	
+		g_calibration.accelZ += sample_accel.accelZ;	
+		++count;	
+	}	
+ 	g_calibration.accelX /= CALIBRATION_SAMPLE_NUMBER;	
+	g_calibration.accelY /= CALIBRATION_SAMPLE_NUMBER;	
+	g_calibration.accelZ /= CALIBRATION_SAMPLE_NUMBER;
+
+        g_accel.accelX = TRANS_ACCEL_TO_G(g_calibration.accelX);
+	g_accel.accelY = TRANS_ACCEL_TO_G(g_calibration.accelY);
+	g_accel.accelZ = TRANS_ACCEL_TO_G(g_calibration.accelZ);
+}
+
 void    sampling_acceleration_value() {
 	u16 count = 0;
 	struct s_accel sample;
@@ -81,29 +108,25 @@ void	movement(void) {
         struct s_gravity arcos;
 
         memset(&arcos, 0, sizeof(struct s_gravity));
+        accel_to_angle_value();
+        sampling_acceleration_value();
+        angle_calculation(&arcos);
 
-	/*
+        /*
 	** Interpret acceleration close to 0, as if they were 0
 	** Everything beetwen window _low and window_high is considered to be 0.
 	** Window_low is a negative integer, window_high a positive one
-//	*/
-//	if (INVALID_VALUE(g_accel[CURR].accelX))
-// 		g_accel[CURR].accelX = 0;
-//	if (INVALID_VALUE(g_accel[CURR].accelY))
-// 		g_accel[CURR].accelY = 0;
-//	if (INVALID_VALUE(g_accel[CURR].accelZ))
-// 		g_accel[CURR].accelZ = 0;
+	*/
+        if (INVALID_VALUE(arcos.accelX))
+            arcos.accelX = 0;
+        if (INVALID_VALUE(arcos.accelY))
+            arcos.accelY = 0;
+        if (INVALID_VALUE(arcos.accelZ))
+            arcos.accelZ = 0;
 
-        sampling_acceleration_value();
-        angle_calculation(&arcos);
-	/* Output */
-//	if (arcos.accelX < 20 && arcos.accelX > -20)
-//            arcos.accelX = 0;
-//	if (arcos.accelZ < 20 && arcos.accelZ > -20)
-//            arcos.accelY = 0;
-	send_report(create_report(arcos.accelX / 2, -arcos.accelZ / 2));
+	send_report(create_report(-arcos.accelX / 2, arcos.accelY / 2));
 
-       // print_arcos(&arcos);
+        //print_arcos(&arcos);
 	/* Blank spot for new values */
 	memset(&g_accel, 0, sizeof(struct s_accel));
         memset(&arcos, 0, sizeof(struct s_gravity));
