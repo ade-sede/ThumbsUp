@@ -118,7 +118,7 @@ void	movement(void) {
         if (arcos.accelZ >= 110)
         {
             if(!(INVALID_VALUE(arcos.accelX)))
-                g_wheel = -arcos.accelX / 2;
+                g_wheel = arcos.accelX / 2;
             send_report(create_report(0, 0));
         }
         /* Movement */
