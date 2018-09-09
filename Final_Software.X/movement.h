@@ -4,8 +4,8 @@
 #include "math.h"
 
 /* Defines for the discrimination window. */
-# define WINDOW_LOW -15 /* Must be < 0 */
-# define WINDOW_HIGH 15 /* Must be > 0 */
+# define WINDOW_LOW -10 /* Must be < 0 */
+# define WINDOW_HIGH 10 /* Must be > 0 */
 
 /* Macro for the window */
 /* (value comprise entre 0 et low) || (value comprise entre 0 et high)*/

@@ -24,9 +24,9 @@ s16  *create_report(s16 x_move, s16 y_move) {
 	report[4] = (s16)(x_move) * (pot / 300.0);// * pot;
 	report[5] = (s16)(y_move) * (pot / 300.0);// * pot;
 	report[6] = (s16)g_wheel * (pot > 100 ? 1 : 0); // Wheel
-        //print_report(report);
+        print_report(report);
 
-        if (g_button > 1)
+        if (g_button > 1 || (TRISAbits.TRISA2 == 0 && g_button == 1))
             g_button = 0;
 	return (report);
 }

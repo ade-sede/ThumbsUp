@@ -34,7 +34,8 @@ void    accel_to_angle_value() {
 
  void calibration(void) {	
 	u16 count = 0;	
-	struct s_accel sample_accel;	
+	struct s_accel sample_accel;
+        LATBbits.LATB14 = 1;
  	while (count <= CALIBRATION_SAMPLE_NUMBER) {	
 		memset(&sample_accel, 0, sizeof(struct s_accel));	
 		read_accel(&sample_accel);	
@@ -50,6 +51,7 @@ void    accel_to_angle_value() {
         g_accel.accelX = TRANS_ACCEL_TO_G(g_calibration.accelX);
 	g_accel.accelY = TRANS_ACCEL_TO_G(g_calibration.accelY);
 	g_accel.accelZ = TRANS_ACCEL_TO_G(g_calibration.accelZ);
+        LATBbits.LATB14 = 0;
 }
 
 void    sampling_acceleration_value() {
@@ -117,8 +119,8 @@ void	movement(void) {
         /* Wheel */
         if (arcos.accelZ >= 110)
         {
-            if(!(INVALID_VALUE(arcos.accelX)))
-                g_wheel = arcos.accelX / 2;
+            if(!(INVALID_VALUE(arcos.accelY)))
+                g_wheel = arcos.accelY / 2;
             send_report(create_report(0, 0));
         }
         /* Movement */
@@ -137,7 +139,7 @@ void	movement(void) {
                 arcos.accelZ = 0;
 
 
-            send_report(create_report(arcos.accelY / 2, -arcos.accelX / 2));
+            send_report(create_report(-arcos.accelX / 2, arcos.accelY / 2));
         }
         /* Blink LED */
         if(LATBbits.LATB14 == 1 || !(arcos.accelY == 0 && arcos.accelX == 0))
