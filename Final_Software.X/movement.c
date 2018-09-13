@@ -139,7 +139,7 @@ void	movement(void) {
                 arcos.accelZ = 0;
 
 
-            send_report(create_report(-arcos.accelX / 2, arcos.accelY / 2));
+            send_report(create_report(-arcos.accelX / 2, -arcos.accelY / 2));
         }
         /* Blink LED */
         if(LATBbits.LATB14 == 1 || !(arcos.accelY == 0 && arcos.accelX == 0))
